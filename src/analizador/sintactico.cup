@@ -1,0 +1,52 @@
+package analizador;
+
+import java.util.LinkedList;
+import java.util.ArrayList;
+import java_cup.runtime.*;
+
+
+parser code
+{://Codigo de acciones
+  //Codigo visible
+    
+    public ASTfs arbol;
+    public ArrayList<ErrorE> errorSintactico = new ArrayList<>();
+    
+    public void syntax_error(Symbol s)
+    {        
+        String lexema = s.value.toString();
+        int columna = s.right;
+        int fila = s.left;
+        
+        System.out.println("!!!!!!!---- Error Sintactico Recuperado ----!!!!!!!");
+        System.out.println("\t\tLexema: "+lexema);
+        System.out.println("\t\tFila: "+fila);
+        System.out.println("\t\tColumna: "+columna);
+
+        String aux = "Error Sintactico Recuperado: " + "\t\tLexema: "+lexema + " \t\tFila: "+fila +" \t\tColumna: "+columna;
+        errorSintactico.add(new ErrorE(aux));
+    }
+
+   
+    public void unrecovered_syntax_error(Symbol s) throws java.lang.Exception
+    {
+        String lexema = s.value.toString();
+        int columna = s.right;
+        int fila = s.left;
+        
+        System.err.println("Error caracter no esperado");
+        System.err.println(s);
+        System.out.println("!!!!!!! Error Sintactico, Panic Mode!!!!!!!");
+        System.out.println("\t\tLexema: "+lexema);
+        System.out.println("\t\tFila: "+fila);
+        System.out.println("\t\tColumna: "+columna);  
+        
+        String aux1 = "Error Sintactico, Modo Panico: " + "\t\tLexema: "+lexema + " \t\tFila: "+fila +" \t\tColumna: "+columna;
+        errorSintactico.add(new ErrorE(aux1));
+    }
+:}
+
+action code
+{://Codigo de acciones
+      
+:}

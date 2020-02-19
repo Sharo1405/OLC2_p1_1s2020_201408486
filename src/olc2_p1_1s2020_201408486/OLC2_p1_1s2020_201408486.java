@@ -15,7 +15,19 @@ public class OLC2_p1_1s2020_201408486 {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        // TODO code application logic here
+        
+        //generarCompilador();
     }
     
+     private static void generarCompilador() {
+        try {
+            String lexicoFlex[] = {"src/analizador/" + "lexico.jflex", "-d", "src/analizador/"};
+            jflex.Main.generate(lexicoFlex);
+            String sintacticoCup[] = {"-destdir", "src/analizador/", "-parser", 
+                "Sintactico", "src/analizador/" + "sintactico.cup"};
+            java_cup.Main.main(sintacticoCup);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    } 
 }
