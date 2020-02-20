@@ -14,9 +14,11 @@ public class OLC2_p1_1s2020_201408486 {
     /**
      * @param args the command line arguments
      */
-    public static void main(String[] args) {
-        
+    public static void main(String[] args) {        
         //generarCompilador();
+        
+        GUI vista = new GUI();
+        vista.setVisible(true);        
     }
     
      private static void generarCompilador() {
