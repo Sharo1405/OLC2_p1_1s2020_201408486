@@ -114,6 +114,7 @@ SENTENCIA::= DECLARACIONES{::}
        | DOWHILE{::}
        | FORR{::}
        | SENTENCIATRANSFERENCIA puntoycoma{::}
+       | SENTENCIATRANSFERENCIA{::}
        | FUNCIONESMETODOS{::}
        | LLAMADASFUNCIONES{::}
        | LLAMADASFUNCIONES puntoycoma{::}
@@ -211,7 +212,8 @@ DECLARACIONES::= id igual E{::};
 
 
 
-BLOQUESENTENCIAS::= allave  CUERPO cllave{::};
+BLOQUESENTENCIAS::= allave  CUERPO cllave{::}
+                   |allave cllave{::};
 
 
 E::= resta E:e1 {::} %prec unegativo 
