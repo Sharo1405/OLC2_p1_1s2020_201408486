@@ -105,8 +105,8 @@ CUERPO::= CUERPO SENTENCIA {::}
 
 SENTENCIA::= DECLARACIONES{::}
        | DECLARACIONES puntoycoma {::}
-       | MODIFICADORVALOR {::}
-       | MODIFICADORVALOR puntoycoma{::}
+       /*| MODIFICADORVALOR {::}
+       | MODIFICADORVALOR puntoycoma{::}*/
        | IFSTATEMENT{::}
        | SWITCHSTATEMENT{::}
        | WHILEE{::}
@@ -130,11 +130,12 @@ GRAFICAS::= pie E {::}
            |hist E {::};
 
 
-MODIFICADORVALOR::= id LISTACORCHETES igual E {::};
+//MODIFICADORVALOR::= id LISTACORCHETES igual E {::};
 
 
-LISTACORCHETES::= LISTACORCHETES acorchete E ccorchete {::}
-                 |acorchete E ccorchete{::};
+LISTACORCHETES::= E {::}; 
+                /*LISTACORCHETES acorchete E ccorchete {::}
+                 |acorchete E ccorchete{::};*/
 
 
 FUNCIONESLENGUAJE::= c E{::}
@@ -207,7 +208,8 @@ IFSTATEMENT::= IF_LISTA  elsee  BLOQUESENTENCIAS{::}
 IF_LISTA::= iff aparentesis E cparentesis BLOQUESENTENCIAS{::}
           | IF_LISTA elsee iff aparentesis E cparentesis BLOQUESENTENCIAS{::};
 
-DECLARACIONES::= id igual E{::};
+DECLARACIONES::= id igual E{::}
+                |id LISTACORCHETES igual E {::};
 
 
 
@@ -248,6 +250,7 @@ E::= resta E:e1 {::} %prec unegativo
     |ERnumero{::}
     |ERdecimal{::}
     |id{::}
+    |id E {::}
     |truee{::}
     |falsee{::}
     |nulo;
