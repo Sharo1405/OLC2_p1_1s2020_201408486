@@ -3,14 +3,14 @@ package analizador;
 import java.util.LinkedList;
 import java.util.ArrayList;
 import java_cup.runtime.*;
-
+import Errores.*;
 
 parser code
 {://Codigo de acciones
   //Codigo visible
     
     //public ASTfs arbol;
-    //public ArrayList<ErrorE> errorSintactico = new ArrayList<>();
+    public ArrayList<ErrorE> errorSintactico = new ArrayList<>();
     
     public void syntax_error(Symbol s)
     {        
@@ -24,7 +24,7 @@ parser code
         System.out.println("\t\tColumna: "+columna);
 
         String aux = "Error Sintactico Recuperado: " + "\t\tLexema: "+lexema + " \t\tFila: "+fila +" \t\tColumna: "+columna;
-        /*errorSintactico.add(new ErrorE(aux));*/
+        errorSintactico.add(new ErrorE(aux));
     }
 
    
@@ -42,7 +42,7 @@ parser code
         System.out.println("\t\tColumna: "+columna);  
         
         String aux1 = "Error Sintactico, Modo Panico: " + "\t\tLexema: "+lexema + " \t\tFila: "+fila +" \t\tColumna: "+columna;
-        //errorSintactico.add(new ErrorE(aux1));
+        errorSintactico.add(new ErrorE(aux1));
     }
 :}
 
@@ -59,7 +59,7 @@ terminal String meann, mediann, modee, nulo, matrix, pie, barplot, plot, hist;
 terminal String allave, cllave, acorchete, ccorchete, aparentesis, cparentesis, igual, suma, resta, por, division;
 terminal String potencia, modulo, mayorq, menorq, mayorigualq, menorigualq, igualigual, diferente, interrogacion;
 terminal String and, or, not, dospuntos, puntoycoma, coma, flecha, unegativo, upositivo;
-terminal String ERnumero, ERdecimal, id;
+terminal String cadena, ERnumero, ERdecimal, id;
 
 
 nonterminal S;
@@ -161,7 +161,9 @@ LLAMADASFUNCIONES::= id aparentesis E cparentesis{::}
                    | id aparentesis cparentesis{::};
 
 
-FUNCIONESMETODOS::= id igual functionn E BLOQUESENTENCIAS{::}
+FUNCIONESMETODOS::= id igual functionn aparentesis cparentesis BLOQUESENTENCIAS{::}
+                   |id igual functionn E BLOQUESENTENCIAS{::}
+                   |id igual aparentesis cparentesis flecha BLOQUESENTENCIAS{::}
                    |id igual E flecha BLOQUESENTENCIAS{::};
 
 FORR::= forr aparentesis INICIALIZACION cparentesis BLOQUESENTENCIAS{::};
@@ -249,8 +251,9 @@ E::= resta E:e1 {::} %prec unegativo
     |arrayy E {::}
     |ERnumero{::}
     |ERdecimal{::}
+    |cadena{::}
     |id{::}
     |id E {::}
     |truee{::}
     |falsee{::}
-    |nulo;
+    |nulo{::};

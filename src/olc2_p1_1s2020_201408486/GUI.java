@@ -16,10 +16,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.Reader;
 import java.io.StringReader;
-import java.util.ArrayList;
 import java.util.LinkedList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 
@@ -27,6 +24,9 @@ import javax.swing.JPanel;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import org.fife.ui.rsyntaxtextarea.*;
 import org.fife.ui.rtextarea.*;
+import analizador.*;
+import Errores.*;
+import java.util.ArrayList;
 
 /**
  *
@@ -168,7 +168,7 @@ public class GUI extends javax.swing.JFrame {
 
         jMenuBar1.add(jMenu1);
 
-        jMenu2.setText("AnalizarFS");
+        jMenu2.setText("Analizar");
         jMenu2.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
 
         jMenuItem5.setText("Analizar");
@@ -348,7 +348,7 @@ public class GUI extends javax.swing.JFrame {
     }
 
     
-    /*public void EscribirHTML(ArrayList<analizadoresGXML.ErrorE> errorLexico, ArrayList<analizadoresGXML.ErrorE> errorSintactico, LinkedList<Traduccion> errores) {
+    public void EscribirHTML(ArrayList<ErrorE> errorLexico, ArrayList<ErrorE> errorSintactico){//, LinkedList<Traduccion> errores) {
 
         StringBuilder paraHTML = new StringBuilder();
         paraHTML.append("<HTML> \n <HEAD> \n <TITLE> REPORTE DE ERRORES GXML</TITLE> \n </HEAD> \n <BODY> \n");
@@ -359,28 +359,28 @@ public class GUI extends javax.swing.JFrame {
                 + "  <td><strong>Descripcion</strong></td>\n"
                 + "</tr> \n");
 
-        for (analizadoresGXML.ErrorE errorE : errorLexico) {
+        for (ErrorE errorE : errorLexico) {
             paraHTML.append("<tr>\n"
                     + "  <td>Lexico</td>\n"
                     + "  <td> " + errorE.lexema + "</td>\n"
                     + "</tr> \n");
         }
 
-        for (analizadoresGXML.ErrorE errorE : errorSintactico) {
+        for (ErrorE errorE : errorSintactico) {
             paraHTML.append("<tr>\n"
                     + "  <td>Sintactico</td>\n"
                     + "  <td> " + errorE.lexema + "</td>\n"
                     + "</tr> \n");
         }
 
-        for (Traduccion errore : errores) {
+        /*for (Traduccion errore : errores) {
             for (String errore1 : errore.errores) {
                 paraHTML.append("<tr>\n"
                         + "  <td>Semantico</td>\n"
                         + "  <td> " + errore1 + "</td>\n"
                         + "</tr> \n");
             }
-        }
+        }*/
         paraHTML.append("</TABLE> \n "
                 + "</BODY> \n "
                 + "</HTML> \n");
@@ -408,7 +408,7 @@ public class GUI extends javax.swing.JFrame {
                 e2.printStackTrace();
             }
         }
-    }*/
+    }
     
     
 
@@ -421,19 +421,20 @@ public class GUI extends javax.swing.JFrame {
         RTextScrollPane scrolito = (RTextScrollPane) pan.getComponent(0);
         RSyntaxTextArea codigooriginal = (RSyntaxTextArea) scrolito.getViewport().getComponent(0);
         Reader leyendo = new StringReader(codigooriginal.getText());
-        /*FS.AnalizadoresFS.Lexico scan = new FS.AnalizadoresFS.Lexico(leyendo);
-        FS.AnalizadoresFS.Sintactico parser = new FS.AnalizadoresFS.Sintactico(scan);
+        Lexico scanner = new Lexico(leyendo);
+        Sintactico parser = new Sintactico(scanner);
+        /*
         EscribirHTMLFS(FS.AnalizadoresFS.Lexico.errorLexico, parser.errorSintactico, errorSemanti);*/
         try {
-            /*parser.parse();
-            LinkedList<Ambito> tablaDeSimbolos = new LinkedList<>();
+            parser.parse();
+            /*LinkedList<Ambito> tablaDeSimbolos = new LinkedList<>();
             Ambito global = new Ambito();
             tablaDeSimbolos.addFirst(global);
             LinkedList<ErrorFS> errorSemantico = new LinkedList<>();
             LinkedList<String> imprimir = new LinkedList<>();
             parser.arbol.ejecutarTODO(tablaDeSimbolos, errorSemantico, imprimir);
-            ImprimirConsola(imprimir);
-            EscribirHTMLFS(FS.AnalizadoresFS.Lexico.errorLexico, parser.errorSintactico, errorSemantico);*/
+            ImprimirConsola(imprimir);*/
+            EscribirHTML(Lexico.errorLexico, parser.errorSintactico);
             entro = 1;
         } catch (Exception ex) {
             ex.printStackTrace();

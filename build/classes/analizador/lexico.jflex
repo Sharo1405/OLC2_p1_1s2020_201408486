@@ -2,12 +2,14 @@ package analizador;
 
 import java_cup.runtime.*;
 import java.util.ArrayList;
+import Errores.*;
 
 %%
 %{
     //cod
     //metodo para error
-    //public static ArrayList<ErrorE> errorLexico = new ArrayList<ErrorE>();
+    String ERcadena = "";
+    public static ArrayList<ErrorE> errorLexico = new ArrayList<ErrorE>();
 %}
 
 %public
@@ -107,6 +109,8 @@ enter   = [\ \n]
 
 %state comentariosimple
 %state comentariomultiple
+%state cadenaEscapes
+%state cadenaEscapes2
 %%
 
 <YYINITIAL> "#*"                       {yybegin(comentariomultiple);}
@@ -120,6 +124,22 @@ enter   = [\ \n]
 <comentariosimple> [^"\n"]              {}
 <comentariosimple> "\n"                 {yybegin(YYINITIAL);
                                         System.out.println("Comentario simple: <<"+yytext()+">> Linea: "+yyline+" ,Columna: "+yycolumn);}
+
+
+//-----------------------------------------------------------------------------------------------------------------------------------------------
+<YYINITIAL> "\""                {yybegin(cadenaEscapes); ERcadena ="";}
+<cadenaEscapes> "\\"            {yybegin(cadenaEscapes2);}
+<cadenaEscapes> "\""            {System.out.println(ERcadena); yybegin(YYINITIAL); 
+                                return new Symbol(sym.cadena, yyline, yycolumn, ERcadena);}
+<cadenaEscapes> .               {ERcadena += yytext();}
+
+<cadenaEscapes2>{   
+    "\""                        {System.out.println("\""); ERcadena += "\""; yybegin(cadenaEscapes);}    
+    "n"                         {System.out.println("\n"); ERcadena += "\n"; yybegin(cadenaEscapes);}
+    "\\"                        {System.out.println("\\"); ERcadena += "\\" ; yybegin(cadenaEscapes);}  
+    "r"                       {System.out.println("\r"); ERcadena += "\r"; yybegin(cadenaEscapes);}
+    "t"                       {System.out.println("\t"); ERcadena += "\t"; yybegin(cadenaEscapes);}
+}
 
 
 //palabras---------------------------------------------------------------------------------------------------------------------------------------
@@ -275,5 +295,5 @@ enter   = [\ \n]
 
 [ \t\r\n\f]                 {/* ignore white space. */ }
 .                           {System.out.println("ERROR LEXICO: <<"+yytext()+">> Linea: "+yyline+" ,Columna: "+yycolumn);
-                            /*errorLexico.add(new ErrorE("ERROR LEXICO: <<"+yytext()+">> Linea: "+yyline+" ,Columna: "+yycolumn));*/
+                            errorLexico.add(new ErrorE("ERROR LEXICO: <<"+yytext()+">> Linea: "+yyline+" ,Columna: "+yycolumn));
                             ;}
