@@ -52,9 +52,9 @@ action code
 :}
 
 
-terminal String iff, elsee, switchh, casee, breakk, defaultt, whilee, print,forr, doo, truee, falsee, inn, continuee, returnn, functionn, c;
-terminal String listt, typeoff, lengthh, nCol, arrayy, nrow, stringlength, removee, tolowercase, touppercase, trunkk, roundd;
-terminal String meann, mediann, modee, nulo, matrix, pie, barplot, plot, hist;
+terminal String iff, elsee, switchh, casee, breakk, whilee,forr, doo, truee, falsee, inn, continuee, returnn, functionn, nulo;
+//terminal String c, listt, typeoff, lengthh, nCol, arrayy, nrow, stringlength, removee, tolowercase, touppercase, trunkk, roundd;
+//terminal String meann, mediann, modee, matrix, pie, barplot, plot, hist, print, default;
 
 terminal String allave, cllave, acorchete, ccorchete, aparentesis, cparentesis, igual, suma, resta, por, division;
 terminal String potencia, modulo, mayorq, menorq, mayorigualq, menorigualq, igualigual, diferente, interrogacion;
@@ -71,14 +71,12 @@ nonterminal SWITCHSTATEMENT, SWITCHBLOCKSTATEMENTGROUPS, SWITCHBLOCKSTATEMENTGRO
 nonterminal WHILEE, DOWHILE;
 nonterminal SENTENCIATRANSFERENCIA, FUNCIONESMETODOS;
 nonterminal FORR, INICIALIZACION;
-nonterminal LLAMADASFUNCIONES, IMPRIMIR;
-nonterminal FUNCIONESLENGUAJE, LISTACORCHETES, E, MODIFICADORVALOR;
-nonterminal GRAFICAS ;
+nonterminal LLAMADASFUNCIONES;
+nonterminal E;
 
 
 //PRECEDENCIA------------------------------------------------------------------------------------------------------------------
 precedence left coma;
-precedence left c, typeoff, lengthh, nCol, nrow, stringlength, removee,tolowercase, touppercase, trunkk, roundd, meann, mediann, modee;                   
 precedence left id;
 precedence right acorchete, aparentesis;
 precedence left aparentesis, acorchete;
@@ -92,6 +90,7 @@ precedence left igualigual, diferente;
 precedence left and;
 precedence left or;
 precedence left interrogacion, dospuntos;
+precedence left igual;
 //------------------------------------------------------------------------------------------------------------------------------
 
 
@@ -105,8 +104,6 @@ CUERPO::= CUERPO SENTENCIA {::}
 
 SENTENCIA::= DECLARACIONES{::}
        | DECLARACIONES puntoycoma {::}
-       /*| MODIFICADORVALOR {::}
-       | MODIFICADORVALOR puntoycoma{::}*/
        | IFSTATEMENT{::}
        | SWITCHSTATEMENT{::}
        | WHILEE{::}
@@ -117,31 +114,8 @@ SENTENCIA::= DECLARACIONES{::}
        | SENTENCIATRANSFERENCIA{::}
        | FUNCIONESMETODOS{::}
        | LLAMADASFUNCIONES{::}
-       | LLAMADASFUNCIONES puntoycoma{::}
-       | IMPRIMIR {::}
-       | IMPRIMIR puntoycoma{::}
-       | FUNCIONESLENGUAJE{::}
-       | GRAFICAS{::};
-
-
-GRAFICAS::= pie E {::}
-           |barplot E {::}//8 dispersion y 5 lineas
-           |plot E {::}
-           |hist E {::};
-
-
-//MODIFICADORVALOR::= id LISTACORCHETES igual E {::};
-
-
-LISTACORCHETES::= E {::}; 
-                /*LISTACORCHETES acorchete E ccorchete {::}
-                 |acorchete E ccorchete{::};*/
-
-
-
-
-
-IMPRIMIR::= print aparentesis E cparentesis{::};
+       | LLAMADASFUNCIONES puntoycoma{::};
+         
 
 
 LLAMADASFUNCIONES::= id aparentesis E cparentesis{::} 
@@ -186,7 +160,7 @@ SWITCHLABELS::= SWITCHLABELS SWITCHLABEL{::}
               | SWITCHLABEL{::};
 
 SWITCHLABEL::= casee E dospuntos{::}
-             | defaultt dospuntos{::};
+             | id dospuntos {::}; //defaultt dospuntos{::};
 
 
 
@@ -198,12 +172,10 @@ IF_LISTA::= iff aparentesis E cparentesis BLOQUESENTENCIAS{::}
           | IF_LISTA elsee iff aparentesis E cparentesis BLOQUESENTENCIAS{::};
 
 DECLARACIONES::= id igual E{::}
-                |id LISTACORCHETES igual E {::};
+                |id E igual E {::};
 
 
-
-
-BLOQUESENTENCIAS::= allave  CUERPO cllave{::}
+BLOQUESENTENCIAS::= allave CUERPO cllave{::}
                    |allave cllave{::};
 
 
@@ -226,36 +198,18 @@ E::= resta E:e1 {::} %prec unegativo
     |E:e1 diferente:s E:e2{::} 
     |E:cond interrogacion E:vdd dospuntos E:fake {::}
     |E coma E {::}
+    |E igual E {::}
     |E coma {::}
     |coma E {::}
     |acorchete E ccorchete {::}
     |acorchete E ccorchete E {::}
     |aparentesis E cparentesis{::}
-    |aparentesis E cparentesis E{::}
-    |FUNCIONESLENGUAJE{::}
-    |listt E {::}
-    |matrix E {::}
-    |arrayy E {::}
+    |aparentesis E cparentesis E{::}    
     |ERnumero{::}
     |ERdecimal{::}
     |cadena{::}
-    |id{::}
+    |id{::}    
     |id E {::}
     |truee{::}
     |falsee{::}
     |nulo{::};
-
-FUNCIONESLENGUAJE::= c aparentesis E cparentesis{::}
-                    |typeoff E{::}
-                    |lengthh E{::}
-                    |nCol E{::}
-                    |nrow E{::}
-                    |stringlength E{::}
-                    |removee E{::} //2 parametros
-                    |tolowercase E{::}
-                    |touppercase E{::}
-                    |trunkk E{::}
-                    |roundd E{::}
-                    |meann E{::}
-                    |mediann E{::}
-                    |modee E{::};

@@ -18,7 +18,7 @@ public class OLC2_p1_1s2020_201408486 {
         generarCompilador();
         
         GUI vista = new GUI();
-        vista.setVisible(true);        
+        vista.setVisible(true);
     }
     
      private static void generarCompilador() {

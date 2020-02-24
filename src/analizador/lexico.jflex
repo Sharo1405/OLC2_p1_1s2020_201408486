@@ -29,9 +29,8 @@ elsee = "else"
 switchh = "switch"
 casee = "case"
 breakk = "break"
-defaultt = "default"
+//defaultt = "default"
 whilee = "while"
-print = "print"
 doo = "do"
 forr = "for"
 truee = "true"
@@ -40,28 +39,29 @@ inn = "in"
 continuee = "continue"
 returnn = "return"
 functionn = "function"
-c = "c"
-listt = "list"
-typeoff = "typeof"
-lengthh = "length"
-nCol = "ncol"
-arrayy = "array"
-nrow = "nrow"
-stringlength = "stringlength"
-removee = "remove"
-tolowercase = "tolowercase"
-touppercase = "touppercase"
-trunkk = "trunk"
-roundd = "round"
-meann = "mean"
-mediann = "median"
-modee = "mode"
+//print = "print"
+//c = "c"
+//listt = "list"
+//typeoff = "typeof"
+//lengthh = "length"
+//nCol = "ncol"
+//arrayy = "array"
+//nrow = "nrow"
+//stringlength = "stringlength"
+//removee = "remove"
+//tolowercase = "tolowercase"
+//touppercase = "touppercase"
+//trunkk = "trunk"
+//roundd = "round"
+//meann = "mean"
+//mediann = "median"
+//modee = "mode"
 nulo = "null"
-matrix = "matrix"
-pie = "pie"
-barplot = "barplot"
-plot = "plot"
-hist = "hist"
+//matrix = "matrix"
+//pie = "pie"
+//barplot = "barplot"
+//plot = "plot"
+//hist = "hist"
 
 
 
@@ -109,8 +109,8 @@ enter   = [\ \n]
 
 %state comentariosimple
 %state comentariomultiple
-%state cadenaEscapes
-%state cadenaEscapes2
+%state stringSecuenciasEscapes
+%state stringSecuenciasEscapes2
 %%
 
 <YYINITIAL> "#*"                       {yybegin(comentariomultiple);}
@@ -127,18 +127,18 @@ enter   = [\ \n]
 
 
 //-----------------------------------------------------------------------------------------------------------------------------------------------
-<YYINITIAL> "\""                {yybegin(cadenaEscapes); ERcadena ="";}
-<cadenaEscapes> "\\"            {yybegin(cadenaEscapes2);}
-<cadenaEscapes> "\""            {System.out.println(ERcadena); yybegin(YYINITIAL); 
+<YYINITIAL> "\""                {yybegin(stringSecuenciasEscapes); ERcadena ="";}
+<stringSecuenciasEscapes> "\\"            {yybegin(stringSecuenciasEscapes2);}
+<stringSecuenciasEscapes> "\""            {System.out.println(ERcadena); yybegin(YYINITIAL); 
                                 return new Symbol(sym.cadena, yyline, yycolumn, ERcadena);}
-<cadenaEscapes> .               {ERcadena += yytext();}
+<stringSecuenciasEscapes> .               {ERcadena += yytext();}
 
-<cadenaEscapes2>{   
-    "\""                        {System.out.println("\""); ERcadena += "\""; yybegin(cadenaEscapes);}    
-    "n"                         {System.out.println("\n"); ERcadena += "\n"; yybegin(cadenaEscapes);}
-    "\\"                        {System.out.println("\\"); ERcadena += "\\" ; yybegin(cadenaEscapes);}  
-    "r"                       {System.out.println("\r"); ERcadena += "\r"; yybegin(cadenaEscapes);}
-    "t"                       {System.out.println("\t"); ERcadena += "\t"; yybegin(cadenaEscapes);}
+<stringSecuenciasEscapes2>{   
+    "\""                        {System.out.println("\""); ERcadena += "\""; yybegin(stringSecuenciasEscapes);}    
+    "n"                         {System.out.println("\n"); ERcadena += "\n"; yybegin(stringSecuenciasEscapes);}
+    "\\"                        {System.out.println("\\"); ERcadena += "\\" ; yybegin(stringSecuenciasEscapes);}  
+    "r"                       {System.out.println("\r"); ERcadena += "\r"; yybegin(stringSecuenciasEscapes);}
+    "t"                       {System.out.println("\t"); ERcadena += "\t"; yybegin(stringSecuenciasEscapes);}
 }
 
 
@@ -153,12 +153,12 @@ enter   = [\ \n]
                                 return new Symbol(sym.casee, yyline, yycolumn, yytext()); } 
 <YYINITIAL> {breakk}              {  System.out.println("Reconocido: <<"+yytext()+">>, breakk");
                                 return new Symbol(sym.breakk, yyline, yycolumn, yytext()); } 
-<YYINITIAL> {defaultt}              {  System.out.println("Reconocido: <<"+yytext()+">>, defaultt");
-                                return new Symbol(sym.defaultt, yyline, yycolumn, yytext()); } 
+/*<YYINITIAL> {defaultt}              {  System.out.println("Reconocido: <<"+yytext()+">>, defaultt");
+                                return new Symbol(sym.defaultt, yyline, yycolumn, yytext()); } */
 <YYINITIAL> {whilee}              {  System.out.println("Reconocido: <<"+yytext()+">>, whilee");
                                 return new Symbol(sym.whilee, yyline, yycolumn, yytext()); } 
-<YYINITIAL> {print}              {  System.out.println("Reconocido: <<"+yytext()+">>, print");
-                                return new Symbol(sym.print, yyline, yycolumn, yytext()); } 
+/*<YYINITIAL> {print}              {  System.out.println("Reconocido: <<"+yytext()+">>, print");
+                                return new Symbol(sym.print, yyline, yycolumn, yytext()); }*/ 
 <YYINITIAL> {doo}              {  System.out.println("Reconocido: <<"+yytext()+">>, doo");
                                 return new Symbol(sym.doo, yyline, yycolumn, yytext()); }
 <YYINITIAL> {forr}              {  System.out.println("Reconocido: <<"+yytext()+">>, forr");
@@ -175,7 +175,7 @@ enter   = [\ \n]
                                 return new Symbol(sym.returnn, yyline, yycolumn, yytext()); }
 <YYINITIAL> {functionn}              {  System.out.println("Reconocido: <<"+yytext()+">>, functionn");
                                 return new Symbol(sym.functionn, yyline, yycolumn, yytext()); }
-<YYINITIAL> {c}              {  System.out.println("Reconocido: <<"+yytext()+">>, c");
+/*<YYINITIAL> {c}              {  System.out.println("Reconocido: <<"+yytext()+">>, c");
                                 return new Symbol(sym.c, yyline, yycolumn, yytext()); }
 <YYINITIAL> {listt}              {  System.out.println("Reconocido: <<"+yytext()+">>, listt");
                                 return new Symbol(sym.listt, yyline, yycolumn, yytext()); }
@@ -206,10 +206,10 @@ enter   = [\ \n]
 <YYINITIAL> {mediann}            {  System.out.println("Reconocido: <<"+yytext()+">>, mediann");
                                 return new Symbol(sym.mediann, yyline, yycolumn, yytext()); }
 <YYINITIAL> {modee}              {  System.out.println("Reconocido: <<"+yytext()+">>, modee");
-                                return new Symbol(sym.modee, yyline, yycolumn, yytext()); }
+                                return new Symbol(sym.modee, yyline, yycolumn, yytext()); }*/
 <YYINITIAL> {nulo}              {  System.out.println("Reconocido: <<"+yytext()+">>, nulo");
                                 return new Symbol(sym.nulo, yyline, yycolumn, yytext()); }
-<YYINITIAL> {matrix}            {  System.out.println("Reconocido: <<"+yytext()+">>, matrix");
+/*<YYINITIAL> {matrix}            {  System.out.println("Reconocido: <<"+yytext()+">>, matrix");
                                 return new Symbol(sym.matrix, yyline, yycolumn, yytext()); }
 <YYINITIAL> {pie}              {  System.out.println("Reconocido: <<"+yytext()+">>, pie");
                                 return new Symbol(sym.pie, yyline, yycolumn, yytext()); }
@@ -218,7 +218,7 @@ enter   = [\ \n]
 <YYINITIAL> {plot}              {  System.out.println("Reconocido: <<"+yytext()+">>, plot");
                                 return new Symbol(sym.plot, yyline, yycolumn, yytext()); }
 <YYINITIAL> {hist}              {  System.out.println("Reconocido: <<"+yytext()+">>, hist");
-                                return new Symbol(sym.hist, yyline, yycolumn, yytext()); }
+                                return new Symbol(sym.hist, yyline, yycolumn, yytext()); }*/
 
 
 //signos--------------------------------------------------------------------------------------------------------------

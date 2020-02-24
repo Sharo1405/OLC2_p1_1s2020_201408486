@@ -297,7 +297,8 @@ public class GUI extends javax.swing.JFrame {
         try {
 
             JFileChooser file = new JFileChooser();
-            FileNameExtensionFilter filtro = new FileNameExtensionFilter("FS, GXML", "fs", "gxml");
+            FileNameExtensionFilter filtro = new FileNameExtensionFilter("r"
+                    , "R");
             file.setFileFilter(filtro);
             file.setDialogTitle("Abriendo Archivo");
             file.setFileSelectionMode(0);

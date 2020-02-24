@@ -179,7 +179,7 @@ ERIdFIn                                 = ({ERIdInicio}|{num})
 ERCadena              = ("\"" ({finalCadenaDoble})* "\"")   //= ("\"" ~"\"")|("'" ~"'")
    
 CMultilinea          = "#*" 
-CMultilineaFin       = "#*/"
+CMultilineaFin       = "*#"
 CommentUniLinea      = "#"
    
 ERnumero             = ({num}+) //([0-9]+|[0-9]+"."[0-9]+)
