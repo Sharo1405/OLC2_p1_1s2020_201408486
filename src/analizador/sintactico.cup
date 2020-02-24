@@ -77,9 +77,9 @@ nonterminal GRAFICAS ;
 
 
 //PRECEDENCIA------------------------------------------------------------------------------------------------------------------
+precedence left coma;
 precedence left c, typeoff, lengthh, nCol, nrow, stringlength, removee,tolowercase, touppercase, trunkk, roundd, meann, mediann, modee;                   
 precedence left id;
-precedence left coma;
 precedence right acorchete, aparentesis;
 precedence left aparentesis, acorchete;
 precedence right unegativo, upositivo;
@@ -138,20 +138,7 @@ LISTACORCHETES::= E {::};
                  |acorchete E ccorchete{::};*/
 
 
-FUNCIONESLENGUAJE::= c E{::}
-                    |typeoff E{::}
-                    |lengthh E{::}
-                    |nCol E{::}
-                    |nrow E{::}
-                    |stringlength E{::}
-                    |removee E{::} //2 parametros
-                    |tolowercase E{::}
-                    |touppercase E{::}
-                    |trunkk E{::}
-                    |roundd E{::}
-                    |meann E{::}
-                    |mediann E{::}
-                    |modee E{::};
+
 
 
 IMPRIMIR::= print aparentesis E cparentesis{::};
@@ -257,3 +244,18 @@ E::= resta E:e1 {::} %prec unegativo
     |truee{::}
     |falsee{::}
     |nulo{::};
+
+FUNCIONESLENGUAJE::= c aparentesis E cparentesis{::}
+                    |typeoff E{::}
+                    |lengthh E{::}
+                    |nCol E{::}
+                    |nrow E{::}
+                    |stringlength E{::}
+                    |removee E{::} //2 parametros
+                    |tolowercase E{::}
+                    |touppercase E{::}
+                    |trunkk E{::}
+                    |roundd E{::}
+                    |meann E{::}
+                    |mediann E{::}
+                    |modee E{::};

@@ -1042,7 +1042,7 @@ public class Lexico implements java_cup.runtime.Scanner {
             }
           case 119: break;
           case 35: 
-            { System.out.println("\t"); ERcadena += "\r"; yybegin(cadenaEscapes);
+            { System.out.println("\t"); ERcadena += "\t"; yybegin(cadenaEscapes);
             }
           case 120: break;
           case 36: 
