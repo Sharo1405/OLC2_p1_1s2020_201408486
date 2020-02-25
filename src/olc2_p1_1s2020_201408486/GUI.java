@@ -5,7 +5,6 @@
  */
 package olc2_p1_1s2020_201408486;
 
-
 import java.awt.Color;
 import java.awt.Desktop;
 import java.io.BufferedReader;
@@ -27,6 +26,8 @@ import org.fife.ui.rtextarea.*;
 import analizador.*;
 import Errores.*;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -34,9 +35,7 @@ import java.util.ArrayList;
  */
 public class GUI extends javax.swing.JFrame {
 
-    
     //public static RSyntaxTextArea textEntrada = new RSyntaxTextArea(20, 60);
-
     public String nombrePestania = "";
 
     /**
@@ -297,8 +296,8 @@ public class GUI extends javax.swing.JFrame {
         try {
 
             JFileChooser file = new JFileChooser();
-            FileNameExtensionFilter filtro = new FileNameExtensionFilter("r"
-                    , "R");
+            FileNameExtensionFilter filtro = new FileNameExtensionFilter("r",
+                     "R");
             file.setFileFilter(filtro);
             file.setDialogTitle("Abriendo Archivo");
             file.setFileSelectionMode(0);
@@ -348,8 +347,7 @@ public class GUI extends javax.swing.JFrame {
         jTextArea1.setText(concatenacion);
     }
 
-    
-    public void EscribirHTML(ArrayList<ErrorE> errorLexico, ArrayList<ErrorE> errorSintactico){//, LinkedList<Traduccion> errores) {
+    public void EscribirHTML(ArrayList<ErrorE> errorLexico, ArrayList<ErrorE> errorSintactico) {//, LinkedList<Traduccion> errores) {
 
         StringBuilder paraHTML = new StringBuilder();
         paraHTML.append("<HTML> \n <HEAD> \n <TITLE> REPORTE DE ERRORES GXML</TITLE> \n </HEAD> \n <BODY> \n");
@@ -410,13 +408,12 @@ public class GUI extends javax.swing.JFrame {
             }
         }
     }
-    
-    
+
 
     private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem5ActionPerformed
         //ANALIZAR EL FS
         int entro = 0;
-        System.out.println("Inicia la evaluacion de cadenaFS...");
+        System.out.println("Inicia la evaluacion de cadena...");
         JPanel pan = (JPanel) jTabbedPane1.getSelectedComponent();
         //LinkedList<ErrorFS> errorSemanti = new LinkedList<>();
         RTextScrollPane scrolito = (RTextScrollPane) pan.getComponent(0);
@@ -441,11 +438,9 @@ public class GUI extends javax.swing.JFrame {
             ex.printStackTrace();
             // Logger.getLogger(GUI.class.getName()).log(Level.SEVERE, null, ex);
         }
-        System.out.println("Finaliza la evalucion de la cadenaFS....");        
+        System.out.println("Finaliza la evalucion de la cadena....");
     }//GEN-LAST:event_jMenuItem5ActionPerformed
-    
 
-    
 
     private void jMenuItem7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem7ActionPerformed
         //NUEVA PESTAÑA
@@ -605,6 +600,32 @@ public class GUI extends javax.swing.JFrame {
     private void jMenuItem11ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem11ActionPerformed
         // TODO add your handling code here:
         //ARBOL DE ANALISIS SINTACTICO
+
+        //ANALIZAR EL FS
+        int entro = 0;
+        System.out.println("Inicia la evaluacion de cadena...");
+        JPanel pan = (JPanel) jTabbedPane1.getSelectedComponent();
+        RTextScrollPane scrolito = (RTextScrollPane) pan.getComponent(0);
+        RSyntaxTextArea codigooriginal = (RSyntaxTextArea) scrolito.getViewport().getComponent(0);
+        Reader leyendo = new StringReader(codigooriginal.getText());
+        ArbolGrafico.Lexico scanner = new ArbolGrafico.Lexico(leyendo);
+        ArbolGrafico.Sintactico parser = new ArbolGrafico.Sintactico(scanner);
+        try {
+            parser.parse();
+            ArbolGrafico.EscribirDot e = new ArbolGrafico.EscribirDot();
+            e.EscribirGrafica(parser.raiz);
+            try {
+                File archivo = new File("C:\\Users\\sharolin\\Desktop\\ReporteArbol\\arbol.png");
+                if (archivo.exists()) {
+                    Desktop.getDesktop().open(archivo);
+                }
+            } catch (IOException ex) {
+                System.out.println("NO SE PUEDE ABRIR EL DOT ALGO SALIO MAL...!!!");
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        System.out.println("Finaliza la evalucion de la cadena....");
     }//GEN-LAST:event_jMenuItem11ActionPerformed
 
     private void jMenuItem13ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem13ActionPerformed

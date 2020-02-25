@@ -77,20 +77,19 @@ nonterminal E;
 
 //PRECEDENCIA------------------------------------------------------------------------------------------------------------------
 precedence left coma;
-precedence left id;
-precedence right acorchete, aparentesis;
-precedence left aparentesis, acorchete;
-precedence right unegativo, upositivo;
-precedence right not;
-precedence left potencia;
-precedence left por,division, modulo;
-precedence left suma, resta;
-precedence left mayorq, menorq, menorigualq, mayorigualq;
-precedence left igualigual, diferente;
-precedence left and;
+precedence right interrogacion, dospuntos;
 precedence left or;
-precedence left interrogacion, dospuntos;
+precedence left and;
+precedence left igualigual, diferente;
+precedence left mayorq, menorq, menorigualq, mayorigualq;
+precedence right unegativo, upositivo;
+precedence left suma, resta;
+precedence left por,division, modulo;
+precedence left potencia;
+precedence right not;
+precedence right acorchete, aparentesis;
 precedence left igual;
+precedence left id;
 //------------------------------------------------------------------------------------------------------------------------------
 
 

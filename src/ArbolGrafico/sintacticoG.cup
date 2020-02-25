@@ -1,0 +1,606 @@
+package ArbolGrafico;
+
+import java.util.LinkedList;
+import java.util.ArrayList;
+import java_cup.runtime.*;
+import Errores.*;
+
+parser code
+{://Codigo de acciones
+  //Codigo visible
+    
+    public Nodo raiz;
+
+    public void syntax_error(Symbol s)
+    {        
+        String lexema = s.value.toString();
+        int columna = s.right;
+        int fila = s.left;
+        
+        System.out.println("!!!!!!!---- Error Sintactico Recuperado ----!!!!!!!");
+        System.out.println("\t\tLexema: "+lexema);
+        System.out.println("\t\tFila: "+fila);
+        System.out.println("\t\tColumna: "+columna);
+
+        String aux = "Error Sintactico Recuperado: " + "\t\tLexema: "+lexema + " \t\tFila: "+fila +" \t\tColumna: "+columna;
+        //errorSintactico.add(new ErrorE(aux));
+    }
+
+   
+    public void unrecovered_syntax_error(Symbol s) throws java.lang.Exception
+    {
+        String lexema = s.value.toString();
+        int columna = s.right;
+        int fila = s.left;
+        
+        System.err.println("Error caracter no esperado");
+        System.err.println(s);
+        System.out.println("!!!!!!! Error Sintactico, Panic Mode!!!!!!!");
+        System.out.println("\t\tLexema: "+lexema);
+        System.out.println("\t\tFila: "+fila);
+        System.out.println("\t\tColumna: "+columna);  
+        
+        String aux1 = "Error Sintactico, Modo Panico: " + "\t\tLexema: "+lexema + " \t\tFila: "+fila +" \t\tColumna: "+columna;
+        //errorSintactico.add(new ErrorE(aux1));
+    }
+:}
+
+action code
+{://Codigo de acciones
+      
+:}
+
+
+terminal String iff, elsee, switchh, casee, breakk, whilee,forr, doo, truee, falsee, inn, continuee, returnn, functionn, nulo;
+//terminal String c, listt, typeoff, lengthh, nCol, arrayy, nrow, stringlength, removee, tolowercase, touppercase, trunkk, roundd;
+//terminal String meann, mediann, modee, matrix, pie, barplot, plot, hist, print, default;
+
+terminal String allave, cllave, acorchete, ccorchete, aparentesis, cparentesis, igual, suma, resta, por, division;
+terminal String potencia, modulo, mayorq, menorq, mayorigualq, menorigualq, igualigual, diferente, interrogacion;
+terminal String and, or, not, dospuntos, puntoycoma, coma, flecha, unegativo, upositivo;
+terminal String cadena, ERnumero, ERdecimal, id;
+
+
+nonterminal Nodo S;
+nonterminal Nodo CUERPO;
+nonterminal Nodo SENTENCIA;
+nonterminal Nodo BLOQUESENTENCIAS;
+nonterminal Nodo DECLARACIONES, IFSTATEMENT, IF_LISTA;
+nonterminal Nodo SWITCHH, SWITCHBLOQUESUPS, SWITCHBLOQUES, SWITCHCASEDEFAULTS, SWITCHCASEDEFAULT;
+nonterminal Nodo WHILEE, DOWHILE;
+nonterminal Nodo SENTENCIATRANSFERENCIA, FUNCIONESMETODOS;
+nonterminal Nodo FORR, INICIALIZACION;
+nonterminal Nodo LLAMADASFUNCIONES;
+nonterminal Nodo E;
+
+
+//PRECEDENCIA------------------------------------------------------------------------------------------------------------------
+precedence left coma;
+precedence right interrogacion, dospuntos;
+precedence left or;
+precedence left and;
+precedence left igualigual, diferente;
+precedence left mayorq, menorq, menorigualq, mayorigualq;
+precedence right unegativo, upositivo;
+precedence left suma, resta;
+precedence left por,division, modulo;
+precedence left potencia;
+precedence right not;
+precedence right acorchete, aparentesis;
+precedence left igual;
+precedence left id;
+//------------------------------------------------------------------------------------------------------------------------------
+
+
+
+start with S;
+ 
+S::= CUERPO:raiz{:
+        parser.raiz=raiz;
+    :};
+
+CUERPO::= CUERPO:lista SENTENCIA:sentencia 
+          {:
+            lista.hijos.add(sentencia);
+            RESULT = lista;
+         :}
+         |SENTENCIA:sentencia 
+          {:
+            Nodo lista = new Nodo("sentencia");
+            lista.hijos.add(sentencia);
+            RESULT = lista;
+         :};
+
+SENTENCIA::= DECLARACIONES:sentencia
+        {:
+            RESULT = sentencia;
+        :}
+       | DECLARACIONES:sentencia puntoycoma
+        {:
+            RESULT = sentencia;
+        :}
+       | IFSTATEMENT:sentencia
+        {:
+            RESULT = sentencia;
+        :}
+       | SWITCHH:sentencia
+        {:
+            RESULT = sentencia;
+        :}
+       | WHILEE:sentencia
+        {:
+            RESULT = sentencia;
+        :}
+       | DOWHILE:sentencia puntoycoma
+        {:
+            RESULT = sentencia;
+        :}
+       | DOWHILE:sentencia
+        {:
+            RESULT = sentencia;
+        :}
+       | FORR:sentencia
+        {:
+            RESULT = sentencia;
+        :}
+       | SENTENCIATRANSFERENCIA:sentencia puntoycoma
+        {:
+            RESULT = sentencia;
+        :}
+       | SENTENCIATRANSFERENCIA:sentencia
+        {:
+            RESULT = sentencia;
+        :}
+       | FUNCIONESMETODOS:sentencia
+        {:
+            RESULT = sentencia;
+        :}
+       | LLAMADASFUNCIONES:sentencia
+        {:
+            RESULT = sentencia;
+        :}
+       | LLAMADASFUNCIONES:sentencia puntoycoma 
+        {:
+            RESULT = sentencia;
+        :};
+         
+
+
+LLAMADASFUNCIONES::= id:id aparentesis E:e cparentesis{:
+                        Nodo padre = new Nodo("LLAMADASFUNCIONES");
+                        Nodo hijo_1 = new Nodo(id);
+                        padre.hijos.add(hijo_1);
+                        padre.hijos.add(e);
+                        RESULT =  padre;
+                    :} 
+                   | id:id aparentesis cparentesis{:
+                        Nodo padre = new Nodo("LLAMADASFUNCIONES");
+                        Nodo hijo_1 = new Nodo(id);
+                        padre.hijos.add(hijo_1);
+                        RESULT =  padre;
+                    :};
+
+
+
+FUNCIONESMETODOS::= id:id igual functionn aparentesis cparentesis BLOQUESENTENCIAS:ee{:
+                        Nodo padre = new Nodo("FUNCIONESMETODOS");
+                        Nodo hijo_1 = new Nodo(id);
+                        padre.hijos.add(hijo_1);
+                        padre.hijos.add(ee);
+                        RESULT =  padre;
+                    :}
+                   |id:id igual functionn E:e BLOQUESENTENCIAS:ee{:
+                        Nodo padre = new Nodo("FUNCIONESMETODOS");
+                        Nodo hijo_1 = new Nodo(id);
+                        padre.hijos.add(hijo_1);    
+                        padre.hijos.add(e);
+                        padre.hijos.add(ee);
+                        RESULT =  padre;
+                    :}
+                   |id:id igual aparentesis cparentesis flecha BLOQUESENTENCIAS:ee{:
+                        Nodo padre = new Nodo("FUNCIONESMETODOS");
+                        Nodo hijo_1 = new Nodo(id);
+                        padre.hijos.add(hijo_1);
+                        padre.hijos.add(ee);
+                        RESULT =  padre;
+                    :}
+                   |id:id igual E:e flecha BLOQUESENTENCIAS:ee{:
+                        Nodo padre = new Nodo("FUNCIONESMETODOS");
+                        Nodo hijo_1 = new Nodo(id);
+                        padre.hijos.add(hijo_1);
+                        padre.hijos.add(e);
+                        padre.hijos.add(ee);
+                        RESULT =  padre;
+                    :};
+
+
+FORR::= forr aparentesis INICIALIZACION:ini cparentesis BLOQUESENTENCIAS:e{:
+            Nodo padre = new Nodo("FORR");
+            padre.hijos.add(ini);
+            padre.hijos.add(e);
+            RESULT =  padre;
+        :};
+
+
+INICIALIZACION::= id:id inn E:e {:
+                    Nodo padre = new Nodo("INICIALIZACION");
+                    Nodo hijo_1 = new Nodo(id);
+                    padre.hijos.add(hijo_1);
+                    padre.hijos.add(e);
+                    RESULT =  padre;
+                :};
+                 
+
+
+WHILEE::= whilee aparentesis E:ee cparentesis BLOQUESENTENCIAS:sentencias{:
+                Nodo padre = new Nodo("While");
+                padre.hijos.add(ee);
+                padre.hijos.add(sentencias);
+                RESULT =  padre;
+          :};
+
+DOWHILE::= doo BLOQUESENTENCIAS:sentencias whilee aparentesis E:ee cparentesis{:
+                Nodo padre = new Nodo("DoWhile");
+                padre.hijos.add(ee);
+                padre.hijos.add(sentencias);
+                RESULT =  padre;
+          :};
+
+
+
+
+
+SWITCHH::= switchh aparentesis E:ee cparentesis allave SWITCHBLOQUESUPS:cases SWITCHCASEDEFAULTS:cases2 cllave{:
+                Nodo padre = new Nodo("Switch");
+                padre.hijos.add(ee);
+                padre.hijos.add(cases);
+                padre.hijos.add(cases2);
+                RESULT =  padre;
+          :}
+          | switchh aparentesis E:ee cparentesis allave SWITCHBLOQUESUPS:cases cllave{:
+                Nodo padre = new Nodo("Switch");
+                padre.hijos.add(ee);
+                padre.hijos.add(cases);
+                RESULT =  padre;
+          :}
+          | switchh aparentesis E:ee cparentesis allave SWITCHCASEDEFAULTS:cases cllave{:
+                Nodo padre = new Nodo("Switch");
+                padre.hijos.add(ee);
+                padre.hijos.add(cases);
+                RESULT =  padre;
+          :}
+          | switchh aparentesis E:ee cparentesis allave cllave{:
+                Nodo padre = new Nodo("Switch");
+                padre.hijos.add(ee);
+                RESULT =  padre;
+            :};
+
+
+
+SWITCHBLOQUESUPS::= SWITCHBLOQUES:sentencia{:
+                        Nodo lista = new Nodo("sentencias");
+                        lista.hijos.add(sentencia);
+                        RESULT = lista;
+                    :}
+                  | SWITCHBLOQUESUPS:lista SWITCHBLOQUES:sentencia{:
+                        lista.hijos.add(sentencia);
+                        RESULT = lista;
+                    :};
+
+SWITCHBLOQUES::= SWITCHCASEDEFAULTS:casesdefaults CUERPO:cuerpo{:
+                    Nodo padre = new Nodo("SENTENCIATRANSFERENCIA");
+                    padre.hijos.add(casesdefaults);
+                    padre.hijos.add(cuerpo);
+                    RESULT = padre;
+                :};
+
+
+
+SENTENCIATRANSFERENCIA::= continuee{:
+                            Nodo padre = new Nodo("SENTENCIATRANSFERENCIA");
+                            Nodo hijo_1 = new Nodo("continue");
+                            padre.hijos.add(hijo_1);
+                            RESULT = padre;
+                        :}
+                        | breakk{:
+                            Nodo padre = new Nodo("SENTENCIATRANSFERENCIA");
+                            Nodo hijo_1 = new Nodo("break");
+                            padre.hijos.add(hijo_1);
+                            RESULT = padre;
+                        :}
+                        | returnn{:
+                            Nodo padre = new Nodo("SENTENCIATRANSFERENCIA");
+                            Nodo hijo_1 = new Nodo("return");
+                            padre.hijos.add(hijo_1);
+                            RESULT = padre;
+                        :}
+                        | returnn E:e1{:
+                            Nodo padre = new Nodo("SENTENCIATRANSFERENCIA");
+                            Nodo hijo_1 = new Nodo("return");
+                            padre.hijos.add(hijo_1);
+                            padre.hijos.add(e1);
+                            RESULT = padre;
+                        :};
+
+SWITCHCASEDEFAULTS::= SWITCHCASEDEFAULTS:lista SWITCHCASEDEFAULT:sentencia{:
+                        lista.hijos.add(sentencia);
+                        RESULT = lista;
+                :}
+              | SWITCHCASEDEFAULT:sentencia{:
+                    Nodo lista = new Nodo("SWITCHCASEDEFAULTS");
+                    lista.hijos.add(sentencia);
+                    RESULT = lista;
+                :};
+
+SWITCHCASEDEFAULT::= casee E:e1 dospuntos{:
+                Nodo padre = new Nodo("Case");
+                padre.hijos.add(e1);
+                RESULT = padre;
+            :}
+             | id:id dospuntos {:
+                Nodo padre = new Nodo("Default");
+                Nodo hijo_1 = new Nodo(id);
+                padre.hijos.add(hijo_1);
+                RESULT = padre;
+            :}; //defaultt dospuntos{::};
+
+
+
+
+IFSTATEMENT::= IF_LISTA:ifff  elsee  BLOQUESENTENCIAS:bloque{:
+                    Nodo padre = new Nodo("LISTA IF ELSE");
+                    Nodo hijo = new Nodo("else");
+                    padre.hijos.add(hijo);
+                    padre.hijos.add(ifff);
+                    padre.hijos.add(bloque);
+                    RESULT = padre;
+                :}
+             | IF_LISTA:ifff{:
+                    Nodo padre = new Nodo("LISTA IF");
+                    padre.hijos.add(ifff);
+                    RESULT = padre;
+                :};
+
+IF_LISTA::= iff aparentesis E:e1 cparentesis BLOQUESENTENCIAS:bloque{:
+                Nodo padre = new Nodo("IF ELSE");
+                Nodo hijo = new Nodo("if");
+                padre.hijos.add(hijo);
+                padre.hijos.add(e1);
+                padre.hijos.add(bloque);
+                RESULT = padre;
+            :}
+          | IF_LISTA:lista elsee iff aparentesis E:e1 cparentesis BLOQUESENTENCIAS:bloque{:                
+                Nodo hijo = new Nodo("else if");
+                lista.hijos.add(hijo);
+                lista.hijos.add(e1);
+                lista.hijos.add(bloque);
+                RESULT = lista;
+            :};
+
+
+
+DECLARACIONES::= id:id igual E:e1{:
+                    Nodo padre = new Nodo("Declaracion");
+                    Nodo hijo_1 = new Nodo(id);
+                    padre.hijos.add(hijo_1);
+                    padre.hijos.add(e1);
+                    RESULT = padre;
+                :}
+                |id:id E:e1 igual E:e2 {:    
+                    Nodo padre = new Nodo("ModificadorValor");
+                    Nodo hijo_1 = new Nodo(id);
+                    padre.hijos.add(hijo_1);
+                    padre.hijos.add(e1);
+                    padre.hijos.add(e2);
+                    RESULT = padre;
+                :};
+
+
+BLOQUESENTENCIAS::= allave CUERPO:cuerpo cllave{:
+                        Nodo padre = new Nodo("Bloquesentencias");
+                        padre.hijos.add(cuerpo);
+                        RESULT = padre;
+                    :}
+                   |allave cllave{:
+                        Nodo padre = new Nodo("Bloquesentencias");
+                        RESULT = padre;
+                    :};
+
+
+E::= resta E:e1 
+    {:
+        Nodo padre = new Nodo("negativo");
+        padre.hijos.add(e1);
+        RESULT=padre;
+    :} %prec unegativo 
+    |suma E:e1 {:
+        Nodo padre = new Nodo("positivo");
+        padre.hijos.add(e1);
+        RESULT=padre;
+    :} %prec upositivo
+    |not E:e1{:
+        Nodo padre = new Nodo("!");
+        padre.hijos.add(e1);
+        RESULT=padre;
+    :}
+    |E:e1 or:s E:e2{:
+        Nodo padre = new Nodo("|");
+        padre.hijos.add(e1);
+        padre.hijos.add(e2);
+        RESULT=padre;
+    :}
+    |E:e1 and:s E:e2{:
+        Nodo padre = new Nodo("&");
+        padre.hijos.add(e1);
+        padre.hijos.add(e2);
+        RESULT=padre;
+    :}
+    |E:e1 suma:s E:e2 {:
+        Nodo padre = new Nodo("+");
+        padre.hijos.add(e1);
+        padre.hijos.add(e2);
+        RESULT=padre;
+    :}
+    |E:e1 resta:s E:e2 {:
+        Nodo padre = new Nodo("-");
+        padre.hijos.add(e1);
+        padre.hijos.add(e2);
+        RESULT=padre;
+    :}
+    |E:e1 por:s E:e2 {:
+        Nodo padre = new Nodo("*");
+        padre.hijos.add(e1);
+        padre.hijos.add(e2);
+        RESULT=padre;
+    :}
+    |E:e1 division:s E:e2 {:
+        Nodo padre = new Nodo("/");
+        padre.hijos.add(e1);
+        padre.hijos.add(e2);
+        RESULT=padre;
+    :}
+    |E:e1 potencia:s E:e2 {:
+        Nodo padre = new Nodo("^");
+        padre.hijos.add(e1);
+        padre.hijos.add(e2);
+        RESULT=padre;
+    :}
+    |E:e1 modulo E:e2 {:
+        Nodo padre = new Nodo("%");
+        padre.hijos.add(e1);
+        padre.hijos.add(e2);
+        RESULT=padre;
+    :}
+    |E:e1 mayorq:s E:e2{:
+        Nodo padre = new Nodo(">");
+        padre.hijos.add(e1);
+        padre.hijos.add(e2);
+        RESULT=padre;
+    :}
+    |E:e1 menorq:s E:e2{:
+        Nodo padre = new Nodo("<");
+        padre.hijos.add(e1);
+        padre.hijos.add(e2);
+        RESULT=padre;
+    :}
+    |E:e1 mayorigualq:s E:e2{:
+        Nodo padre = new Nodo(">=");
+        padre.hijos.add(e1);
+        padre.hijos.add(e2);
+        RESULT=padre;
+    :}
+    |E:e1 menorigualq:s E:e2{:
+        Nodo padre = new Nodo("<=");
+        padre.hijos.add(e1);
+        padre.hijos.add(e2);
+        RESULT=padre;
+    :}
+    |E:e1 igualigual:s E:e2{:
+        Nodo padre = new Nodo("==");
+        padre.hijos.add(e1);
+        padre.hijos.add(e2);
+        RESULT=padre;
+    :}
+    |E:e1 diferente:s E:e2{:
+        Nodo padre = new Nodo("!=");
+        padre.hijos.add(e1);
+        padre.hijos.add(e2);
+        RESULT=padre;
+    :} 
+    |E:cond interrogacion E:vdd dospuntos E:fake {:
+        Nodo padre = new Nodo("Ternario");
+        padre.hijos.add(cond);
+        padre.hijos.add(vdd);
+        padre.hijos.add(fake);
+        RESULT = padre;
+    :}
+    |E:e1 coma E:e2 {:
+        Nodo padre = new Nodo(",");
+        padre.hijos.add(e1);
+        padre.hijos.add(e2);
+        RESULT=padre;
+    :}
+    |E:e1 igual E:e2 {:
+        Nodo padre = new Nodo("=");
+        padre.hijos.add(e1);
+        padre.hijos.add(e2);
+        RESULT=padre;
+    :}
+    |E:e1 coma {:
+        Nodo padre = new Nodo("e,");
+        padre.hijos.add(e1);
+        RESULT=padre;
+    :}
+    |coma E:e1 {:
+        Nodo padre = new Nodo(",e");
+        padre.hijos.add(e1);
+        RESULT=padre;
+    :}
+    |acorchete E:e ccorchete {:        
+        RESULT=e;
+    :}
+    |acorchete E:e1 ccorchete E:e2 {:
+        Nodo padre = new Nodo("[]");
+        padre.hijos.add(e1);
+        padre.hijos.add(e2);
+        RESULT=padre;
+    :}
+    |aparentesis E:e cparentesis{:
+        RESULT=e;
+    :}
+    |aparentesis E:e1 cparentesis E:e2{:
+        Nodo padre = new Nodo("()");
+        padre.hijos.add(e1);
+        padre.hijos.add(e2);
+        RESULT=padre;
+    :}    
+    |ERnumero:dato{:
+        Nodo padre = new Nodo("Integer");
+        Nodo hijo_1 = new Nodo(dato);
+        padre.hijos.add(hijo_1);
+        RESULT = padre;
+    :}
+    |ERdecimal:dato{:
+        Nodo padre = new Nodo("Numeric");
+        Nodo hijo_1 = new Nodo(dato);
+        padre.hijos.add(hijo_1);
+        RESULT = padre;
+    :}
+    |cadena:dato{:
+        Nodo padre = new Nodo("String");
+        Nodo hijo_1 = new Nodo(dato);
+        padre.hijos.add(hijo_1);
+        RESULT = padre;
+    :}
+    |id:dato{:
+        Nodo padre = new Nodo("ID");
+        Nodo hijo_1 = new Nodo(dato);
+        padre.hijos.add(hijo_1);
+        RESULT = padre;
+    :}    
+    |id:dato E:e1 {:
+        Nodo padre = new Nodo("ID");
+        Nodo hijo_1 = new Nodo(dato);
+        padre.hijos.add(hijo_1);
+        padre.hijos.add(e1);
+        RESULT = padre;
+    :}
+    |truee:dato{:
+        Nodo padre = new Nodo("Boolean");
+        Nodo hijo_1 = new Nodo(dato);
+        padre.hijos.add(hijo_1);
+        RESULT = padre;
+    :}
+    |falsee:dato{:
+        Nodo padre = new Nodo("Boolean");
+        Nodo hijo_1 = new Nodo(dato);
+        padre.hijos.add(hijo_1);
+        RESULT = padre;
+    :}
+    |nulo:dato{:
+        Nodo padre = new Nodo("Boolean");
+        Nodo hijo_1 = new Nodo(dato);
+        padre.hijos.add(hijo_1);
+        RESULT = padre;
+    :};
+
