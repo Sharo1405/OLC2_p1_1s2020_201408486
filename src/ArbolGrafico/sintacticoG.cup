@@ -51,7 +51,7 @@ action code
 :}
 
 
-terminal String iff, elsee, switchh, casee, breakk, whilee,forr, doo, truee, falsee, inn, continuee, returnn, functionn, nulo;
+terminal String iff, elsee, switchh, casee, breakk, whilee,forr, doo, truee, falsee, inn, continuee, returnn, functionn, nulo, defaultt;
 //terminal String c, listt, typeoff, lengthh, nCol, arrayy, nrow, stringlength, removee, tolowercase, touppercase, trunkk, roundd;
 //terminal String meann, mediann, modee, matrix, pie, barplot, plot, hist, print, default;
 
@@ -72,22 +72,24 @@ nonterminal Nodo SENTENCIATRANSFERENCIA, FUNCIONESMETODOS;
 nonterminal Nodo FORR, INICIALIZACION;
 nonterminal Nodo LLAMADASFUNCIONES;
 nonterminal Nodo E;
-
+nonterminal LISTA, CORCHE, PAREN;
 
 //PRECEDENCIA------------------------------------------------------------------------------------------------------------------
+
+precedence left defaultt;
 precedence left coma;
+precedence left igual;
 precedence right interrogacion, dospuntos;
 precedence left or;
 precedence left and;
 precedence left igualigual, diferente;
 precedence left mayorq, menorq, menorigualq, mayorigualq;
-precedence right unegativo, upositivo;
 precedence left suma, resta;
 precedence left por,division, modulo;
 precedence left potencia;
+precedence right unegativo, upositivo;
 precedence right not;
 precedence right acorchete, aparentesis;
-precedence left igual;
 precedence left id;
 //------------------------------------------------------------------------------------------------------------------------------
 
@@ -337,7 +339,7 @@ SWITCHCASEDEFAULT::= casee E:e1 dospuntos{:
                 padre.hijos.add(e1);
                 RESULT = padre;
             :}
-             | id:id dospuntos {:
+             | defaultt:id dospuntos {:
                 Nodo padre = new Nodo("Default");
                 Nodo hijo_1 = new Nodo(id);
                 padre.hijos.add(hijo_1);
@@ -410,11 +412,15 @@ BLOQUESENTENCIAS::= allave CUERPO:cuerpo cllave{:
 E::= resta E:e1 
     {:
         Nodo padre = new Nodo("negativo");
+        Nodo hijo_1 = new Nodo("-");
+        padre.hijos.add(hijo_1);
         padre.hijos.add(e1);
         RESULT=padre;
     :} %prec unegativo 
     |suma E:e1 {:
         Nodo padre = new Nodo("positivo");
+        Nodo hijo_1 = new Nodo("+");
+        padre.hijos.add(hijo_1);
         padre.hijos.add(e1);
         RESULT=padre;
     :} %prec upositivo
@@ -539,21 +545,21 @@ E::= resta E:e1
     |acorchete E:e ccorchete {:        
         RESULT=e;
     :}
-    |acorchete E:e1 ccorchete E:e2 {:
-        Nodo padre = new Nodo("[]");
-        padre.hijos.add(e1);
+    |E:e2 acorchete E:e1 ccorchete {:
+        Nodo padre = new Nodo("[ ]");
         padre.hijos.add(e2);
+        padre.hijos.add(e1);        
         RESULT=padre;
     :}
     |aparentesis E:e cparentesis{:
         RESULT=e;
     :}
-    |aparentesis E:e1 cparentesis E:e2{:
-        Nodo padre = new Nodo("()");
-        padre.hijos.add(e1);
+    |E:e2 aparentesis E:e1 cparentesis {:
+        Nodo padre = new Nodo("( )");
         padre.hijos.add(e2);
+        padre.hijos.add(e1);        
         RESULT=padre;
-    :}    
+    :} 
     |ERnumero:dato{:
         Nodo padre = new Nodo("Integer");
         Nodo hijo_1 = new Nodo(dato);
@@ -598,9 +604,48 @@ E::= resta E:e1
         RESULT = padre;
     :}
     |nulo:dato{:
-        Nodo padre = new Nodo("Boolean");
+        Nodo padre = new Nodo("Nulo");
         Nodo hijo_1 = new Nodo(dato);
         padre.hijos.add(hijo_1);
         RESULT = padre;
+    :}
+    |defaultt:def {:
+        Nodo padre = new Nodo("Default");
+        Nodo hijo_1 = new Nodo(def);
+        padre.hijos.add(hijo_1);
+        RESULT = padre;
     :};
+    /*|LISTA:e{:
+        RESULT=e;
+    :}*/
 
+
+/*LISTA::= LISTA E:e {:
+            lista.hijos.add(e);
+            RESULT = lista;
+        :}
+       | E:e {:
+            Nodo lista = new Nodo("ListaE");
+            lista.hijos.add(e);
+            RESULT = lista;
+        :};*/
+
+/*CORCHE::= CORCHE:lista acorchete E:sentencia ccorchete{:
+            lista.hijos.add(sentencia);
+            RESULT = lista;
+        :}
+         |acorchete E:sentencia ccorchete{:
+            Nodo lista = new Nodo("ListaCorchete");
+            lista.hijos.add(sentencia);
+            RESULT = lista;
+        :};
+
+PAREN::= PAREN:lista aparentesis E:sentencia cparentesis {:
+            lista.hijos.add(sentencia);
+            RESULT = lista;            
+        :}
+        |aparentesis E:sentencia cparentesis {:
+            Nodo lista = new Nodo("ListaParentesis");
+            lista.hijos.add(sentencia);
+            RESULT = lista;
+        :};*/

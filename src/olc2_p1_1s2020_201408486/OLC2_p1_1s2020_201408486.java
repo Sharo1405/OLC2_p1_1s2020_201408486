@@ -16,7 +16,7 @@ public class OLC2_p1_1s2020_201408486 {
      */
     public static void main(String[] args) {        
             
-        //generarCompiladorGraficaArbol();
+        generarCompiladorGraficaArbol();
         
         generarCompilador();
         

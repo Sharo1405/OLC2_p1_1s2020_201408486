@@ -52,9 +52,9 @@ action code
 :}
 
 
-terminal String iff, elsee, switchh, casee, breakk, whilee,forr, doo, truee, falsee, inn, continuee, returnn, functionn, nulo;
+terminal String iff, elsee, switchh, casee, breakk, whilee,forr, doo, truee, falsee, inn, continuee, returnn, functionn, nulo, defaultt;
 //terminal String c, listt, typeoff, lengthh, nCol, arrayy, nrow, stringlength, removee, tolowercase, touppercase, trunkk, roundd;
-//terminal String meann, mediann, modee, matrix, pie, barplot, plot, hist, print, default;
+//terminal String meann, mediann, modee, matrix, pie, barplot, plot, hist, print;
 
 terminal String allave, cllave, acorchete, ccorchete, aparentesis, cparentesis, igual, suma, resta, por, division;
 terminal String potencia, modulo, mayorq, menorq, mayorigualq, menorigualq, igualigual, diferente, interrogacion;
@@ -66,29 +66,31 @@ nonterminal S;
 nonterminal CUERPO;
 nonterminal SENTENCIA;
 nonterminal BLOQUESENTENCIAS;
-nonterminal DECLARACIONES, IFSTATEMENT, IF_LISTA;
-nonterminal SWITCHSTATEMENT, SWITCHBLOCKSTATEMENTGROUPS, SWITCHBLOCKSTATEMENTGRO, SWITCHLABELS, SWITCHLABEL;
+nonterminal DECLARACIONES, IFSSS, IF_LISTA;
+nonterminal SWITCHH, SWITCHBLOQUESUPS, SWITCHBLOQUES, SWITCHCASEDEFAULTS, SWITCHCASEDEFAULT;
 nonterminal WHILEE, DOWHILE;
 nonterminal SENTENCIATRANSFERENCIA, FUNCIONESMETODOS;
 nonterminal FORR, INICIALIZACION;
 nonterminal LLAMADASFUNCIONES;
 nonterminal E;
+nonterminal LISTA, CORCHE, PAREN;
 
 
 //PRECEDENCIA------------------------------------------------------------------------------------------------------------------
+precedence left defaultt;
 precedence left coma;
+precedence left igual;
 precedence right interrogacion, dospuntos;
 precedence left or;
 precedence left and;
 precedence left igualigual, diferente;
 precedence left mayorq, menorq, menorigualq, mayorigualq;
-precedence right unegativo, upositivo;
 precedence left suma, resta;
 precedence left por,division, modulo;
 precedence left potencia;
+precedence right unegativo, upositivo;
 precedence right not;
 precedence right acorchete, aparentesis;
-precedence left igual;
 precedence left id;
 //------------------------------------------------------------------------------------------------------------------------------
 
@@ -103,8 +105,8 @@ CUERPO::= CUERPO SENTENCIA {::}
 
 SENTENCIA::= DECLARACIONES{::}
        | DECLARACIONES puntoycoma {::}
-       | IFSTATEMENT{::}
-       | SWITCHSTATEMENT{::}
+       | IFSSS{::}
+       | SWITCHH{::}
        | WHILEE{::}
        | DOWHILE puntoycoma{::}
        | DOWHILE{::}
@@ -117,14 +119,7 @@ SENTENCIA::= DECLARACIONES{::}
          
 
 
-LLAMADASFUNCIONES::= id aparentesis E cparentesis{::} 
-                   | id aparentesis cparentesis{::};
 
-
-FUNCIONESMETODOS::= id igual functionn aparentesis cparentesis BLOQUESENTENCIAS{::}
-                   |id igual functionn E BLOQUESENTENCIAS{::}
-                   |id igual aparentesis cparentesis flecha BLOQUESENTENCIAS{::}
-                   |id igual E flecha BLOQUESENTENCIAS{::};
 
 FORR::= forr aparentesis INICIALIZACION cparentesis BLOQUESENTENCIAS{::};
 
@@ -140,75 +135,100 @@ DOWHILE::= doo BLOQUESENTENCIAS whilee aparentesis E cparentesis{::};
 
 
 
-SWITCHSTATEMENT::= switchh aparentesis E cparentesis allave SWITCHBLOCKSTATEMENTGROUPS SWITCHLABELS cllave{::}
-                 | switchh aparentesis E cparentesis allave SWITCHBLOCKSTATEMENTGROUPS cllave{::}
-                 | switchh aparentesis E cparentesis allave SWITCHLABELS cllave{::}
-                 | switchh aparentesis E cparentesis allave cllave{::};
+SWITCHH::= switchh aparentesis E cparentesis allave SWITCHBLOQUESUPS SWITCHCASEDEFAULTS cllave{::}
+          | switchh aparentesis E cparentesis allave SWITCHBLOQUESUPS cllave{::}
+          | switchh aparentesis E cparentesis allave SWITCHCASEDEFAULTS cllave{::}
+          | switchh aparentesis E cparentesis allave cllave{::};
 
-SWITCHBLOCKSTATEMENTGROUPS::= SWITCHBLOCKSTATEMENTGRO{::}
-                            | SWITCHBLOCKSTATEMENTGROUPS SWITCHBLOCKSTATEMENTGRO{::};
 
-SWITCHBLOCKSTATEMENTGRO::= SWITCHLABELS CUERPO{::};
+
+SWITCHBLOQUESUPS::= SWITCHBLOQUES{::}
+                  | SWITCHBLOQUESUPS SWITCHBLOQUES{::};
+
+SWITCHBLOQUES::= SWITCHCASEDEFAULTS CUERPO{::};
 
 SENTENCIATRANSFERENCIA::= continuee{::}
                         | breakk{::}
                         | returnn{::}
                         | returnn E{::};
 
-SWITCHLABELS::= SWITCHLABELS SWITCHLABEL{::}
-              | SWITCHLABEL{::};
+SWITCHCASEDEFAULTS::= SWITCHCASEDEFAULTS SWITCHCASEDEFAULT{::}
+              | SWITCHCASEDEFAULT{::};
 
-SWITCHLABEL::= casee E dospuntos{::}
-             | id dospuntos {::}; //defaultt dospuntos{::};
-
-
+SWITCHCASEDEFAULT::= casee E dospuntos{::}
+             | defaultt dospuntos {::}; 
 
 
-IFSTATEMENT::= IF_LISTA  elsee  BLOQUESENTENCIAS{::}
+
+
+IFSSS::= IF_LISTA  elsee  BLOQUESENTENCIAS{::}
              | IF_LISTA{::};
 
 IF_LISTA::= iff aparentesis E cparentesis BLOQUESENTENCIAS{::}
           | IF_LISTA elsee iff aparentesis E cparentesis BLOQUESENTENCIAS{::};
 
-DECLARACIONES::= id igual E{::}
+
+
+DECLARACIONES::= id igual E{::}                
                 |id E igual E {::};
+
+
+LLAMADASFUNCIONES::= id aparentesis E cparentesis{::} 
+                   | id aparentesis cparentesis{::};
+
+
+FUNCIONESMETODOS::= id igual functionn aparentesis cparentesis BLOQUESENTENCIAS{::}
+                   |id igual functionn E BLOQUESENTENCIAS{::}
+                   |id igual aparentesis cparentesis flecha BLOQUESENTENCIAS{::}
+                   |id igual E flecha BLOQUESENTENCIAS{::};
+
 
 
 BLOQUESENTENCIAS::= allave CUERPO cllave{::}
                    |allave cllave{::};
 
 
-E::= resta E:e1 {::} %prec unegativo 
-    |suma E:e1 {::} %prec upositivo
-    |not E:e1{::}
-    |E:e1 or:s E:e2{::}
-    |E:e1 and:s E:e2{::}
-    |E:e1 suma:s E:e2 {::}
-    |E:e1 resta:s E:e2 {::}
-    |E:e1 por:s E:e2 {::}
-    |E:e1 division:s E:e2 {::}
-    |E:e1 potencia:s E:e2 {::}
-    |E modulo E {::}
-    |E:e1 mayorq:s E:e2{::}
-    |E:e1 menorq:s E:e2{::}
-    |E:e1 mayorigualq:s E:e2{::}
-    |E:e1 menorigualq:s E:e2{::}
-    |E:e1 igualigual:s E:e2{::}
-    |E:e1 diferente:s E:e2{::} 
-    |E:cond interrogacion E:vdd dospuntos E:fake {::}
-    |E coma E {::}
-    |E igual E {::}
-    |E coma {::}
-    |coma E {::}
-    |acorchete E ccorchete {::}
-    |acorchete E ccorchete E {::}
-    |aparentesis E cparentesis{::}
-    |aparentesis E cparentesis E{::}    
-    |ERnumero{::}
-    |ERdecimal{::}
-    |cadena{::}
-    |id{::}    
-    |id E {::}
-    |truee{::}
-    |falsee{::}
-    |nulo{::};
+E::= resta E:e1 {::} %prec unegativo //ya
+    |suma E:e1 {::} %prec upositivo  //ya
+    |not E:e1{::} //ya
+    |E:e1 or:s E:e2{::}  //ya
+    |E:e1 and:s E:e2{::}  //ya
+    |E:e1 suma:s E:e2 {::}  //ya
+    |E:e1 resta:s E:e2 {::}  //ya
+    |E:e1 por:s E:e2 {::}  //ya
+    |E:e1 division:s E:e2 {::}  //ya
+    |E:e1 potencia:s E:e2 {::} //YA
+    |E modulo E {::} //ya
+    |E:e1 mayorq:s E:e2{::}  //ya
+    |E:e1 menorq:s E:e2{::}  //ya
+    |E:e1 mayorigualq:s E:e2{::}  //ya
+    |E:e1 menorigualq:s E:e2{::}  //ya
+    |E:e1 igualigual:s E:e2{::}  //ya
+    |E:e1 diferente:s E:e2{::}   //ya
+    |E:cond interrogacion E:vdd dospuntos E:fake {::} //YA
+    |E coma E {::} //ya
+    |E igual E {::} //YA
+    |E coma {::} 
+    |coma E {::} //ya
+    |acorchete E ccorchete {::}//ya
+    |E acorchete E ccorchete {::}//ya
+    |aparentesis E cparentesis{::} //ya
+    |E aparentesis E cparentesis{::}   //ya 
+    |ERnumero{::}//ya
+    |ERdecimal{::}//ya
+    |cadena{::}//ya   
+    |truee{::}//ya
+    |falsee{::}//ya
+    |nulo{::} //ya
+    |defaultt {::}
+    |id{::}    //ya
+    |id E {::};//ya
+
+/*LISTA::= LISTA E {::}
+       | E{::};*/
+
+/*CORCHE::= CORCHE acorchete E ccorchete{::}
+         |acorchete E ccorchete{::};
+
+PAREN::= PAREN aparentesis E cparentesis {::}
+        |aparentesis E cparentesis {::}*/

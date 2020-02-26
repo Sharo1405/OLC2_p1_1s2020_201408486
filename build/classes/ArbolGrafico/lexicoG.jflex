@@ -29,7 +29,7 @@ elsee = "else"
 switchh = "switch"
 casee = "case"
 breakk = "break"
-//defaultt = "default"
+defaultt = "default"
 whilee = "while"
 doo = "do"
 forr = "for"
@@ -153,8 +153,8 @@ enter   = [\ \n]
                                 return new Symbol(sym.casee, yyline, yycolumn, yytext()); } 
 <YYINITIAL> {breakk}              {  System.out.println("Reconocido: <<"+yytext()+">>, breakk");
                                 return new Symbol(sym.breakk, yyline, yycolumn, yytext()); } 
-/*<YYINITIAL> {defaultt}              {  System.out.println("Reconocido: <<"+yytext()+">>, defaultt");
-                                return new Symbol(sym.defaultt, yyline, yycolumn, yytext()); } */
+<YYINITIAL> {defaultt}              {  System.out.println("Reconocido: <<"+yytext()+">>, defaultt");
+                                return new Symbol(sym.defaultt, yyline, yycolumn, yytext()); }
 <YYINITIAL> {whilee}              {  System.out.println("Reconocido: <<"+yytext()+">>, whilee");
                                 return new Symbol(sym.whilee, yyline, yycolumn, yytext()); } 
 /*<YYINITIAL> {print}              {  System.out.println("Reconocido: <<"+yytext()+">>, print");
