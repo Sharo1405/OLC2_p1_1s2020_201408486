@@ -69,17 +69,17 @@ nonterminal BLOQUESENTENCIAS;
 nonterminal DECLARACIONES, IFSSS, IF_LISTA;
 nonterminal SWITCHH, SWITCHBLOQUESUPS, SWITCHBLOQUES, SWITCHCASEDEFAULTS, SWITCHCASEDEFAULT;
 nonterminal WHILEE, DOWHILE;
-nonterminal SENTENCIATRANSFERENCIA, FUNCIONESMETODOS;
+nonterminal SENTENCIATRANSFERENCIA;
 nonterminal FORR, INICIALIZACION;
-nonterminal LLAMADASFUNCIONES;
 nonterminal E;
-nonterminal LISTA, CORCHE, PAREN;
+nonterminal EIZQUIERDA, EDERECHA;
+nonterminal FACTORIZANDO, FUNCIONESMETODOSDECLARACIONES;
 
 
 //PRECEDENCIA------------------------------------------------------------------------------------------------------------------
 precedence left defaultt;
 precedence left coma;
-precedence left igual;
+//precedence left igual;
 precedence right interrogacion, dospuntos;
 precedence left or;
 precedence left and;
@@ -102,9 +102,8 @@ S::= CUERPO{::};
 
 CUERPO::= CUERPO SENTENCIA {::}
          |SENTENCIA {::};
-
-SENTENCIA::= DECLARACIONES{::}
-       | DECLARACIONES puntoycoma {::}
+ 
+SENTENCIA::= FACTORIZANDO{::}            
        | IFSSS{::}
        | SWITCHH{::}
        | WHILEE{::}
@@ -112,10 +111,8 @@ SENTENCIA::= DECLARACIONES{::}
        | DOWHILE{::}
        | FORR{::}
        | SENTENCIATRANSFERENCIA puntoycoma{::}
-       | SENTENCIATRANSFERENCIA{::}
-       | FUNCIONESMETODOS{::}
-       | LLAMADASFUNCIONES{::}
-       | LLAMADASFUNCIONES puntoycoma{::};
+       | SENTENCIATRANSFERENCIA{::};     
+       
          
 
 
@@ -150,7 +147,7 @@ SWITCHBLOQUES::= SWITCHCASEDEFAULTS CUERPO{::};
 SENTENCIATRANSFERENCIA::= continuee{::}
                         | breakk{::}
                         | returnn{::}
-                        | returnn E{::};
+                        | returnn aparentesis E cparentesis{::};
 
 SWITCHCASEDEFAULTS::= SWITCHCASEDEFAULTS SWITCHCASEDEFAULT{::}
               | SWITCHCASEDEFAULT{::};
@@ -169,66 +166,80 @@ IF_LISTA::= iff aparentesis E cparentesis BLOQUESENTENCIAS{::}
 
 
 
-DECLARACIONES::= id igual E{::}                
-                |id E igual E {::};
+FACTORIZANDO::= id igual FUNCIONESMETODOSDECLARACIONES {::}
+
+               |id acorchete E coma ccorchete igual E{::}
+               |id acorchete coma E ccorchete igual E{::} 
+               |id acorchete E coma ccorchete igual E puntoycoma{::}
+               |id acorchete coma E ccorchete igual E puntoycoma{::} 
+
+               |id aparentesis E cparentesis{::}  //llamadas a funciones
+               |id aparentesis cparentesis{::} //llamadas a funciones
+               |id aparentesis E cparentesis puntoycoma{::}  //llamadas a funciones
+               |id aparentesis cparentesis puntoycoma{::} //llamadas a funciones
+
+               |id acorchete E ccorchete EIZQUIERDA igual E {::}
+               |id acorchete acorchete E ccorchete ccorchete EIZQUIERDA igual E {::}
+               |id acorchete E ccorchete EIZQUIERDA igual E puntoycoma{::}
+               |id acorchete acorchete E ccorchete ccorchete EIZQUIERDA igual E puntoycoma{::};
 
 
-LLAMADASFUNCIONES::= id aparentesis E cparentesis{::} 
-                   | id aparentesis cparentesis{::};
+
+FUNCIONESMETODOSDECLARACIONES::= functionn aparentesis cparentesis BLOQUESENTENCIAS{::}
+                   |functionn aparentesis E cparentesis BLOQUESENTENCIAS{::}
+                   |aparentesis cparentesis flecha BLOQUESENTENCIAS{::}
+                   |aparentesis E cparentesis flecha BLOQUESENTENCIAS{::}
+                   |E {::}
+                   |E puntoycoma{::};
 
 
-FUNCIONESMETODOS::= id igual functionn aparentesis cparentesis BLOQUESENTENCIAS{::}
-                   |id igual functionn E BLOQUESENTENCIAS{::}
-                   |id igual aparentesis cparentesis flecha BLOQUESENTENCIAS{::}
-                   |id igual E flecha BLOQUESENTENCIAS{::};
-
-
+                        
 
 BLOQUESENTENCIAS::= allave CUERPO cllave{::}
                    |allave cllave{::};
 
 
-E::= resta E:e1 {::} %prec unegativo //ya
-    |suma E:e1 {::} %prec upositivo  //ya
-    |not E:e1{::} //ya
-    |E:e1 or:s E:e2{::}  //ya
-    |E:e1 and:s E:e2{::}  //ya
-    |E:e1 suma:s E:e2 {::}  //ya
-    |E:e1 resta:s E:e2 {::}  //ya
-    |E:e1 por:s E:e2 {::}  //ya
-    |E:e1 division:s E:e2 {::}  //ya
-    |E:e1 potencia:s E:e2 {::} //YA
-    |E modulo E {::} //ya
-    |E:e1 mayorq:s E:e2{::}  //ya
-    |E:e1 menorq:s E:e2{::}  //ya
-    |E:e1 mayorigualq:s E:e2{::}  //ya
-    |E:e1 menorigualq:s E:e2{::}  //ya
-    |E:e1 igualigual:s E:e2{::}  //ya
-    |E:e1 diferente:s E:e2{::}   //ya
-    |E:cond interrogacion E:vdd dospuntos E:fake {::} //YA
-    |E coma E {::} //ya
-    |E igual E {::} //YA
-    |E coma {::} 
-    |coma E {::} //ya
-    |acorchete E ccorchete {::}//ya
-    |E acorchete E ccorchete {::}//ya
-    |aparentesis E cparentesis{::} //ya
-    |E aparentesis E cparentesis{::}   //ya 
-    |ERnumero{::}//ya
-    |ERdecimal{::}//ya
-    |cadena{::}//ya   
-    |truee{::}//ya
-    |falsee{::}//ya
-    |nulo{::} //ya
-    |defaultt {::}
-    |id{::}    //ya
-    |id E {::};//ya
+EIZQUIERDA::= EIZQUIERDA acorchete E ccorchete {::}            
+            | EIZQUIERDA acorchete acorchete E ccorchete ccorchete {::}
+            | ;
 
-/*LISTA::= LISTA E {::}
-       | E{::};*/
+EDERECHA::= EDERECHA acorchete E ccorchete {::}            
+          | EDERECHA acorchete acorchete E ccorchete ccorchete {::}
+          | EDERECHA aparentesis E cparentesis {::}
+          | EDERECHA acorchete E coma ccorchete {::}
+          | EDERECHA acorchete coma E ccorchete {::}
+          | ;
 
-/*CORCHE::= CORCHE acorchete E ccorchete{::}
-         |acorchete E ccorchete{::};
 
-PAREN::= PAREN aparentesis E cparentesis {::}
-        |aparentesis E cparentesis {::}*/
+E::= resta E:e1 {::} %prec unegativo 
+    |suma E:e1 {::} %prec upositivo  
+    |not E:e1{::} 
+    |E coma E {::}
+    |E:e1 or:s E:e2{::}  
+    |E:e1 and:s E:e2{::}  
+    |E:e1 suma:s E:e2 {::}  
+    |E:e1 resta:s E:e2 {::}  
+    |E:e1 por:s E:e2 {::}  
+    |E:e1 division:s E:e2 {::}
+    |E:e1 potencia:s E:e2 {::} 
+    |E modulo E {::} 
+    |E:e1 mayorq:s E:e2{::}  
+    |E:e1 menorq:s E:e2{::}  
+    |E:e1 mayorigualq:s E:e2{::}  
+    |E:e1 menorigualq:s E:e2{::}  
+    |E:e1 igualigual:s E:e2{::}  
+    |E:e1 diferente:s E:e2{::}   
+    |E:cond interrogacion E:vdd dospuntos E:fake {::}    
+    |aparentesis E cparentesis
+    |ERnumero{::}
+    |ERdecimal{::}
+    |cadena{::}
+    |truee{::}
+    |falsee{::}
+    |nulo{::} 
+    |defaultt {::}    
+
+    |id EDERECHA {::}
+    |DECLARACIONES{::};
+
+DECLARACIONES::= id igual E{::};
