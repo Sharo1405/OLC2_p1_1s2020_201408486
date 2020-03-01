@@ -213,33 +213,33 @@ EDERECHA::= EDERECHA acorchete E ccorchete {::}
 
 E::= resta E:e1 {::} %prec unegativo 
     |suma E:e1 {::} %prec upositivo  
-    |not E:e1{::} 
-    |E coma E {::}
-    |E:e1 or:s E:e2{::}  
-    |E:e1 and:s E:e2{::}  
-    |E:e1 suma:s E:e2 {::}  
-    |E:e1 resta:s E:e2 {::}  
-    |E:e1 por:s E:e2 {::}  
-    |E:e1 division:s E:e2 {::}
-    |E:e1 potencia:s E:e2 {::} 
-    |E modulo E {::} 
-    |E:e1 mayorq:s E:e2{::}  
-    |E:e1 menorq:s E:e2{::}  
-    |E:e1 mayorigualq:s E:e2{::}  
-    |E:e1 menorigualq:s E:e2{::}  
-    |E:e1 igualigual:s E:e2{::}  
-    |E:e1 diferente:s E:e2{::}   
+    |not E:e1{::}                    
+    |E coma E {::}                  
+    |E:e1 or:s E:e2{::}            
+    |E:e1 and:s E:e2{::}           
+    |E:e1 suma:s E:e2 {::}          
+    |E:e1 resta:s E:e2 {::}         
+    |E:e1 por:s E:e2 {::}           
+    |E:e1 division:s E:e2 {::}      
+    |E:e1 potencia:s E:e2 {::}     
+    |E modulo E {::}                
+    |E:e1 mayorq:s E:e2{::}         
+    |E:e1 menorq:s E:e2{::}         
+    |E:e1 mayorigualq:s E:e2{::}    
+    |E:e1 menorigualq:s E:e2{::}    
+    |E:e1 igualigual:s E:e2{::}     
+    |E:e1 diferente:s E:e2{::}      
     |E:cond interrogacion E:vdd dospuntos E:fake {::}    
-    |aparentesis E cparentesis
-    |ERnumero{::}
-    |ERdecimal{::}
-    |cadena{::}
-    |truee{::}
-    |falsee{::}
-    |nulo{::} 
+    |aparentesis E cparentesis      
+    |ERnumero{::}       
+    |ERdecimal{::}      
+    |cadena{::}         
+    |truee{::}          
+    |falsee{::}         
+    |nulo{::}         
     |defaultt {::}    
 
     |id EDERECHA {::}
-    |DECLARACIONES{::};
+    |DECLARACIONES{::}; 
 
 DECLARACIONES::= id igual E{::};

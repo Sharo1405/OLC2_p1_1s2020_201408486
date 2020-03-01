@@ -153,6 +153,8 @@ SENTENCIA::= FACTORIZANDO:sentencia
 
 FORR::= forr aparentesis INICIALIZACION:ini cparentesis BLOQUESENTENCIAS:e{:
             Nodo padre = new Nodo("FORR");
+            Nodo hijo_1 = new Nodo("For");
+            padre.hijos.add(hijo_1);
             padre.hijos.add(ini);
             padre.hijos.add(e);
             RESULT =  padre;
@@ -171,6 +173,8 @@ INICIALIZACION::= id:id inn E:e {:
 
 WHILEE::= whilee aparentesis E:ee cparentesis BLOQUESENTENCIAS:sentencias{:
                 Nodo padre = new Nodo("While");
+                Nodo hijo_1 = new Nodo("While");
+                padre.hijos.add(hijo_1);
                 padre.hijos.add(ee);
                 padre.hijos.add(sentencias);
                 RESULT =  padre;
@@ -178,8 +182,12 @@ WHILEE::= whilee aparentesis E:ee cparentesis BLOQUESENTENCIAS:sentencias{:
 
 DOWHILE::= doo BLOQUESENTENCIAS:sentencias whilee aparentesis E:ee cparentesis{:
                 Nodo padre = new Nodo("DoWhile");
-                padre.hijos.add(ee);
+                Nodo hijo_1 = new Nodo("Do");
+                padre.hijos.add(hijo_1);
                 padre.hijos.add(sentencias);
+                Nodo hijo_2 = new Nodo("While);
+                padre.hijos.add(hijo_2);
+                padre.hijos.add(ee);
                 RESULT =  padre;
           :};
 
@@ -189,6 +197,8 @@ DOWHILE::= doo BLOQUESENTENCIAS:sentencias whilee aparentesis E:ee cparentesis{:
 
 SWITCHH::= switchh aparentesis E:ee cparentesis allave SWITCHBLOQUESUPS:cases SWITCHCASEDEFAULTS:cases2 cllave{:
                 Nodo padre = new Nodo("Switch");
+                Nodo hijo_1 = new Nodo("Switch");
+                padre.hijos.add(hijo_1);
                 padre.hijos.add(ee);
                 padre.hijos.add(cases);
                 padre.hijos.add(cases2);
@@ -196,18 +206,24 @@ SWITCHH::= switchh aparentesis E:ee cparentesis allave SWITCHBLOQUESUPS:cases SW
           :}
           | switchh aparentesis E:ee cparentesis allave SWITCHBLOQUESUPS:cases cllave{:
                 Nodo padre = new Nodo("Switch");
+                Nodo hijo_1 = new Nodo("Switch");
+                padre.hijos.add(hijo_1);
                 padre.hijos.add(ee);
                 padre.hijos.add(cases);
                 RESULT =  padre;
           :}
           | switchh aparentesis E:ee cparentesis allave SWITCHCASEDEFAULTS:cases cllave{:
                 Nodo padre = new Nodo("Switch");
+                Nodo hijo_1 = new Nodo("Switch");
+                padre.hijos.add(hijo_1);
                 padre.hijos.add(ee);
                 padre.hijos.add(cases);
                 RESULT =  padre;
           :}
           | switchh aparentesis E:ee cparentesis allave cllave{:
                 Nodo padre = new Nodo("Switch");
+                Nodo hijo_1 = new Nodo("Switch");
+                padre.hijos.add(hijo_1);
                 padre.hijos.add(ee);
                 RESULT =  padre;
             :};
@@ -322,6 +338,8 @@ FACTORIZANDO::= id:id igual FUNCIONESMETODOSDECLARACIONES:nodo {:
                     Nodo padre = new Nodo("FACTORIZANDO (F O EXP)");
                     Nodo hijo_1 = new Nodo(id);
                     padre.hijos.add(hijo_1);
+                    Nodo hijo_2 = new Nodo("="); 
+                    padre.hijos.add(hijo_2);
                     padre.hijos.add(nodo);
                     RESULT=padre;
                 :}
@@ -330,96 +348,125 @@ FACTORIZANDO::= id:id igual FUNCIONESMETODOSDECLARACIONES:nodo {:
                     Nodo padre = new Nodo("FACTORIZANDO (Matrix E,)");
                     Nodo hijo_1 = new Nodo(id);
                     padre.hijos.add(hijo_1);
+                    Nodo hijo_2 = new Nodo("["); padre.hijos.add(hijo_2);
                     padre.hijos.add(forr);
+                    Nodo hijo_3 = new Nodo(","); padre.hijos.add(hijo_3);
+                    Nodo hijo_4 = new Nodo("]"); padre.hijos.add(hijo_4);
+                    Nodo hijo_44 = new Nodo("="); padre.hijos.add(hijo_44);
                     padre.hijos.add(exp);
                     RESULT=padre;
                :}
                |id:id acorchete coma E:exp ccorchete igual E:exp2{:
                     Nodo padre = new Nodo("FACTORIZANDO (Matrix , E)");
-                    Nodo hijo_1 = new Nodo(id);
-                    padre.hijos.add(hijo_1);
+                    Nodo hijo_1 = new Nodo(id); padre.hijos.add(hijo_1);
+                    Nodo hijo_2 = new Nodo("["); padre.hijos.add(hijo_2);
+                    Nodo hijo_3 = new Nodo(","); padre.hijos.add(hijo_3);                   
                     padre.hijos.add(exp);
+                    Nodo hijo_4 = new Nodo("]"); padre.hijos.add(hijo_4);
+                    Nodo hijo_44 = new Nodo("="); padre.hijos.add(hijo_44);
                     padre.hijos.add(exp2);
                     RESULT=padre;
                :} 
                |id:id acorchete E:exp coma ccorchete igual E:exp2 puntoycoma{:
                     Nodo padre = new Nodo("FACTORIZANDO (Matrix E,)");
-                    Nodo hijo_1 = new Nodo(id);
-                    padre.hijos.add(hijo_1);
+                    Nodo hijo_1 = new Nodo(id); padre.hijos.add(hijo_1);
+                    Nodo hijo_2 = new Nodo("["); padre.hijos.add(hijo_2);
                     padre.hijos.add(exp);
+                    Nodo hijo_3 = new Nodo(","); padre.hijos.add(hijo_3); 
+                    Nodo hijo_4 = new Nodo("]"); padre.hijos.add(hijo_4);                    
+                    Nodo hijo_44 = new Nodo("="); padre.hijos.add(hijo_44);
                     padre.hijos.add(exp2);
                     RESULT=padre;
                :}
                |id:id acorchete coma E:exp ccorchete igual E:exp2 puntoycoma{:
                     Nodo padre = new Nodo("FACTORIZANDO (Matrix , E)");
-                    Nodo hijo_1 = new Nodo(id);
-                    padre.hijos.add(hijo_1);
+                    Nodo hijo_1 = new Nodo(id); padre.hijos.add(hijo_1);
+                    Nodo hijo_2 = new Nodo("["); padre.hijos.add(hijo_2);
+                    Nodo hijo_3 = new Nodo(","); padre.hijos.add(hijo_3);    
                     padre.hijos.add(exp);
+                    Nodo hijo_4 = new Nodo("]"); padre.hijos.add(hijo_4);                    
+                    Nodo hijo_44 = new Nodo("="); padre.hijos.add(hijo_44);
                     padre.hijos.add(exp2);
                     RESULT=padre;
                :} 
 
                |id:id aparentesis E:exp cparentesis{:
                     Nodo padre = new Nodo("FACTORIZANDO (Llamada Fun)");
-                    Nodo hijo_1 = new Nodo(id);
-                    padre.hijos.add(hijo_1);
+                    Nodo hijo_1 = new Nodo(id); padre.hijos.add(hijo_1);
+                    Nodo hijo_4 = new Nodo("("); padre.hijos.add(hijo_4);                    
                     padre.hijos.add(exp);
+                    Nodo hijo_44 = new Nodo(")"); padre.hijos.add(hijo_44);
                     RESULT=padre;
                 :}  //llamadas a funciones
                |id:id aparentesis cparentesis{:
                     Nodo padre = new Nodo("FACTORIZANDO (Llamada Fun)");
-                    Nodo hijo_1 = new Nodo(id);
-                    padre.hijos.add(hijo_1);
+                    Nodo hijo_1 = new Nodo(id); padre.hijos.add(hijo_1);
+                    Nodo hijo_4 = new Nodo("("); padre.hijos.add(hijo_4);                    
+                    Nodo hijo_44 = new Nodo(")"); padre.hijos.add(hijo_44);
                     RESULT=padre;
                 :} //llamadas a funciones
                |id:id aparentesis E:exp cparentesis puntoycoma{:
                     Nodo padre = new Nodo("FACTORIZANDO (Llamada Fun)");
-                    Nodo hijo_1 = new Nodo(id);
-                    padre.hijos.add(hijo_1);
+                    Nodo hijo_1 = new Nodo(id); padre.hijos.add(hijo_1); 
+                    Nodo hijo_4 = new Nodo("("); padre.hijos.add(hijo_4);                    
                     padre.hijos.add(exp);
+                    Nodo hijo_44 = new Nodo(")"); padre.hijos.add(hijo_44);
                     RESULT=padre;
                 :}  //llamadas a funciones
                |id:id aparentesis cparentesis puntoycoma{:
                     Nodo padre = new Nodo("FACTORIZANDO (Llamada Fun)");
-                    Nodo hijo_1 = new Nodo(id);
-                    padre.hijos.add(hijo_1);
+                    Nodo hijo_1 = new Nodo(id); padre.hijos.add(hijo_1);
+                    Nodo hijo_4 = new Nodo("("); padre.hijos.add(hijo_4);                    
+                    Nodo hijo_44 = new Nodo(")"); padre.hijos.add(hijo_44);
                     RESULT=padre;
                 :} //llamadas a funciones
 
 
                |id:id acorchete E:exp ccorchete EIZQUIERDA:otro igual E:exp2 {:
                     Nodo padre = new Nodo("FACTORIZANDO (accesos)");
-                    Nodo hijo_1 = new Nodo(id);
-                    padre.hijos.add(hijo_1);
+                    Nodo hijo_1 = new Nodo(id); padre.hijos.add(hijo_1);
+                    Nodo hijo_2 = new Nodo("["); padre.hijos.add(hijo_2);
                     padre.hijos.add(exp);
+                    Nodo hijo_22 = new Nodo("]"); padre.hijos.add(hijo_22);
                     padre.hijos.add(otro);
+                    Nodo hijo_12 = new Nodo("="); padre.hijos.add(hijo_12);
                     padre.hijos.add(exp2);
                     RESULT=padre;
                 :}
                |id:id acorchete acorchete E:exp ccorchete ccorchete EIZQUIERDA:otro igual E:exp2 {:
                     Nodo padre = new Nodo("FACTORIZANDO (accesos)");
-                    Nodo hijo_1 = new Nodo(id);
-                    padre.hijos.add(hijo_1);
+                    Nodo hijo_1 = new Nodo(id); padre.hijos.add(hijo_1);
+                    Nodo hijo_2 = new Nodo("["); padre.hijos.add(hijo_2);
+                    Nodo hijo_22 = new Nodo("["); padre.hijos.add(hijo_22);
                     padre.hijos.add(exp);
+                    Nodo hijo_122 = new Nodo("]"); padre.hijos.add(hijo_122);
+                    Nodo hijo_322 = new Nodo("]"); padre.hijos.add(hijo_322);
                     padre.hijos.add(otro);
+                    Nodo hijo_12 = new Nodo("="); padre.hijos.add(hijo_12);
                     padre.hijos.add(exp2);
                     RESULT=padre;
                 :}
                |id:id acorchete E:exp ccorchete EIZQUIERDA:otro igual E:exp2 puntoycoma{:
                     Nodo padre = new Nodo("FACTORIZANDO (accesos)");
-                    Nodo hijo_1 = new Nodo(id);
-                    padre.hijos.add(hijo_1);
+                    Nodo hijo_1 = new Nodo(id); padre.hijos.add(hijo_1);
+                    Nodo hijo_2 = new Nodo("["); padre.hijos.add(hijo_2);
                     padre.hijos.add(exp);
+                    Nodo hijo_22 = new Nodo("]"); padre.hijos.add(hijo_22);
                     padre.hijos.add(otro);
+                    Nodo hijo_12 = new Nodo("="); padre.hijos.add(hijo_12);
                     padre.hijos.add(exp2);
                     RESULT=padre;
                 :}
                |id:id acorchete acorchete E:exp ccorchete ccorchete EIZQUIERDA:otro igual E:exp2 puntoycoma{:
                     Nodo padre = new Nodo("FACTORIZANDO (accesos)");
-                    Nodo hijo_1 = new Nodo(id);
-                    padre.hijos.add(hijo_1);
+                    Nodo hijo_1 = new Nodo(id); padre.hijos.add(hijo_1);
+                    Nodo hijo_2 = new Nodo("["); padre.hijos.add(hijo_2);
+                    Nodo hijo_22 = new Nodo("["); padre.hijos.add(hijo_22);
                     padre.hijos.add(exp);
+                    Nodo hijo_122 = new Nodo("]"); padre.hijos.add(hijo_122);
+                    Nodo hijo_322 = new Nodo("]"); padre.hijos.add(hijo_322);
                     padre.hijos.add(otro);
+                    Nodo hijo_12 = new Nodo("="); padre.hijos.add(hijo_12);
                     padre.hijos.add(exp2);
                     RESULT=padre;
                 :};
@@ -428,23 +475,31 @@ FACTORIZANDO::= id:id igual FUNCIONESMETODOSDECLARACIONES:nodo {:
 
 FUNCIONESMETODOSDECLARACIONES::= functionn aparentesis cparentesis BLOQUESENTENCIAS:sent{:
                         Nodo padre = new Nodo("Funcion");
+                        Nodo hijo_1 = new Nodo("Function"); padre.hijos.add(hijo_1);
                         padre.hijos.add(sent);
                         RESULT=padre;
                     :}
                    |functionn aparentesis E:forr cparentesis BLOQUESENTENCIAS:sent{:
                         Nodo padre = new Nodo("Funcion");
+                        Nodo hijo_1 = new Nodo("Function"); padre.hijos.add(hijo_1);
                         padre.hijos.add(forr);
                         padre.hijos.add(sent);
                         RESULT=padre;
                     :}
                    |aparentesis cparentesis flecha BLOQUESENTENCIAS:sent{:
                         Nodo padre = new Nodo("Funcion");
+                        Nodo hijo_1 = new Nodo("("); padre.hijos.add(hijo_1);
+                        Nodo hijo_2 = new Nodo(")"); padre.hijos.add(hijo_2);
+                        Nodo hijo_22 = new Nodo("=>"); padre.hijos.add(hijo_22);
                         padre.hijos.add(sent);
                         RESULT=padre;
                    :}
                    |aparentesis E:forr cparentesis flecha BLOQUESENTENCIAS:sent{:
                         Nodo padre = new Nodo("Funcion");
+                        Nodo hijo_1 = new Nodo("("); padre.hijos.add(hijo_1);
                         padre.hijos.add(forr);
+                        Nodo hijo_2 = new Nodo(")"); padre.hijos.add(hijo_2);
+                        Nodo hijo_22 = new Nodo("=>"); padre.hijos.add(hijo_22);
                         padre.hijos.add(sent);
                         RESULT=padre;
                    :}
@@ -471,11 +526,17 @@ BLOQUESENTENCIAS::= allave CUERPO:cuerpo cllave{:
                     :};
 
 EIZQUIERDA::= EIZQUIERDA:lista acorchete E:sent ccorchete {:
+                Nodo hijo_2 = new Nodo("["); lista.hijos.add(hijo_2);
                 lista.hijos.add(sent);
+                Nodo hijo_122 = new Nodo("]"); lista.hijos.add(hijo_122);
                 RESULT = lista;
             :}            
             | EIZQUIERDA:lista acorchete acorchete E:sent ccorchete ccorchete {:
+               Nodo hijo_2 = new Nodo("["); lista.hijos.add(hijo_2);
+               Nodo hijo_22 = new Nodo("["); lista.hijos.add(hijo_22);
                lista.hijos.add(sent);
+               Nodo hijo_122 = new Nodo("]"); lista.hijos.add(hijo_122);
+               Nodo hijo_322 = new Nodo("]"); lista.hijos.add(hijo_322);
                RESULT = lista;
             :}
             | {:
@@ -484,23 +545,37 @@ EIZQUIERDA::= EIZQUIERDA:lista acorchete E:sent ccorchete {:
             :};
 
 EDERECHA::= EDERECHA:lista acorchete E:sent ccorchete {:
+            Nodo hijo_2 = new Nodo("["); lista.hijos.add(hijo_2);
             lista.hijos.add(sent);
+            Nodo hijo_122 = new Nodo("]"); lista.hijos.add(hijo_122);
             RESULT = lista;
            :}            
           | EDERECHA:lista acorchete acorchete E:sent ccorchete ccorchete {:
+            Nodo hijo_2 = new Nodo("["); lista.hijos.add(hijo_2);
+            Nodo hijo_22 = new Nodo("["); lista.hijos.add(hijo_22);
             lista.hijos.add(sent);
+            Nodo hijo_122 = new Nodo("]"); lista.hijos.add(hijo_122);
+            Nodo hijo_12 = new Nodo("]"); lista.hijos.add(hijo_12);
             RESULT = lista;
           :}
           | EDERECHA:lista aparentesis E:sent cparentesis {:
+            Nodo hijo_2 = new Nodo("("); lista.hijos.add(hijo_2);
             lista.hijos.add(sent);
+            Nodo hijo_122 = new Nodo(")"); lista.hijos.add(hijo_122);
             RESULT = lista;
           :}
           | EDERECHA:lista acorchete E:sent coma ccorchete {:
+            Nodo hijo_2 = new Nodo("["); lista.hijos.add(hijo_2);
             lista.hijos.add(sent);
+            Nodo hijo_12 = new Nodo(","); lista.hijos.add(hijo_12);
+            Nodo hijo_122 = new Nodo("]"); lista.hijos.add(hijo_122);
             RESULT = lista;
           :}
           | EDERECHA:lista acorchete coma E:sent ccorchete {:
-            lista.hijos.add(sent);
+            Nodo hijo_2 = new Nodo("["); lista.hijos.add(hijo_2);
+            Nodo hijo_12 = new Nodo(","); lista.hijos.add(hijo_12);
+            lista.hijos.add(sent);            
+            Nodo hijo_122 = new Nodo("]"); lista.hijos.add(hijo_122);
             RESULT = lista;
           :}
           | {:
