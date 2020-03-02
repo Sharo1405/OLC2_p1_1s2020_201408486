@@ -4,6 +4,11 @@ import java.util.LinkedList;
 import java.util.ArrayList;
 import java_cup.runtime.*;
 import Errores.*;
+import Interprete.*;
+import Interprete.Entorno.*;
+import Interprete.Expresiones.*;
+import Interprete.Expresiones.TipoDato.*;
+import Interprete.Instrucciones.*;
 
 parser code
 {://Codigo de acciones
@@ -71,7 +76,7 @@ nonterminal SWITCHH, SWITCHBLOQUESUPS, SWITCHBLOQUES, SWITCHCASEDEFAULTS, SWITCH
 nonterminal WHILEE, DOWHILE;
 nonterminal SENTENCIATRANSFERENCIA;
 nonterminal FORR, INICIALIZACION;
-nonterminal E;
+nonterminal Expresion E;
 nonterminal EIZQUIERDA, EDERECHA;
 nonterminal FACTORIZANDO, FUNCIONESMETODOSDECLARACIONES;
 
@@ -211,33 +216,87 @@ EDERECHA::= EDERECHA acorchete E ccorchete {::}
           | ;
 
 
-E::= resta E:e1 {::} %prec unegativo 
-    |suma E:e1 {::} %prec upositivo  
-    |not E:e1{::}                    
-    |E coma E {::}                  
-    |E:e1 or:s E:e2{::}            
-    |E:e1 and:s E:e2{::}           
-    |E:e1 suma:s E:e2 {::}          
-    |E:e1 resta:s E:e2 {::}         
-    |E:e1 por:s E:e2 {::}           
-    |E:e1 division:s E:e2 {::}      
-    |E:e1 potencia:s E:e2 {::}     
-    |E modulo E {::}                
-    |E:e1 mayorq:s E:e2{::}         
-    |E:e1 menorq:s E:e2{::}         
-    |E:e1 mayorigualq:s E:e2{::}    
-    |E:e1 menorigualq:s E:e2{::}    
-    |E:e1 igualigual:s E:e2{::}     
-    |E:e1 diferente:s E:e2{::}      
-    |E:cond interrogacion E:vdd dospuntos E:fake {::}    
-    |aparentesis E cparentesis      
-    |ERnumero{::}       
-    |ERdecimal{::}      
-    |cadena{::}         
-    |truee{::}          
-    |falsee{::}         
-    |nulo{::}         
-    |defaultt {::}    
+E::= resta:s E:e1 {:
+        RESULT = new Negativo(sleft +1, sright +1, e1);
+    :} %prec unegativo 
+    |suma:s E:e1 {:
+        RESULT = new Positivo(sleft +1, sright +1, e1);
+    :} %prec upositivo  
+    |not:s E:e1{:
+         RESULT = new Nott(sleft +1, sright +1, e1);
+    :}                    
+    |E coma:s E {:
+        RESULT = new Comas(sleft +1, sright +1, e1, e2);
+    :}                  
+    |E:e1 or:s E:e2{:
+        RESULT = new Or(sleft +1, sright +1, e1, e2);
+    :}            
+    |E:e1 and:s E:e2{:
+        RESULT = new And(sleft +1, sright +1, e1, e2);
+    :}           
+    |E:e1 suma:s E:e2 {:
+        RESULT = new Suma(sleft +1, sright +1, e1, e2);
+    :}          
+    |E:e1 resta:s E:e2 {:
+        RESULT = new Resta(sleft +1, sright +1, e1, e2);
+    :}         
+    |E:e1 por:s E:e2 {:
+        RESULT = new Multiplicacion(sleft +1, sright +1, e1, e2);
+    :}           
+    |E:e1 division:s E:e2 {:
+        RESULT = new Division(sleft +1, sright +1, e1, e2);
+    :}      
+    |E:e1 potencia:s E:e2 {:
+        RESULT = new Potencia(sleft +1, sright +1, e1, e2);
+    :}     
+    |E:e1 modulo:s E:e2 {:
+        RESULT = new Modulo(sleft +1, sright +1, e1, e2);
+    :}                
+    |E:e1 mayorq:s E:e2{:
+        RESULT = new MayorQ(sleft +1, sright +1, e1, e2);
+    :}         
+    |E:e1 menorq:s E:e2{:
+        RESULT = new MenorQ(sleft +1, sright +1, e1, e2);
+    :}         
+    |E:e1 mayorigualq:s E:e2{:
+        RESULT = new MayorIgualQ(sleft +1, sright +1, e1, e2);
+    :}    
+    |E:e1 menorigualq:s E:e2{:
+        RESULT = new MenorIgualQ(sleft +1, sright +1, e1, e2);
+    :}    
+    |E:e1 igualigual:s E:e2{:
+        RESULT = new IgualIgual(sleft +1, sright +1, e1, e2);
+    :}     
+    |E:e1 diferente:n E:e2{:
+        RESULT = new Diferente(nleft +1, nright +1, e1, e2);
+    :}      
+    |E:cond interrogacion:n E:vdd dospuntos E:fake {:
+        RESULT = new Ternario(cond, vdd, fake,  nleft +1, nright +1);
+    :}    
+    |aparentesis E:el cparentesis{:
+        RESULT = el;
+    :}      
+    |ERnumero:n{:
+        RESULT = new Numero(Integer.parseInt(n), Operacion.tipoDato.ENTERO , nleft +1, nright +1);
+    :}       
+    |ERdecimal:n{:
+        RESULT = new Decimal( Double.parseDouble(n), Operacion.tipoDato.DECIMAL , nleft +1, nright +1);
+    :}      
+    |cadena:n{:
+        RESULT = new Cadena(n.substring(1, n.length() - 1).toLowerCase(), Operacion.tipoDato.CADENA , nleft +1, nright +1);
+    :}         
+    |truee:n{:
+        RESULT = new Booleano(true, Operacion.tipoDato.BOOLEAN , nleft +1, nright +1);
+    :}          
+    |falsee:n{:
+        RESULT = new Booleano(false, Operacion.tipoDato.BOOLEAN , nleft +1, nright +1);
+    :}         
+    |nulo:n{:
+        RESULT = new Nulo("nulo", Operacion.tipoDato.NULO , nleft +1, nright +1);
+    :}         
+    |defaultt:n {:
+        RESULT = new Defaultt("default", Operacion.tipoDato.DEFAULT , nleft +1, nright +1);
+    :}    
 
     |id EDERECHA {::}
     |DECLARACIONES{::}; 

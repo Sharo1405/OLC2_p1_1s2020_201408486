@@ -185,7 +185,7 @@ DOWHILE::= doo BLOQUESENTENCIAS:sentencias whilee aparentesis E:ee cparentesis{:
                 Nodo hijo_1 = new Nodo("Do");
                 padre.hijos.add(hijo_1);
                 padre.hijos.add(sentencias);
-                Nodo hijo_2 = new Nodo("While);
+                Nodo hijo_2 = new Nodo("While");
                 padre.hijos.add(hijo_2);
                 padre.hijos.add(ee);
                 RESULT =  padre;
