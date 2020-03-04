@@ -8,6 +8,7 @@ package Interprete.Expresiones;
 import Interprete.AST;
 import Interprete.Entorno.Entorno;
 import Interprete.ErrorImpresion;
+import java.util.LinkedList;
 
 /**
  *
@@ -15,7 +16,7 @@ import Interprete.ErrorImpresion;
  */
 public interface Expresion extends AST{
     
-    Object getValue(Entorno entorno, ErrorImpresion listas);
-    Object getType(Entorno entorno, ErrorImpresion listas);
+    Object getValue(Entorno tablaDeSimbolos, ErrorImpresion listas);
+    Operacion.tipoDato getType(Entorno tablaDeSimbolos, ErrorImpresion listas);
     
 }

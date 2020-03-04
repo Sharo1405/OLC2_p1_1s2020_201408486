@@ -9,6 +9,7 @@ import Interprete.Entorno.Entorno;
 import Interprete.ErrorImpresion;
 import Interprete.Expresiones.Expresion;
 import Interprete.Expresiones.Operacion;
+import java.util.LinkedList;
 
 /**
  *
@@ -22,12 +23,18 @@ public class Suma extends Operacion implements Expresion{
     }
 
     @Override
-    public Object getValue(Entorno entorno, ErrorImpresion listas) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public Object getValue(Entorno tablaDeSimbolos, ErrorImpresion listas) {
+        //1 con 1  normal
+        //1 con varios y varios con 1: ese uno con cada uno
+        //varios con varios solo si es del mismo tamanio
+        
+        
+        
+        return null;
     }
 
     @Override
-    public Object getType(Entorno entorno, ErrorImpresion listas) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public Operacion.tipoDato getType(Entorno tablaDeSimbolos, ErrorImpresion listas) {
+        return null;
     }
 }

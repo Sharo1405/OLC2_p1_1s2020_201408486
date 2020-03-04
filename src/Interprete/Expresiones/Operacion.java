@@ -5,6 +5,10 @@
  */
 package Interprete.Expresiones;
 
+import Interprete.Entorno.*;
+import Interprete.ErrorImpresion;
+import java.util.ArrayList;
+
 /**
  *
  * @author sharolin
@@ -29,7 +33,8 @@ public class Operacion {
         ARRAY,
         NULO,
         DEFAULT,
-        ERRORSEMANTICO
+        ERRORSEMANTICO,
+        ID
     }
 
     public Operacion() {
@@ -50,6 +55,45 @@ public class Operacion {
         this.expresion1 = expresion1;
 
     }
+
+    //solo para aritmeticas
+    public tipoDato tipoResultante(tipoDato izquierda, tipoDato derecha, Entorno lista, ErrorImpresion impresion) {
+        if (izquierda == tipoDato.NULO || derecha == tipoDato.NULO) {
+            return tipoDato.ERRORSEMANTICO;
+        } else if (izquierda == tipoDato.CADENA || derecha == tipoDato.CADENA) {
+            return tipoDato.CADENA;
+        } else if ((izquierda == tipoDato.DECIMAL && derecha == tipoDato.ENTERO) || (izquierda == tipoDato.ENTERO && derecha == tipoDato.DECIMAL)
+                || (izquierda == tipoDato.DECIMAL && derecha == tipoDato.DECIMAL)) {
+            return tipoDato.DECIMAL;
+        } else if (izquierda == tipoDato.ENTERO && derecha == tipoDato.ENTERO) {
+            return tipoDato.ENTERO;
+        } else {
+            return tipoDato.ERRORSEMANTICO;
+        }
+    }
+    
+    
+    
+    //solo para lista de expresiones 
+    public tipoDato tipoResultanteLISTA(ArrayList<tipoDato> listaTipo) {
+        
+        if(listaTipo.contains(tipoDato.LISTA)){
+            return tipoDato.LISTA;
+        }else if(listaTipo.contains(tipoDato.CADENA)){
+            return tipoDato.CADENA;
+        }else if(listaTipo.contains(tipoDato.DECIMAL)){
+            return tipoDato.DECIMAL;
+        }else if(listaTipo.contains(tipoDato.ENTERO)){
+            return tipoDato.ENTERO;
+        }else if(listaTipo.contains(tipoDato.BOOLEAN)){
+            return tipoDato.BOOLEAN;
+        }else if(listaTipo.contains(tipoDato.DECIMAL)){
+            return tipoDato.DECIMAL;
+        }else{
+            return tipoDato.ERRORSEMANTICO;
+        }               
+    }
+    
 
     /**
      * @return the linea

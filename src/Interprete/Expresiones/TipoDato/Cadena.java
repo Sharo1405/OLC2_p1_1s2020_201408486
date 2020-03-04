@@ -10,6 +10,7 @@ import Interprete.ErrorImpresion;
 import Interprete.Expresiones.Expresion;
 import Interprete.Expresiones.Operacion;
 import java.util.ArrayList;
+import java.util.LinkedList;
 
 /**
  *
@@ -35,12 +36,12 @@ public class Cadena implements Expresion{
     
     
     @Override
-    public Object getValue(Entorno entorno, ErrorImpresion listas) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public Object getValue(Entorno tablaDeSimbolos, ErrorImpresion listas) {
+        return valor;
     }
 
     @Override
-    public Object getType(Entorno entorno, ErrorImpresion listas) {
+    public Operacion.tipoDato getType(Entorno tablaDeSimbolos, ErrorImpresion listas) {
         return tipo;
     }
 

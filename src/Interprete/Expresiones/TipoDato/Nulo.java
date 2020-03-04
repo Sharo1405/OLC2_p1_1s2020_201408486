@@ -10,6 +10,7 @@ import Interprete.ErrorImpresion;
 import Interprete.Expresiones.Expresion;
 import Interprete.Expresiones.Operacion;
 import java.util.ArrayList;
+import java.util.LinkedList;
 
 /**
  *
@@ -33,12 +34,12 @@ public class Nulo implements Expresion {
     }
 
     @Override
-    public Object getValue(Entorno entorno, ErrorImpresion listas) {
-        return tipo;
+    public Object getValue(Entorno tablaDeSimbolos, ErrorImpresion listas) {
+        return valor;
     }
 
     @Override
-    public Object getType(Entorno entorno, ErrorImpresion listas) {
+    public Operacion.tipoDato getType(Entorno tablaDeSimbolos, ErrorImpresion listas) {
         return tipo;
     }
 

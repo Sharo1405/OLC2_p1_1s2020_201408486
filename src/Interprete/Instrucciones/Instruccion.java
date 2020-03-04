@@ -8,6 +8,7 @@ package Interprete.Instrucciones;
 import Interprete.AST;
 import Interprete.Entorno.Entorno;
 import Interprete.ErrorImpresion;
+import java.util.LinkedList;
 
 /**
  *
@@ -15,5 +16,5 @@ import Interprete.ErrorImpresion;
  */
 public interface Instruccion extends AST{
     
-    Object ejecutar(Entorno entorno, ErrorImpresion listas);
+    Object ejecutar(Entorno tablaDeSimbolos, ErrorImpresion listas);
 }

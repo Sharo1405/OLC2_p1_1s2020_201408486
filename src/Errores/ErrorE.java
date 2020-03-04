@@ -10,15 +10,21 @@ package Errores;
  * @author sharolin
  */
 public class ErrorE {
+
     public String lexema;
-       
-    
-    public ErrorE(){}
-    
-    public ErrorE(String lex)
-    {
+    public int linea;
+    public int columna;
+
+    public ErrorE() {
+    }
+
+    public ErrorE(String lexema, int linea, int columna) {
+        this.lexema = lexema;
+        this.linea = linea;
+        this.columna = columna;
+    }
+
+    public ErrorE(String lex) {
         this.lexema = lex;
-        
-        
     }
 }
