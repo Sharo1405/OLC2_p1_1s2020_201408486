@@ -251,18 +251,20 @@ EDERECHA::= EDERECHA:lista acorchete E:e ccorchete {:
                 RESULT.add(cor);
           :}
 
-          | EDERECHA:lista aparentesis E:e cparentesis {:
+          | EDERECHA:lista aparentesis E:e cparentesis {: 
                 EDerechaParentesis cor = new EDerechaParentesis(e, eleft +1, eright +1); 
                 RESULT = lista;
                 RESULT.add(cor);
           :}
 
-          | EDERECHA:lista acorchete E:e coma ccorchete {:
+
+
+          | EDERECHA:lista acorchete E:e coma ccorchete {: //[e,] MATRICES
                 EDerechaCorcheteEcoma cor = new EDerechaCorcheteEcoma(e, eleft +1, eright +1); 
                 RESULT = lista;
                 RESULT.add(cor);
           :}
-          | EDERECHA:lista acorchete coma E:e ccorchete {:
+          | EDERECHA:lista acorchete coma E:e ccorchete {: //[,e] MATRICES
                 EDerechaComaE cor = new EDerechaComaE(e, eleft +1, eright +1); 
                 RESULT = lista;
                 RESULT.add(cor);

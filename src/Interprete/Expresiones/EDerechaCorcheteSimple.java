@@ -31,13 +31,13 @@ public class EDerechaCorcheteSimple implements Expresion{
    
     @Override
     public Object getValue(Entorno tablaDeSimbolos, ErrorImpresion listas) {
-        return valor.getValue(tablaDeSimbolos, listas);
+        return getValor().getValue(tablaDeSimbolos, listas);
     }
 
     
     @Override
     public Operacion.tipoDato getType(Entorno tablaDeSimbolos, ErrorImpresion listas) {
-        return valor.getType(tablaDeSimbolos, listas);
+        return getValor().getType(tablaDeSimbolos, listas);
     }    
 
     

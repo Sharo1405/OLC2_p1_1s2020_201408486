@@ -55,18 +55,21 @@ public class Identificador extends Entorno implements Expresion {
                                     if (o instanceof Operacion.tipoDato) {
                                         listas.errores.add(new NodoError(getLinea(), getColumna(), NodoError.tipoError.Semantico,
                                                 "Parametro no valido para la funcion Stringlength, el tipo pude ser lo invalido"));
+                                        return Operacion.tipoDato.ERRORSEMANTICO;
                                     }
                                     return o;
 
                                 } else {
                                     listas.errores.add(new NodoError(getLinea(), getColumna(), NodoError.tipoError.Semantico,
                                             "La funcion C no es valida"));
+                                    return Operacion.tipoDato.ERRORSEMANTICO;
                                 }
                             } else {
                                 listas.errores.add(new NodoError(getLinea(), getColumna(), NodoError.tipoError.Semantico,
                                         "La funcion C no es valida"));
+                                return Operacion.tipoDato.ERRORSEMANTICO;
                             }
-                            break;
+                        //break;
 
                         case "list":
                             break;
@@ -115,12 +118,14 @@ public class Identificador extends Entorno implements Expresion {
                                 } else {
                                     listas.errores.add(new NodoError(getLinea(), getColumna(), NodoError.tipoError.Semantico,
                                             "La funcion TypeOf no es valida"));
+                                    return Operacion.tipoDato.ERRORSEMANTICO;
                                 }
                             } else {
                                 listas.errores.add(new NodoError(getLinea(), getColumna(), NodoError.tipoError.Semantico,
                                         "La funcion TypeOf no es valida"));
+                                return Operacion.tipoDato.ERRORSEMANTICO;
                             }
-                            break;
+                        //break;
 
                         case "length":
                             if (EDerecha.size() == 1) {
@@ -136,8 +141,9 @@ public class Identificador extends Entorno implements Expresion {
                             } else {
                                 listas.errores.add(new NodoError(getLinea(), getColumna(), NodoError.tipoError.Semantico,
                                         "La funcion length no es valida"));
+                                return Operacion.tipoDato.ERRORSEMANTICO;
                             }
-                            break;
+                        //break;
 
                         case "ncol"://matriz
                             break;
@@ -160,12 +166,14 @@ public class Identificador extends Entorno implements Expresion {
                                 } else {
                                     listas.errores.add(new NodoError(getLinea(), getColumna(), NodoError.tipoError.Semantico,
                                             "La funcion Stringlength no es valida"));
+                                    return Operacion.tipoDato.ERRORSEMANTICO;
                                 }
                             } else {
                                 listas.errores.add(new NodoError(getLinea(), getColumna(), NodoError.tipoError.Semantico,
                                         "La funcion Stringlength no es valida"));
+                                return Operacion.tipoDato.ERRORSEMANTICO;
                             }
-                            break;
+                        //break;
 
                         case "remove":
                             if (EDerecha.size() == 1) {
@@ -182,12 +190,14 @@ public class Identificador extends Entorno implements Expresion {
                                 } else {
                                     listas.errores.add(new NodoError(getLinea(), getColumna(), NodoError.tipoError.Semantico,
                                             "La funcion Remove no es valida"));
+                                    return Operacion.tipoDato.ERRORSEMANTICO;
                                 }
                             } else {
                                 listas.errores.add(new NodoError(getLinea(), getColumna(), NodoError.tipoError.Semantico,
                                         "La funcion Remove no es valida"));
+                                return Operacion.tipoDato.ERRORSEMANTICO;
                             }
-                            break;
+                        //break;
 
                         case "tolowercase":
                             if (EDerecha.size() == 1) {
@@ -204,12 +214,14 @@ public class Identificador extends Entorno implements Expresion {
                                 } else {
                                     listas.errores.add(new NodoError(getLinea(), getColumna(), NodoError.tipoError.Semantico,
                                             "La funcion Tolowercase no es valida"));
+                                    return Operacion.tipoDato.ERRORSEMANTICO;
                                 }
                             } else {
                                 listas.errores.add(new NodoError(getLinea(), getColumna(), NodoError.tipoError.Semantico,
                                         "La funcion Tolowercase no es valida"));
+                                return Operacion.tipoDato.ERRORSEMANTICO;
                             }
-                            break;
+                        //break;
 
                         case "touppercase":
                             if (EDerecha.size() == 1) {
@@ -226,12 +238,14 @@ public class Identificador extends Entorno implements Expresion {
                                 } else {
                                     listas.errores.add(new NodoError(getLinea(), getColumna(), NodoError.tipoError.Semantico,
                                             "La funcion ToUpperCase no es valida"));
+                                    return Operacion.tipoDato.ERRORSEMANTICO;
                                 }
                             } else {
                                 listas.errores.add(new NodoError(getLinea(), getColumna(), NodoError.tipoError.Semantico,
                                         "La funcion ToUpperCase no es valida"));
+                                return Operacion.tipoDato.ERRORSEMANTICO;
                             }
-                            break;
+                        //break;
 
                         case "trunk":
                             if (EDerecha.size() == 1) {
@@ -248,12 +262,14 @@ public class Identificador extends Entorno implements Expresion {
                                 } else {
                                     listas.errores.add(new NodoError(getLinea(), getColumna(), NodoError.tipoError.Semantico,
                                             "La funcion Trunk no es valida"));
+                                    return Operacion.tipoDato.ERRORSEMANTICO;
                                 }
                             } else {
                                 listas.errores.add(new NodoError(getLinea(), getColumna(), NodoError.tipoError.Semantico,
                                         "La funcion Trunk no es valida"));
+                                return Operacion.tipoDato.ERRORSEMANTICO;
                             }
-                            break;
+                        //break;
 
                         case "round":
                             if (EDerecha.size() == 1) {
@@ -270,12 +286,14 @@ public class Identificador extends Entorno implements Expresion {
                                 } else {
                                     listas.errores.add(new NodoError(getLinea(), getColumna(), NodoError.tipoError.Semantico,
                                             "La funcion Round no es valida"));
+                                    return Operacion.tipoDato.ERRORSEMANTICO;
                                 }
                             } else {
                                 listas.errores.add(new NodoError(getLinea(), getColumna(), NodoError.tipoError.Semantico,
                                         "La funcion Round no es valida"));
+                                return Operacion.tipoDato.ERRORSEMANTICO;
                             }
-                            break;
+                        //break;
 
                         //-----------------------------------------------------------------------------------------------------------------------------
                         case "mean":
@@ -288,13 +306,71 @@ public class Identificador extends Entorno implements Expresion {
                             break;
 
                         default:
+                            //funcion creada por mi, verificar si existe
 
                             break;
 
                     }
                 } else {
                     //aqui irian todos los demas accesos que tiene el mismo nombre de las funciones
+                    //vector: [1,2,3,4,5] -> acceso: vector[1][2][1]
 
+                    ArrayList<Object> arree = new ArrayList<>();
+                    Simbolo sim = this.get(getId(), tablaDeSimbolos, Simbolo.Rol.VARIABLE);
+
+                    if (sim != null) {
+                        arree = (ArrayList<Object>) sim.getValor();
+                        Operacion.tipoDato tti = sim.getTipo();
+                        if (tti.equals(Operacion.tipoDato.VECTOR) || tti.equals(Operacion.tipoDato.MATRIZ)
+                                || tti.equals(Operacion.tipoDato.ARRAY) || tti.equals(Operacion.tipoDato.LISTA)) {
+                            
+                            
+                            for (Expresion expreDERECHA : EDerecha) {
+
+                                switch (tti) {
+                                    case VECTOR:
+                                        //verificar que sea el acceso que es del vector
+                                        //acceder y si trae mas 
+                                        if (expreDERECHA instanceof EDerechaCorcheteSimple) {
+                                            Object ow = accesosVector(tablaDeSimbolos, listas, arree, expreDERECHA);
+                                            if (ow instanceof ArrayList) {
+                                                arree = (ArrayList<Object>) ow;
+                                            } else if (ow instanceof Operacion.tipoDato) {
+                                                return Operacion.tipoDato.ERRORSEMANTICO;
+                                            }
+                                        } else {
+                                            listas.errores.add(new NodoError(getLinea(), getColumna(), NodoError.tipoError.Semantico,
+                                                    "Acceso al vector: " + getId() + " no es valido, se esperaba [ Indice ]"));
+                                            return Operacion.tipoDato.ERRORSEMANTICO;
+                                        }
+                                        break;
+
+                                    case LISTA:
+
+                                        break;
+
+                                    case MATRIZ:
+
+                                        break;
+
+                                    case ARRAY:
+
+                                        break;
+
+                                }
+
+                            }
+                            return arree;
+                        } else {
+                            listas.errores.add(new NodoError(getLinea(), getColumna(), NodoError.tipoError.Semantico, "El id " + getId()
+                                    + " No es tipo Estructura para aplicar el acceso correspondiente"));
+                            return Operacion.tipoDato.ERRORSEMANTICO;
+                        }
+                    } else {
+                        listas.errores.add(new NodoError(getLinea(), getColumna(), NodoError.tipoError.Semantico, "El id " + getId()
+                                + " No existe como variable para accesar"));
+                        return Operacion.tipoDato.ERRORSEMANTICO;
+                    }
                 }
             } else {
                 //variable normal guardada en tabla de simbolos
@@ -314,13 +390,25 @@ public class Identificador extends Entorno implements Expresion {
         try {
             if (EDerecha.size() > 0) {
                 //solo llamadas a funciones o accesos
-                Simbolo encontrado = this.get(getId(), tablaDeSimbolos, Simbolo.Rol.FUNCION);
-                if (encontrado != null) {
-                    return encontrado.getTipo();
-                } else if (encontrado == null) {
-                    return encontrado.getTipo();
+                Expresion ss = EDerecha.get(0);
+                if (ss instanceof EDerechaParentesis) {
+                    Simbolo encontrado = this.get(getId(), tablaDeSimbolos, Simbolo.Rol.FUNCION);
+                    if (encontrado != null) {
+                        return encontrado.getTipo();
+                    } else if (encontrado == null) {
+                        listas.errores.add(new NodoError(getLinea(), getColumna(), NodoError.tipoError.Semantico, "El id " + getId()
+                                + " No existe como Funcion para Ejecutar"));
+                        return Operacion.tipoDato.ERRORSEMANTICO;
+                    }
                 } else {
-                    return Operacion.tipoDato.ERRORSEMANTICO;
+                    Simbolo encontrado = this.get(getId(), tablaDeSimbolos, Simbolo.Rol.VARIABLE);
+                    if (encontrado != null) {
+                        return encontrado.getTipoItems();
+                    } else if (encontrado == null) {
+                        listas.errores.add(new NodoError(getLinea(), getColumna(), NodoError.tipoError.Semantico, "El id " + getId()
+                                + " No existe como variable para accesar"));
+                        return Operacion.tipoDato.ERRORSEMANTICO;
+                    }
                 }
             } else {
                 //solo variables
@@ -328,6 +416,8 @@ public class Identificador extends Entorno implements Expresion {
                 if (encontrado != null) {
                     return encontrado.getTipo();
                 } else {
+                    listas.errores.add(new NodoError(getLinea(), getColumna(), NodoError.tipoError.Semantico, "El id " + getId()
+                                + " No existe como variable para devolver el tipo"));
                     return Operacion.tipoDato.ERRORSEMANTICO;
                 }
             }
@@ -336,6 +426,29 @@ public class Identificador extends Entorno implements Expresion {
             System.out.println("Error en la clase Identificador");
         }
         return Operacion.tipoDato.ERRORSEMANTICO;
+    }
+
+    public Object accesosVector(Entorno tablaDeSimbolos, ErrorImpresion listas, ArrayList vector, Expresion indice) {
+
+        Operacion.tipoDato tipoIndice = indice.getType(tablaDeSimbolos, listas);
+        if (tipoIndice.equals(Operacion.tipoDato.ENTERO)) {
+            int inde = (int) ((ArrayList)indice.getValue(tablaDeSimbolos, listas)).get(0);
+            if (inde >= 1 && inde <= vector.size()) {
+                if (inde == 1 && vector.size() == 1) {
+                    return vector;
+                } else {
+                    return vector.get(inde - 1) ;
+                }
+            } else {
+                listas.errores.add(new NodoError(getLinea(), getColumna(), NodoError.tipoError.Semantico, "En el acceso al id: " + getId()
+                        + " el Indice no es valido, esta fuera de rando"));
+                return Operacion.tipoDato.ERRORSEMANTICO;
+            }
+        } else {
+            listas.errores.add(new NodoError(getLinea(), getColumna(), NodoError.tipoError.Semantico, "En el acceso al id: " + getId()
+                    + " el Indice no es valido, se espera un tipo Entero"));
+            return Operacion.tipoDato.ERRORSEMANTICO;
+        }
     }
 
     //saber si EDerecha trae nodos para ver si es lista, vector, matriz o array
