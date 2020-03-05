@@ -54,12 +54,12 @@ public class Factorizando_id_igual extends Entorno implements Instruccion {
                     sbl.setColumna(getColumna());
                     sbl.setFila(getLinea());
                     sbl.setId(getId());
-                    this.setSimbolo(getId().toLowerCase(), sbl);
+                    this.setSimbolo(getId().toLowerCase(), sbl, tablaDeSimbolos);
                     
                 } else {
                     Simbolo nuevo = new Simbolo(id.toLowerCase(), objetoo, linea, columna,
                             funcionesDeclaraciones.getType(tablaDeSimbolos, listas), Simbolo.Rol.VARIABLE);
-                    this.setSimbolo(id.toLowerCase(), nuevo);
+                    this.setSimbolo(id.toLowerCase(), nuevo, tablaDeSimbolos);
                 }
             }
         }

@@ -62,8 +62,8 @@ public class Entorno {
         try {
 
             for (Entorno entorno = actual; entorno != null; entorno = entorno.padreANTERIOR) {
-                for (Simbolo simbolo : tablaS) {
-                    if (simbolo.getId() == id.toLowerCase()) {
+                for (Simbolo simbolo : entorno.tablaS) {
+                    if (simbolo.getId().equals(id.toLowerCase())) {
                         if (rol == simbolo.getRol()) {
                             return simbolo;
                         }
@@ -77,13 +77,13 @@ public class Entorno {
         return null;
     }
 
-    public void setSimbolo(String id, Simbolo nuevoSimbolo) {
+    public void setSimbolo(String id, Simbolo nuevoSimbolo, Entorno TablaSimbolos) {
         try {
             /*if (!this.tablaS.contains(id.toLowerCase())) {
                 this.tablaS.put(id.toLowerCase(), nuevoSimbolo);
             }*/
 
-            this.tablaS.add(nuevoSimbolo);
+            TablaSimbolos.tablaS.add(nuevoSimbolo);
 
         } catch (Exception e) {
             System.out.println("Error en la clase Entorno setSimbolo()");

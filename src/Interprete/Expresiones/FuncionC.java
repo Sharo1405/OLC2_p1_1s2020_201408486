@@ -64,10 +64,10 @@ public class FuncionC implements Expresion {
 
                         case VECTOR:
                             //HACER EL VECTOR solo deberia de traer un parentesisi con una lista de expresiones dentro
-                            ArrayList<Object> valorRetorno = new ArrayList<>();                   
+                            ArrayList<Object> valorRetorno = new ArrayList<>();
                             Expresion actual = listaExpresiones.get(0);
-                            Object v = actual.getValue(tablaDeSimbolos, listas);                            
-                            Simbolo nuevo = new Simbolo("", v, getLinea(), getColumna(), Operacion.tipoDato.VECTOR, 
+                            Object v = actual.getValue(tablaDeSimbolos, listas);
+                            Simbolo nuevo = new Simbolo("", v, getLinea(), getColumna(), Operacion.tipoDato.VECTOR,
                                     actual.getType(tablaDeSimbolos, listas), Simbolo.Rol.VARIABLE);
                             return nuevo;
                     }
@@ -81,8 +81,6 @@ public class FuncionC implements Expresion {
                 listas.errores.add(new NodoError(getLinea(), getColumna(), NodoError.tipoError.Semantico, "Funcion C no valida no es precedida de Parentesis"));
                 return Operacion.tipoDato.ERRORSEMANTICO;
             }
-
-            return Operacion.tipoDato.ERRORSEMANTICO;
         } catch (Exception e) {
             System.out.println("Error en la clase Funcion C");
         }

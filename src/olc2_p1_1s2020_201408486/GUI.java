@@ -353,8 +353,8 @@ public class GUI extends javax.swing.JFrame {
     public void EscribirHTML(ArrayList<ErrorE> errorLexico, ArrayList<ErrorE> errorSintactico, LinkedList<NodoError> errores) {
 
         StringBuilder paraHTML = new StringBuilder();
-        paraHTML.append("<HTML> \n <HEAD> \n <TITLE> REPORTE DE ERRORES GXML</TITLE> \n </HEAD> \n <BODY> \n");
-        paraHTML.append("<H1> REPORTE DE ERRORES GXML </H1> \n");
+        paraHTML.append("<HTML> \n <HEAD> \n <TITLE> REPORTE DE ERRORES</TITLE> \n </HEAD> \n <BODY> \n");
+        paraHTML.append("<H1> REPORTE DE ERRORES </H1> \n");
         paraHTML.append("<TABLE style=\"font-size:20px\" height=200 width=1000 border=1 align=center cellpadding=10 BGCOLOR==\"#FFFF00\" >\n "
                 + "<tr>\n"
                 + "  <td><strong>Tipo</strong></td>\n"
@@ -393,14 +393,14 @@ public class GUI extends javax.swing.JFrame {
                 + "</BODY> \n "
                 + "</HTML> \n");
 
-        File arch = new File("ErroresGXML.html");
+        File arch = new File("Errores.html");
         if (arch.exists()) {
             arch.delete();
         }
         FileWriter nuevoMismo = null;
         PrintWriter pw = null;
         try {
-            nuevoMismo = new FileWriter("ErroresGXML.html");
+            nuevoMismo = new FileWriter("Errores.html");
             pw = new PrintWriter(arch);
             pw.write(paraHTML.toString());
             pw.close();
@@ -448,8 +448,9 @@ public class GUI extends javax.swing.JFrame {
             EscribirHTML(Lexico.errorLexico, parser.errorSintactico, errorSemanti);
             entro = 1;
         } catch (Exception ex) {
-            ex.printStackTrace();
+            //ex.printStackTrace();
             // Logger.getLogger(GUI.class.getName()).log(Level.SEVERE, null, ex);
+            System.out.println("Error al Analizar Excepcion");
         }
         System.out.println("Finaliza la evalucion de la cadena....");
     }//GEN-LAST:event_jMenuItem5ActionPerformed
@@ -581,7 +582,7 @@ public class GUI extends javax.swing.JFrame {
     private void jMenuItem8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem8ActionPerformed
         //ERRORES GXML
         Desktop desktop;
-        File file = new File("ErroresGXML.html");//declaro un Objeto File que apunte a mi archivo html
+        File file = new File("Errores.html");//declaro un Objeto File que apunte a mi archivo html
         if (Desktop.isDesktopSupported()) {// si éste Host soporta esta API 
             desktop = Desktop.getDesktop();//objtengo una instancia del Desktop(Escritorio)de mi host 
             try {

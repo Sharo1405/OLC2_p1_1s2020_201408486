@@ -7,6 +7,7 @@ package Interprete.Expresiones;
 
 import Interprete.Entorno.Entorno;
 import Interprete.ErrorImpresion;
+import Interprete.NodoError;
 import java.util.ArrayList;
 
 /**
@@ -50,12 +51,18 @@ public class LlamadaFunciones implements Expresion {
 
                         case ARRAY:
                             break;
+                            
+                        case ERRORSEMANTICO:
+                            listas.errores.add(new NodoError(getLinea(), getColumna(), NodoError.tipoError.Semantico, "La llamada a la funcion su tipo no es valido"));
+                            break;
 
                         default:
                             //aqui van todos los demas tipos
                             Object impri = Parametros.getValue(tablaDeSimbolos, listas);
                             if (impri instanceof ArrayList) {
                                 listas.impresiones.add(String.valueOf(((ArrayList) impri).get(0)) + "\n");
+                            }else{
+                                listas.impresiones.add(String.valueOf(impri) + "\n");
                             }
                     }
 

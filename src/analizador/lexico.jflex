@@ -296,5 +296,4 @@ enter   = [\ \n]
 [ \t\r\n\f]                 {/* ignore white space. */ }
 .                           {System.out.println("ERROR LEXICO: <<"+yytext()+">> Linea: "+yyline+" ,Columna: "+yycolumn);
                             //errorLexico.add(new ErrorE("ERROR LEXICO: <<" +yytext()+ ">> Linea: "+yyline+" ,Columna: "+yycolumn));
-                            errorLexico.add(new ErrorE(yytext(), yyline, yycolumn));
-                            ;}
+                            errorLexico.add(new ErrorE(yytext(), yyline, yycolumn)); }

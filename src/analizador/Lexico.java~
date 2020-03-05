@@ -740,7 +740,6 @@ public class Lexico implements java_cup.runtime.Scanner {
             { System.out.println("ERROR LEXICO: <<"+yytext()+">> Linea: "+yyline+" ,Columna: "+yycolumn);
                             //errorLexico.add(new ErrorE("ERROR LEXICO: <<" +yytext()+ ">> Linea: "+yyline+" ,Columna: "+yycolumn));
                             errorLexico.add(new ErrorE(yytext(), yyline, yycolumn));
-                            ;
             }
           case 64: break;
           case 2: 
