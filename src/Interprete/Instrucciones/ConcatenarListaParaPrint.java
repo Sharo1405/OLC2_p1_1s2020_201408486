@@ -63,9 +63,9 @@ public class ConcatenarListaParaPrint implements Instruccion {
 
                     }
                 } else {
-                    concatena += " [ ";
+                    //concatena += " [ ";
                     concatena += String.valueOf(object);
-                    concatena += " ] ";
+                    //concatena += " ] ";
                 }
 
                 if (contador == tamanio) {

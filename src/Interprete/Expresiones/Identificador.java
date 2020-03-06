@@ -342,7 +342,9 @@ public class Identificador extends Entorno implements Expresion {
                     Simbolo sim = this.get(getId(), tablaDeSimbolos, Simbolo.Rol.VARIABLE);
 
                     if (sim != null) {
-                        arree = (ArrayList<Object>) sim.getValor();
+                        Object sdsa = sim.getValor();
+                        //arree = (ArrayList<Object>) sim.getValor();
+
                         Operacion.tipoDato tti = sim.getTipo();
                         if (tti.equals(Operacion.tipoDato.VECTOR) || tti.equals(Operacion.tipoDato.MATRIZ)
                                 || tti.equals(Operacion.tipoDato.ARRAY) || tti.equals(Operacion.tipoDato.LISTA)) {
@@ -354,10 +356,19 @@ public class Identificador extends Entorno implements Expresion {
                                         //verificar que sea el acceso que es del vector
                                         //acceder y si trae mas 
                                         if (expreDERECHA instanceof EDerechaCorcheteSimple) {
-                                            Object ow = accesosVector(tablaDeSimbolos, listas, arree, expreDERECHA);
-                                            if (ow instanceof ArrayList) {
-                                                arree = (ArrayList<Object>) ow;
-                                            } else if (ow instanceof Operacion.tipoDato) {
+                                            if (sdsa != null) {
+                                                if (sdsa instanceof Simbolo) {
+                                                    listas.errores.add(new NodoError(getLinea(), getColumna(), NodoError.tipoError.Semantico,
+                                                            "Vector con multiples dimensiones no es valido"));
+                                                    return Operacion.tipoDato.ERRORSEMANTICO;
+                                                } else {
+                                                    arree = (ArrayList<Object>) sdsa;
+                                                }
+                                            }
+                                            sdsa = accesosVector(tablaDeSimbolos, listas, arree, expreDERECHA);
+                                            if (sdsa instanceof ArrayList) {
+                                                arree = (ArrayList<Object>) sdsa;
+                                            } else if (sdsa instanceof Operacion.tipoDato) {
                                                 return Operacion.tipoDato.ERRORSEMANTICO;
                                             }
                                         } else {
@@ -369,19 +380,44 @@ public class Identificador extends Entorno implements Expresion {
 
                                     case LISTA:
                                         if (expreDERECHA instanceof EDerechaCorcheteSimple) {
-                                            Object ow = accesosVector(tablaDeSimbolos, listas, arree, expreDERECHA);
-                                            if (ow instanceof ArrayList) {
-                                                arree = (ArrayList<Object>) ow;
-                                            } else if (ow instanceof Operacion.tipoDato) {
-                                                return Operacion.tipoDato.ERRORSEMANTICO;
+                                            //Object ow = accesosVector(tablaDeSimbolos, listas, arree, expreDERECHA);
+                                            if (sdsa != null) {
+                                                if (sdsa instanceof Simbolo) {
+                                                    ArrayList<Object> nuevo = new ArrayList<>();
+                                                    nuevo.add(sdsa);
+                                                    arree = nuevo;
+                                                } else {
+                                                    arree = (ArrayList<Object>) sdsa;
+                                                    sdsa = accesosVector(tablaDeSimbolos, listas, arree, expreDERECHA);
+                                                    if (sdsa instanceof ArrayList) {
+                                                        arree = (ArrayList<Object>) sdsa;
+                                                    } else if (sdsa instanceof Operacion.tipoDato) {
+                                                        return Operacion.tipoDato.ERRORSEMANTICO;
+                                                    }
+                                                }
                                             }
                                         } else if (expreDERECHA instanceof EDerechaCorcheteDoble) {
-                                            Object wo = accesosLista(tablaDeSimbolos, listas, arree, expreDERECHA);
-                                            if (wo instanceof ArrayList) {
-                                                arree = (ArrayList<Object>) wo;
-                                            } else if (wo instanceof Operacion.tipoDato) {
-                                                return Operacion.tipoDato.ERRORSEMANTICO;
+                                            
+                                            if (sdsa != null) {
+                                                if (sdsa instanceof Simbolo) {
+                                                    arree = (ArrayList<Object>) ((Simbolo)sdsa).getValor();
+                                                    sdsa = accesosVector(tablaDeSimbolos, listas, arree, expreDERECHA);
+                                                    if (sdsa instanceof ArrayList) {
+                                                        arree = (ArrayList<Object>) sdsa;
+                                                    } else if (sdsa instanceof Operacion.tipoDato) {
+                                                        return Operacion.tipoDato.ERRORSEMANTICO;
+                                                    }
+                                                } else {
+                                                    arree = (ArrayList<Object>) sdsa;
+                                                    sdsa = accesosVector(tablaDeSimbolos, listas, arree, expreDERECHA);
+                                                    if (sdsa instanceof ArrayList) {
+                                                        arree = (ArrayList<Object>) sdsa;
+                                                    } else if (sdsa instanceof Operacion.tipoDato) {
+                                                        return Operacion.tipoDato.ERRORSEMANTICO;
+                                                    }
+                                                }
                                             }
+                                                                                                                                   
                                         } else {
                                             listas.errores.add(new NodoError(getLinea(), getColumna(), NodoError.tipoError.Semantico,
                                                     "Acceso al vector: " + getId() + " no es valido, se esperaba [ Indice ]"));
@@ -512,9 +548,9 @@ public class Identificador extends Entorno implements Expresion {
                 } else {
                     //return vector.get(inde - 1);
                     Object o = vector.get(inde - 1);
-                    if(o instanceof Simbolo){
+                    if (o instanceof Simbolo) {
                         return ((Simbolo) o).getValor();
-                    }else{
+                    } else {
                         return o;
                     }
                 }
@@ -556,9 +592,9 @@ public class Identificador extends Entorno implements Expresion {
                         if (sisis instanceof Simbolo) {
                             Object s = ((Simbolo) sisis).getValor();
                             return s;
-                        } else if(sisis instanceof ArrayList){
+                        } else if (sisis instanceof ArrayList) {
                             return sisis;
-                        }else {
+                        } else {
                             //return sisis;
                             listas.errores.add(new NodoError(getLinea(), getColumna(), NodoError.tipoError.Semantico, "Posicion de la lista "
                                     + "NO VALIDA para acceso por valor [[]] "));
