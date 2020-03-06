@@ -10,6 +10,7 @@ import Interprete.Entorno.Simbolo;
 import Interprete.ErrorImpresion;
 import Interprete.Expresiones.Expresion;
 import Interprete.Expresiones.Operacion;
+import Interprete.NodoError;
 import java.util.LinkedList;
 
 /**
@@ -41,25 +42,61 @@ public class Factorizando_id_igual extends Entorno implements Instruccion {
             Simbolo encontrado = this.get(this.id.toLowerCase(), tablaDeSimbolos, Simbolo.Rol.VARIABLE);
             if (encontrado != null) {
                 //si exite entonces solo cambiar valor
-                int declarada = setValorSimbolo(this.id.toLowerCase(), funcionesDeclaraciones,
+                Object dvuleo = funcionesDeclaraciones.getValue(tablaDeSimbolos, listas);
+                if (dvuleo instanceof Operacion.tipoDato) {
+                    Operacion.tipoDato to = (Operacion.tipoDato) dvuleo;
+                    if (to.equals(Operacion.tipoDato.ERRORSEMANTICO)) {
+                        listas.errores.add(new NodoError(getLinea(), getColumna(), NodoError.tipoError.Semantico, "No se puede"
+                                + " realizar la declarcion de la variable: " + getId() + " ya que su valor a asignar no es valido"));
+                        return Operacion.tipoDato.ERRORSEMANTICO;
+                    } else {
+                        int declarada = setValorSimbolo(this.id.toLowerCase(), dvuleo,
                         tablaDeSimbolos, encontrado.getRol(), funcionesDeclaraciones.getType(tablaDeSimbolos, listas),
                         Simbolo.Rol.VARIABLE);
+                    }
+                } else {
+                    int declarada = setValorSimbolo(this.id.toLowerCase(), dvuleo,
+                        tablaDeSimbolos, encontrado.getRol(), funcionesDeclaraciones.getType(tablaDeSimbolos, listas),
+                        Simbolo.Rol.VARIABLE);
+                }               
 
             } else {
                 //no existe entonces declararla
                 //VERIFICAR SI LO QUE TRAE ES UN SIMBOLO
                 Object objetoo = funcionesDeclaraciones.getValue(tablaDeSimbolos, listas);
-                if (objetoo instanceof Simbolo) {
-                    Simbolo sbl = (Simbolo) objetoo;
-                    sbl.setColumna(getColumna());
-                    sbl.setFila(getLinea());
-                    sbl.setId(getId());
-                    this.setSimbolo(getId().toLowerCase(), sbl, tablaDeSimbolos);
-                    
+                if (objetoo instanceof Operacion.tipoDato) {
+                    Operacion.tipoDato to = (Operacion.tipoDato) objetoo;
+                    if (to.equals(Operacion.tipoDato.ERRORSEMANTICO)) {
+                        listas.errores.add(new NodoError(getLinea(), getColumna(), NodoError.tipoError.Semantico, "No se puede"
+                                + " realizar la declarcion de la variable: " + getId() + " ya que su valor a asignar no es valido"));
+                        return Operacion.tipoDato.ERRORSEMANTICO;
+                    } else {
+                        if (objetoo instanceof Simbolo) {
+                            Simbolo sbl = (Simbolo) objetoo;
+                            sbl.setColumna(getColumna());
+                            sbl.setFila(getLinea());
+                            sbl.setId(getId());
+                            this.setSimbolo(getId().toLowerCase(), sbl, tablaDeSimbolos);
+
+                        } else {
+                            Simbolo nuevo = new Simbolo(id.toLowerCase(), objetoo, linea, columna,
+                                    funcionesDeclaraciones.getType(tablaDeSimbolos, listas), Simbolo.Rol.VARIABLE);
+                            this.setSimbolo(id.toLowerCase(), nuevo, tablaDeSimbolos);
+                        }
+                    }
                 } else {
-                    Simbolo nuevo = new Simbolo(id.toLowerCase(), objetoo, linea, columna,
-                            funcionesDeclaraciones.getType(tablaDeSimbolos, listas), Simbolo.Rol.VARIABLE);
-                    this.setSimbolo(id.toLowerCase(), nuevo, tablaDeSimbolos);
+                    if (objetoo instanceof Simbolo) {
+                        Simbolo sbl = (Simbolo) objetoo;
+                        sbl.setColumna(getColumna());
+                        sbl.setFila(getLinea());
+                        sbl.setId(getId());
+                        this.setSimbolo(getId().toLowerCase(), sbl, tablaDeSimbolos);
+
+                    } else {
+                        Simbolo nuevo = new Simbolo(id.toLowerCase(), objetoo, linea, columna,
+                                funcionesDeclaraciones.getType(tablaDeSimbolos, listas), Simbolo.Rol.VARIABLE);
+                        this.setSimbolo(id.toLowerCase(), nuevo, tablaDeSimbolos);
+                    }
                 }
             }
         }

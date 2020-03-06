@@ -445,7 +445,7 @@ public class GUI extends javax.swing.JFrame {
             
             ImprimirConsola(erorImpresion.impresiones);
             
-            EscribirHTML(Lexico.errorLexico, parser.errorSintactico, errorSemanti);
+            EscribirHTML(Lexico.errorLexico, parser.errorSintactico, erorImpresion.errores);
             entro = 1;
         } catch (Exception ex) {
             //ex.printStackTrace();

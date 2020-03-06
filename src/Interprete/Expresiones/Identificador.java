@@ -94,7 +94,7 @@ public class Identificador extends Entorno implements Expresion {
                                         "La funcion List no es valida"));
                                 return Operacion.tipoDato.ERRORSEMANTICO;
                             }
-                            //break;
+                        //break;
 
                         case "matrix":
                             break;
@@ -119,7 +119,8 @@ public class Identificador extends Entorno implements Expresion {
                         case "print":
                             listas.errores.add(new NodoError(getLinea(), getColumna(), NodoError.tipoError.Semantico,
                                     "La funcion Print no es valida como asignacion a una variable"));
-                            break;
+                            return Operacion.tipoDato.ERRORSEMANTICO;
+                        //break;
 
                         case "typeof":
                             if (EDerecha.size() == 1) {
@@ -367,7 +368,25 @@ public class Identificador extends Entorno implements Expresion {
                                         break;
 
                                     case LISTA:
-
+                                        if (expreDERECHA instanceof EDerechaCorcheteSimple) {
+                                            Object ow = accesosVector(tablaDeSimbolos, listas, arree, expreDERECHA);
+                                            if (ow instanceof ArrayList) {
+                                                arree = (ArrayList<Object>) ow;
+                                            } else if (ow instanceof Operacion.tipoDato) {
+                                                return Operacion.tipoDato.ERRORSEMANTICO;
+                                            }
+                                        } else if (expreDERECHA instanceof EDerechaCorcheteDoble) {
+                                            Object wo = accesosLista(tablaDeSimbolos, listas, arree, expreDERECHA);
+                                            if (wo instanceof ArrayList) {
+                                                arree = (ArrayList<Object>) wo;
+                                            } else if (wo instanceof Operacion.tipoDato) {
+                                                return Operacion.tipoDato.ERRORSEMANTICO;
+                                            }
+                                        } else {
+                                            listas.errores.add(new NodoError(getLinea(), getColumna(), NodoError.tipoError.Semantico,
+                                                    "Acceso al vector: " + getId() + " no es valido, se esperaba [ Indice ]"));
+                                            return Operacion.tipoDato.ERRORSEMANTICO;
+                                        }
                                         break;
 
                                     case MATRIZ:
@@ -411,26 +430,59 @@ public class Identificador extends Entorno implements Expresion {
         try {
             if (EDerecha.size() > 0) {
                 //solo llamadas a funciones o accesos
-                Expresion ss = EDerecha.get(0);
-                if (ss instanceof EDerechaParentesis) {
-                    Simbolo encontrado = this.get(getId(), tablaDeSimbolos, Simbolo.Rol.FUNCION);
-                    if (encontrado != null) {
-                        return encontrado.getTipo();
-                    } else if (encontrado == null) {
-                        listas.errores.add(new NodoError(getLinea(), getColumna(), NodoError.tipoError.Semantico, "El id " + getId()
-                                + " No existe como Funcion para Ejecutar"));
-                        return Operacion.tipoDato.ERRORSEMANTICO;
-                    }
-                } else {
-                    Simbolo encontrado = this.get(getId(), tablaDeSimbolos, Simbolo.Rol.VARIABLE);
-                    if (encontrado != null) {
-                        return encontrado.getTipoItems();
-                    } else if (encontrado == null) {
-                        listas.errores.add(new NodoError(getLinea(), getColumna(), NodoError.tipoError.Semantico, "El id " + getId()
-                                + " No existe como variable para accesar"));
-                        return Operacion.tipoDato.ERRORSEMANTICO;
+                Operacion.tipoDato tipoDvolvergetTYpe = Operacion.tipoDato.NULO;
+                for (Expresion sim : EDerecha) {
+
+                    Expresion ss = sim;//EDerecha.get(0);
+                    if (ss instanceof EDerechaParentesis) {
+                        Simbolo encontrado = this.get(getId(), tablaDeSimbolos, Simbolo.Rol.FUNCION);
+                        if (encontrado != null) {
+                            tipoDvolvergetTYpe = encontrado.getTipo();
+                        } else if (encontrado == null) {
+                            listas.errores.add(new NodoError(getLinea(), getColumna(), NodoError.tipoError.Semantico, "El id " + getId()
+                                    + " No existe como Funcion para Ejecutar"));
+                            return Operacion.tipoDato.ERRORSEMANTICO;
+                        }
+                    } else if (ss instanceof EDerechaCorcheteSimple) {//[]
+
+                        Simbolo encontrado = this.get(getId(), tablaDeSimbolos, Simbolo.Rol.VARIABLE);
+                        if (encontrado != null) {
+                            //tipoDvolvergetTYpe = encontrado.getTipo();
+                            Operacion.tipoDato u = encontrado.getTipo();
+                            if (u.equals(Operacion.tipoDato.VECTOR)) {
+                                tipoDvolvergetTYpe = Operacion.tipoDato.VECTOR;
+                            } else if (u.equals(Operacion.tipoDato.LISTA)) {
+                                tipoDvolvergetTYpe = Operacion.tipoDato.LISTA;
+                            }
+                        } else if (encontrado == null) {
+                            listas.errores.add(new NodoError(getLinea(), getColumna(), NodoError.tipoError.Semantico, "El id " + getId()
+                                    + " No existe como Funcion para Ejecutar"));
+                            return Operacion.tipoDato.ERRORSEMANTICO;
+                        }
+
+                    } else if (ss instanceof EDerechaCorcheteDoble) {//[ [] ]
+                        Simbolo encontrado = this.get(getId(), tablaDeSimbolos, Simbolo.Rol.VARIABLE);
+                        if (encontrado != null) {
+                            //tipoDvolvergetTYpe = encontrado.getTipo();
+                            tipoDvolvergetTYpe = Operacion.tipoDato.VECTOR;
+
+                        } else if (encontrado == null) {
+                            listas.errores.add(new NodoError(getLinea(), getColumna(), NodoError.tipoError.Semantico, "El id " + getId()
+                                    + " No existe como Funcion para Ejecutar"));
+                            return Operacion.tipoDato.ERRORSEMANTICO;
+                        }
+                    } else {
+                        Simbolo encontrado = this.get(getId(), tablaDeSimbolos, Simbolo.Rol.VARIABLE);
+                        if (encontrado != null) {
+                            tipoDvolvergetTYpe = encontrado.getTipoItems();
+                        } else if (encontrado == null) {
+                            listas.errores.add(new NodoError(getLinea(), getColumna(), NodoError.tipoError.Semantico, "El id " + getId()
+                                    + " No existe como variable para accesar"));
+                            return Operacion.tipoDato.ERRORSEMANTICO;
+                        }
                     }
                 }
+                return tipoDvolvergetTYpe;
             } else {
                 //solo variables
                 Simbolo encontrado = this.get(getId(), tablaDeSimbolos, Simbolo.Rol.VARIABLE);
@@ -458,7 +510,13 @@ public class Identificador extends Entorno implements Expresion {
                 if (inde == 1 && vector.size() == 1) {
                     return vector;
                 } else {
-                    return vector.get(inde - 1);
+                    //return vector.get(inde - 1);
+                    Object o = vector.get(inde - 1);
+                    if(o instanceof Simbolo){
+                        return ((Simbolo) o).getValor();
+                    }else{
+                        return o;
+                    }
                 }
             } else {
                 listas.errores.add(new NodoError(getLinea(), getColumna(), NodoError.tipoError.Semantico, "En el acceso al id: " + getId()
@@ -470,6 +528,60 @@ public class Identificador extends Entorno implements Expresion {
                     + " el Indice no es valido, se espera un tipo Entero"));
             return Operacion.tipoDato.ERRORSEMANTICO;
         }
+    }
+
+    public Object accesosLista(Entorno tablaDeSimbolos, ErrorImpresion listas, ArrayList vector, Expresion indice) {
+        Operacion.tipoDato tipoIndice = indice.getType(tablaDeSimbolos, listas); //de este seria [[num]]
+        if (tipoIndice.equals(Operacion.tipoDato.ENTERO)) {
+            int inde = (int) ((ArrayList) indice.getValue(tablaDeSimbolos, listas)).get(0);
+            if (inde >= 1 && inde <= vector.size()) {
+                if (inde == 1 && vector.size() == 1) {
+                    //return vector;
+                    Object o = vector.get(inde - 1);
+                    if (o instanceof Simbolo) {
+                        ArrayList<Object> n = new ArrayList();
+                        n.add(o);
+                        return n;
+                    } else {
+                        listas.errores.add(new NodoError(getLinea(), getColumna(), NodoError.tipoError.Semantico, "Posicion de la lista "
+                                + "NO VALIDA para acceso por valor [[]] "));
+                        return Operacion.tipoDato.ERRORSEMANTICO;
+                    }
+                } else {
+                    //return vector.get(inde - 1);
+                    Object obDevuelto = vector.get(inde - 1);
+                    if (obDevuelto instanceof Simbolo) {
+                        Simbolo si = (Simbolo) obDevuelto;
+                        Object sisis = si.getValor(); //primero
+                        if (sisis instanceof Simbolo) {
+                            Object s = ((Simbolo) sisis).getValor();
+                            return s;
+                        } else if(sisis instanceof ArrayList){
+                            return sisis;
+                        }else {
+                            //return sisis;
+                            listas.errores.add(new NodoError(getLinea(), getColumna(), NodoError.tipoError.Semantico, "Posicion de la lista "
+                                    + "NO VALIDA para acceso por valor [[]] "));
+                            return Operacion.tipoDato.ERRORSEMANTICO;
+                        }
+                    } else if (obDevuelto instanceof ArrayList) {
+                        //return obDevuelto;
+                        listas.errores.add(new NodoError(getLinea(), getColumna(), NodoError.tipoError.Semantico, "Posicion de la lista "
+                                + "NO VALIDA para acceso por valor [[]] "));
+                        return Operacion.tipoDato.ERRORSEMANTICO;
+                    }
+                }
+            } else {
+                listas.errores.add(new NodoError(getLinea(), getColumna(), NodoError.tipoError.Semantico, "En el acceso al id: " + getId()
+                        + " el Indice no es valido, esta fuera de rando"));
+                return Operacion.tipoDato.ERRORSEMANTICO;
+            }
+        } else {
+            listas.errores.add(new NodoError(getLinea(), getColumna(), NodoError.tipoError.Semantico, "En el acceso al id: " + getId()
+                    + " el Indice no es valido, se espera un tipo Entero"));
+            return Operacion.tipoDato.ERRORSEMANTICO;
+        }
+        return Operacion.tipoDato.ERRORSEMANTICO;
     }
 
     //saber si EDerecha trae nodos para ver si es lista, vector, matriz o array
