@@ -71,29 +71,28 @@ public class Operacion {
             return tipoDato.ERRORSEMANTICO;
         }
     }
-    
-    
-    
+
     //solo para lista de expresiones 
     public tipoDato tipoResultanteLISTA(ArrayList<tipoDato> listaTipo) {
-        
-        if(listaTipo.contains(tipoDato.LISTA)){
+
+        if (listaTipo.contains(tipoDato.LISTA)) {
             return tipoDato.LISTA;
-        }else if(listaTipo.contains(tipoDato.CADENA)){
+        } else if (listaTipo.contains(tipoDato.CADENA)) {
             return tipoDato.CADENA;
-        }else if(listaTipo.contains(tipoDato.DECIMAL)){
+        } else if (listaTipo.contains(tipoDato.DECIMAL)) {
             return tipoDato.DECIMAL;
-        }else if(listaTipo.contains(tipoDato.ENTERO)){
+        } else if (listaTipo.contains(tipoDato.ENTERO)) {
             return tipoDato.ENTERO;
-        }else if(listaTipo.contains(tipoDato.BOOLEAN)){
+        } else if (listaTipo.contains(tipoDato.BOOLEAN)) {
             return tipoDato.BOOLEAN;
-        }else if(listaTipo.contains(tipoDato.DECIMAL)){
+        } else if (listaTipo.contains(tipoDato.DECIMAL)) {
             return tipoDato.DECIMAL;
-        }else{
+        } else if (listaTipo.contains(tipoDato.VECTOR)) {
+            return tipoDato.VECTOR;
+        } else {
             return tipoDato.ERRORSEMANTICO;
-        }               
+        }
     }
-    
 
     /**
      * @return the linea

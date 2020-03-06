@@ -55,6 +55,7 @@ public class Ejecutar extends Entorno{
         Simbolo si13 = new Simbolo("mean", null, 0, 0, Operacion.tipoDato.DECIMAL, Simbolo.Rol.FUNCION);
         Simbolo si14 = new Simbolo("median", null, 0, 0, Operacion.tipoDato.DECIMAL, Simbolo.Rol.FUNCION);
         Simbolo si15 = new Simbolo("mode", null, 0, 0, Operacion.tipoDato.DECIMAL, Simbolo.Rol.FUNCION);
+        Simbolo s16 = new Simbolo("list", null, 0, 0, Operacion.tipoDato.LISTA, Simbolo.Rol.FUNCION);
         
         this.setSimbolo("print", si, tablaDeSimbolos);
         this.setSimbolo("c", si2, tablaDeSimbolos);
@@ -71,5 +72,6 @@ public class Ejecutar extends Entorno{
         this.setSimbolo("mean", si13, tablaDeSimbolos);
         this.setSimbolo("median", si14, tablaDeSimbolos);
         this.setSimbolo("mode", si15, tablaDeSimbolos);
+        this.setSimbolo("list", s16, tablaDeSimbolos);
     }
 }

@@ -54,7 +54,7 @@ public class Identificador extends Entorno implements Expresion {
                                     Object o = fc.getValue(tablaDeSimbolos, listas);
                                     if (o instanceof Operacion.tipoDato) {
                                         listas.errores.add(new NodoError(getLinea(), getColumna(), NodoError.tipoError.Semantico,
-                                                "Parametro no valido para la funcion Stringlength, el tipo pude ser lo invalido"));
+                                                "Parametro no valido para la funcion C, el tipo pude ser lo invalido"));
                                         return Operacion.tipoDato.ERRORSEMANTICO;
                                     }
                                     return o;
@@ -72,7 +72,29 @@ public class Identificador extends Entorno implements Expresion {
                         //break;
 
                         case "list":
-                            break;
+                            if (EDerecha.size() == 1) {
+                                Expresion expre = EDerecha.get(0);
+                                if (expre instanceof EDerechaParentesis) {
+                                    Listas fc = new Listas(expre, getLinea(), getColumna());
+                                    Object o = fc.getValue(tablaDeSimbolos, listas);
+                                    if (o instanceof Operacion.tipoDato) {
+                                        listas.errores.add(new NodoError(getLinea(), getColumna(), NodoError.tipoError.Semantico,
+                                                "Parametro no valido para la funcion List(), el tipo pude ser lo invalido"));
+                                        return Operacion.tipoDato.ERRORSEMANTICO;
+                                    }
+                                    return o;
+
+                                } else {
+                                    listas.errores.add(new NodoError(getLinea(), getColumna(), NodoError.tipoError.Semantico,
+                                            "La funcion List no es valida"));
+                                    return Operacion.tipoDato.ERRORSEMANTICO;
+                                }
+                            } else {
+                                listas.errores.add(new NodoError(getLinea(), getColumna(), NodoError.tipoError.Semantico,
+                                        "La funcion List no es valida"));
+                                return Operacion.tipoDato.ERRORSEMANTICO;
+                            }
+                            //break;
 
                         case "matrix":
                             break;
@@ -323,8 +345,7 @@ public class Identificador extends Entorno implements Expresion {
                         Operacion.tipoDato tti = sim.getTipo();
                         if (tti.equals(Operacion.tipoDato.VECTOR) || tti.equals(Operacion.tipoDato.MATRIZ)
                                 || tti.equals(Operacion.tipoDato.ARRAY) || tti.equals(Operacion.tipoDato.LISTA)) {
-                            
-                            
+
                             for (Expresion expreDERECHA : EDerecha) {
 
                                 switch (tti) {
@@ -417,7 +438,7 @@ public class Identificador extends Entorno implements Expresion {
                     return encontrado.getTipo();
                 } else {
                     listas.errores.add(new NodoError(getLinea(), getColumna(), NodoError.tipoError.Semantico, "El id " + getId()
-                                + " No existe como variable para devolver el tipo"));
+                            + " No existe como variable para devolver el tipo"));
                     return Operacion.tipoDato.ERRORSEMANTICO;
                 }
             }
@@ -432,12 +453,12 @@ public class Identificador extends Entorno implements Expresion {
 
         Operacion.tipoDato tipoIndice = indice.getType(tablaDeSimbolos, listas);
         if (tipoIndice.equals(Operacion.tipoDato.ENTERO)) {
-            int inde = (int) ((ArrayList)indice.getValue(tablaDeSimbolos, listas)).get(0);
+            int inde = (int) ((ArrayList) indice.getValue(tablaDeSimbolos, listas)).get(0);
             if (inde >= 1 && inde <= vector.size()) {
                 if (inde == 1 && vector.size() == 1) {
                     return vector;
                 } else {
-                    return vector.get(inde - 1) ;
+                    return vector.get(inde - 1);
                 }
             } else {
                 listas.errores.add(new NodoError(getLinea(), getColumna(), NodoError.tipoError.Semantico, "En el acceso al id: " + getId()

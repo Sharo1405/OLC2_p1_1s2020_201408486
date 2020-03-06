@@ -6,7 +6,9 @@
 package Interprete.Expresiones;
 
 import Interprete.Entorno.Entorno;
+import Interprete.Entorno.Simbolo;
 import Interprete.ErrorImpresion;
+import Interprete.Instrucciones.ConcatenarListaParaPrint;
 import Interprete.NodoError;
 import java.util.ArrayList;
 
@@ -41,9 +43,43 @@ public class LlamadaFunciones implements Expresion {
                     Operacion.tipoDato t = Parametros.getType(tablaDeSimbolos, listas);
                     switch (t) {
                         case VECTOR:
+                            Object imp2 = Parametros.getValue(tablaDeSimbolos, listas);
+                            String paraImprimir2 = "";
+                            if (imp2 instanceof Simbolo) {
+                                Simbolo s = (Simbolo) imp2;
+                                ArrayList<Object> ar = (ArrayList<Object>) s.getValor();
+                                ConcatenarListaParaPrint clp = new ConcatenarListaParaPrint(ar);
+                                paraImprimir2 += "[";
+                                paraImprimir2 += String.valueOf(clp.ejecutar(tablaDeSimbolos, listas));
+                                paraImprimir2 += "]";
+                            } else if (imp2 instanceof ArrayList) {
+                                ArrayList<Object> ar = (ArrayList<Object>) imp2;
+                                ConcatenarListaParaPrint clp = new ConcatenarListaParaPrint(ar);
+                                paraImprimir2 += "[";
+                                paraImprimir2 += String.valueOf(clp.ejecutar(tablaDeSimbolos, listas));
+                                paraImprimir2 += "]";
+                            }
+                            listas.impresiones.add(paraImprimir2 + "\n");                            
                             break;
 
                         case LISTA:
+                            Object imp = Parametros.getValue(tablaDeSimbolos, listas);
+                            String paraImprimir = "";
+                            if (imp instanceof Simbolo) {
+                                Simbolo s = (Simbolo) imp;
+                                ArrayList<Object> ar = (ArrayList<Object>) s.getValor();
+                                ConcatenarListaParaPrint clp = new ConcatenarListaParaPrint(ar);
+                                paraImprimir += "{";
+                                paraImprimir += String.valueOf(clp.ejecutar(tablaDeSimbolos, listas));
+                                paraImprimir += "}";
+                            } else if (imp instanceof ArrayList) {
+                                ArrayList<Object> ar = (ArrayList<Object>) imp;
+                                ConcatenarListaParaPrint clp = new ConcatenarListaParaPrint(ar);
+                                paraImprimir += "{";
+                                paraImprimir += String.valueOf(clp.ejecutar(tablaDeSimbolos, listas));
+                                paraImprimir += "}";
+                            }
+                            listas.impresiones.add(paraImprimir + "\n");
                             break;
 
                         case MATRIZ:
@@ -51,7 +87,7 @@ public class LlamadaFunciones implements Expresion {
 
                         case ARRAY:
                             break;
-                            
+
                         case ERRORSEMANTICO:
                             listas.errores.add(new NodoError(getLinea(), getColumna(), NodoError.tipoError.Semantico, "La llamada a la funcion su tipo no es valido"));
                             break;
@@ -61,7 +97,7 @@ public class LlamadaFunciones implements Expresion {
                             Object impri = Parametros.getValue(tablaDeSimbolos, listas);
                             if (impri instanceof ArrayList) {
                                 listas.impresiones.add(String.valueOf(((ArrayList) impri).get(0)) + "\n");
-                            }else{
+                            } else {
                                 listas.impresiones.add(String.valueOf(impri) + "\n");
                             }
                     }
