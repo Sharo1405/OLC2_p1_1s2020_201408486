@@ -43,7 +43,11 @@ public class Mediana implements Expresion {
 
             int mediana = vectorValores.size() / 2;
             if (vectorValores.size() % 2 == 1) {
-                return vectorValores.get(mediana);
+                Object nu = vectorValores.get(mediana);
+                ArrayList<Object> array1 = (ArrayList<Object>) nu;
+                Object holi = array1.get(0);
+                Double v = Double.parseDouble(String.valueOf(holi));
+                return v;
             } else {
                 Object o1 = vectorValores.get(mediana - 1);
                 Object o2 = vectorValores.get(mediana);

@@ -326,28 +326,36 @@ public class Identificador extends Entorno implements Expresion {
                                     EDerechaParentesis par = (EDerechaParentesis) expre;
                                     if (par.getValor() instanceof Comas) {
                                         //trae el TRIM
-                                        
+                                        MeanTrim fc = new MeanTrim(expre, getLinea(), getColumna(), (Comas) par.getValor());
+                                        Object o = fc.getValue(tablaDeSimbolos, listas);
+                                        if (o instanceof Operacion.tipoDato) {
+                                            listas.errores.add(new NodoError(getLinea(), getColumna(), NodoError.tipoError.Semantico,
+                                                    "Parametro no valido para la funcion Mean(), el tipo pude ser lo invalido se espera DECIMAL"));
+                                            return Operacion.tipoDato.ERRORSEMANTICO;
+                                        }
+                                        return o;
+
                                     } else {
                                         Meann fc = new Meann(expre, getLinea(), getColumna());
                                         Object o = fc.getValue(tablaDeSimbolos, listas);
                                         if (o instanceof Operacion.tipoDato) {
                                             listas.errores.add(new NodoError(getLinea(), getColumna(), NodoError.tipoError.Semantico,
-                                                    "Parametro no valido para la funcion Round, el tipo pude ser lo invalido se espera DECIMAL"));
+                                                    "Parametro no valido para la funcion Mean(), el tipo pude ser lo invalido se espera DECIMAL"));
                                             return Operacion.tipoDato.ERRORSEMANTICO;
                                         }
                                         return o;
                                     }
                                 } else {
                                     listas.errores.add(new NodoError(getLinea(), getColumna(), NodoError.tipoError.Semantico,
-                                            "La funcion Round no es valida"));
+                                            "La funcion Mean() no es valida"));
                                     return Operacion.tipoDato.ERRORSEMANTICO;
                                 }
                             } else {
                                 listas.errores.add(new NodoError(getLinea(), getColumna(), NodoError.tipoError.Semantico,
-                                        "La funcion Round no es valida"));
+                                        "La funcion Mean() no es valida"));
                                 return Operacion.tipoDato.ERRORSEMANTICO;
                             }
-                            //break;
+                        //break;
 
                         case "median":
                             if (EDerecha.size() == 1) {
@@ -356,28 +364,35 @@ public class Identificador extends Entorno implements Expresion {
                                     EDerechaParentesis par = (EDerechaParentesis) expre;
                                     if (par.getValor() instanceof Comas) {
                                         //trae el TRIM
-                                        
+                                        MedianaTrim fc = new MedianaTrim(expre, getLinea(), getColumna(), (Comas) par.getValor());
+                                        Object o = fc.getValue(tablaDeSimbolos, listas);
+                                        if (o instanceof Operacion.tipoDato) {
+                                            listas.errores.add(new NodoError(getLinea(), getColumna(), NodoError.tipoError.Semantico,
+                                                    "Parametro no valido para la funcion Mean(), el tipo pude ser lo invalido se espera DECIMAL"));
+                                            return Operacion.tipoDato.ERRORSEMANTICO;
+                                        }
+                                        return o;
                                     } else {
                                         Mediana fc = new Mediana(expre, getLinea(), getColumna());
                                         Object o = fc.getValue(tablaDeSimbolos, listas);
                                         if (o instanceof Operacion.tipoDato) {
                                             listas.errores.add(new NodoError(getLinea(), getColumna(), NodoError.tipoError.Semantico,
-                                                    "Parametro no valido para la funcion Round, el tipo pude ser lo invalido se espera DECIMAL"));
+                                                    "Parametro no valido para la funcion Median(), el tipo pude ser lo invalido se espera DECIMAL"));
                                             return Operacion.tipoDato.ERRORSEMANTICO;
                                         }
                                         return o;
                                     }
                                 } else {
                                     listas.errores.add(new NodoError(getLinea(), getColumna(), NodoError.tipoError.Semantico,
-                                            "La funcion Round no es valida"));
+                                            "La funcion Median() no es valida"));
                                     return Operacion.tipoDato.ERRORSEMANTICO;
                                 }
                             } else {
                                 listas.errores.add(new NodoError(getLinea(), getColumna(), NodoError.tipoError.Semantico,
-                                        "La funcion Round no es valida"));
+                                        "La funcion Median() no es valida"));
                                 return Operacion.tipoDato.ERRORSEMANTICO;
                             }
-                            //break;
+                        //break;
 
                         case "mode":
                             if (EDerecha.size() == 1) {
@@ -386,25 +401,32 @@ public class Identificador extends Entorno implements Expresion {
                                     EDerechaParentesis par = (EDerechaParentesis) expre;
                                     if (par.getValor() instanceof Comas) {
                                         //trae el TRIM
-                                        
+                                        ModaTrim fc = new ModaTrim(expre, getLinea(), getColumna(), (Comas) par.getValor());
+                                        Object o = fc.getValue(tablaDeSimbolos, listas);
+                                        if (o instanceof Operacion.tipoDato) {
+                                            listas.errores.add(new NodoError(getLinea(), getColumna(), NodoError.tipoError.Semantico,
+                                                    "Parametro no valido para la funcion Mode(), el tipo pude ser lo invalido se espera DECIMAL"));
+                                            return Operacion.tipoDato.ERRORSEMANTICO;
+                                        }
+                                        return o;
                                     } else {
                                         Moda fc = new Moda(expre, getLinea(), getColumna());
                                         Object o = fc.getValue(tablaDeSimbolos, listas);
                                         if (o instanceof Operacion.tipoDato) {
                                             listas.errores.add(new NodoError(getLinea(), getColumna(), NodoError.tipoError.Semantico,
-                                                    "Parametro no valido para la funcion Round, el tipo pude ser lo invalido se espera DECIMAL"));
+                                                    "Parametro no valido para la funcion Mode(), el tipo pude ser lo invalido se espera DECIMAL"));
                                             return Operacion.tipoDato.ERRORSEMANTICO;
                                         }
                                         return o;
                                     }
                                 } else {
                                     listas.errores.add(new NodoError(getLinea(), getColumna(), NodoError.tipoError.Semantico,
-                                            "La funcion Round no es valida"));
+                                            "La funcion Mode() no es valida"));
                                     return Operacion.tipoDato.ERRORSEMANTICO;
                                 }
                             } else {
                                 listas.errores.add(new NodoError(getLinea(), getColumna(), NodoError.tipoError.Semantico,
-                                        "La funcion Round no es valida"));
+                                        "La funcion Mode() no es valida"));
                                 return Operacion.tipoDato.ERRORSEMANTICO;
                             }
                             break;

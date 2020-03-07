@@ -77,7 +77,6 @@ public class Factorizando_id_igual extends Entorno implements Instruccion {
                             sbl.setFila(getLinea());
                             sbl.setId(getId());
                             this.setSimbolo(getId().toLowerCase(), sbl, tablaDeSimbolos);
-
                         } else {
                             Simbolo nuevo = new Simbolo(id.toLowerCase(), objetoo, linea, columna,
                                     funcionesDeclaraciones.getType(tablaDeSimbolos, listas), Simbolo.Rol.VARIABLE);
