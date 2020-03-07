@@ -320,12 +320,93 @@ public class Identificador extends Entorno implements Expresion {
 
                         //-----------------------------------------------------------------------------------------------------------------------------
                         case "mean":
-                            break;
+                            if (EDerecha.size() == 1) {
+                                Expresion expre = EDerecha.get(0);
+                                if (expre instanceof EDerechaParentesis) {
+                                    EDerechaParentesis par = (EDerechaParentesis) expre;
+                                    if (par.getValor() instanceof Comas) {
+                                        //trae el TRIM
+                                        
+                                    } else {
+                                        Meann fc = new Meann(expre, getLinea(), getColumna());
+                                        Object o = fc.getValue(tablaDeSimbolos, listas);
+                                        if (o instanceof Operacion.tipoDato) {
+                                            listas.errores.add(new NodoError(getLinea(), getColumna(), NodoError.tipoError.Semantico,
+                                                    "Parametro no valido para la funcion Round, el tipo pude ser lo invalido se espera DECIMAL"));
+                                            return Operacion.tipoDato.ERRORSEMANTICO;
+                                        }
+                                        return o;
+                                    }
+                                } else {
+                                    listas.errores.add(new NodoError(getLinea(), getColumna(), NodoError.tipoError.Semantico,
+                                            "La funcion Round no es valida"));
+                                    return Operacion.tipoDato.ERRORSEMANTICO;
+                                }
+                            } else {
+                                listas.errores.add(new NodoError(getLinea(), getColumna(), NodoError.tipoError.Semantico,
+                                        "La funcion Round no es valida"));
+                                return Operacion.tipoDato.ERRORSEMANTICO;
+                            }
+                            //break;
 
                         case "median":
-                            break;
+                            if (EDerecha.size() == 1) {
+                                Expresion expre = EDerecha.get(0);
+                                if (expre instanceof EDerechaParentesis) {
+                                    EDerechaParentesis par = (EDerechaParentesis) expre;
+                                    if (par.getValor() instanceof Comas) {
+                                        //trae el TRIM
+                                        
+                                    } else {
+                                        Mediana fc = new Mediana(expre, getLinea(), getColumna());
+                                        Object o = fc.getValue(tablaDeSimbolos, listas);
+                                        if (o instanceof Operacion.tipoDato) {
+                                            listas.errores.add(new NodoError(getLinea(), getColumna(), NodoError.tipoError.Semantico,
+                                                    "Parametro no valido para la funcion Round, el tipo pude ser lo invalido se espera DECIMAL"));
+                                            return Operacion.tipoDato.ERRORSEMANTICO;
+                                        }
+                                        return o;
+                                    }
+                                } else {
+                                    listas.errores.add(new NodoError(getLinea(), getColumna(), NodoError.tipoError.Semantico,
+                                            "La funcion Round no es valida"));
+                                    return Operacion.tipoDato.ERRORSEMANTICO;
+                                }
+                            } else {
+                                listas.errores.add(new NodoError(getLinea(), getColumna(), NodoError.tipoError.Semantico,
+                                        "La funcion Round no es valida"));
+                                return Operacion.tipoDato.ERRORSEMANTICO;
+                            }
+                            //break;
 
                         case "mode":
+                            if (EDerecha.size() == 1) {
+                                Expresion expre = EDerecha.get(0);
+                                if (expre instanceof EDerechaParentesis) {
+                                    EDerechaParentesis par = (EDerechaParentesis) expre;
+                                    if (par.getValor() instanceof Comas) {
+                                        //trae el TRIM
+                                        
+                                    } else {
+                                        Moda fc = new Moda(expre, getLinea(), getColumna());
+                                        Object o = fc.getValue(tablaDeSimbolos, listas);
+                                        if (o instanceof Operacion.tipoDato) {
+                                            listas.errores.add(new NodoError(getLinea(), getColumna(), NodoError.tipoError.Semantico,
+                                                    "Parametro no valido para la funcion Round, el tipo pude ser lo invalido se espera DECIMAL"));
+                                            return Operacion.tipoDato.ERRORSEMANTICO;
+                                        }
+                                        return o;
+                                    }
+                                } else {
+                                    listas.errores.add(new NodoError(getLinea(), getColumna(), NodoError.tipoError.Semantico,
+                                            "La funcion Round no es valida"));
+                                    return Operacion.tipoDato.ERRORSEMANTICO;
+                                }
+                            } else {
+                                listas.errores.add(new NodoError(getLinea(), getColumna(), NodoError.tipoError.Semantico,
+                                        "La funcion Round no es valida"));
+                                return Operacion.tipoDato.ERRORSEMANTICO;
+                            }
                             break;
 
                         default:
@@ -397,10 +478,10 @@ public class Identificador extends Entorno implements Expresion {
                                                 }
                                             }
                                         } else if (expreDERECHA instanceof EDerechaCorcheteDoble) {
-                                            
+
                                             if (sdsa != null) {
                                                 if (sdsa instanceof Simbolo) {
-                                                    arree = (ArrayList<Object>) ((Simbolo)sdsa).getValor();
+                                                    arree = (ArrayList<Object>) ((Simbolo) sdsa).getValor();
                                                     sdsa = accesosVector(tablaDeSimbolos, listas, arree, expreDERECHA);
                                                     if (sdsa instanceof ArrayList) {
                                                         arree = (ArrayList<Object>) sdsa;
@@ -417,7 +498,7 @@ public class Identificador extends Entorno implements Expresion {
                                                     }
                                                 }
                                             }
-                                                                                                                                   
+
                                         } else {
                                             listas.errores.add(new NodoError(getLinea(), getColumna(), NodoError.tipoError.Semantico,
                                                     "Acceso al vector: " + getId() + " no es valido, se esperaba [ Indice ]"));
