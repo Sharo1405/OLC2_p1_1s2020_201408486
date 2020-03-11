@@ -51,14 +51,22 @@ public class Factorizando_id_igual extends Entorno implements Instruccion {
                         return Operacion.tipoDato.ERRORSEMANTICO;
                     } else {
                         int declarada = setValorSimbolo(this.id.toLowerCase(), dvuleo,
-                        tablaDeSimbolos, encontrado.getRol(), funcionesDeclaraciones.getType(tablaDeSimbolos, listas),
-                        Simbolo.Rol.VARIABLE);
+                                tablaDeSimbolos, encontrado.getRol(), funcionesDeclaraciones.getType(tablaDeSimbolos, listas),
+                                Simbolo.Rol.VARIABLE);
                     }
                 } else {
-                    int declarada = setValorSimbolo(this.id.toLowerCase(), dvuleo,
-                        tablaDeSimbolos, encontrado.getRol(), funcionesDeclaraciones.getType(tablaDeSimbolos, listas),
-                        Simbolo.Rol.VARIABLE);
-                }               
+
+                    if (dvuleo instanceof Simbolo) {
+                        Simbolo simiii = (Simbolo) dvuleo;
+                        int declarada = setValorSimbolo(this.id.toLowerCase(), simiii.getValor(),
+                                tablaDeSimbolos, encontrado.getRol(), simiii.getTipo(),
+                                Simbolo.Rol.VARIABLE);
+                    } else {
+                        int declarada = setValorSimbolo(this.id.toLowerCase(), dvuleo,
+                                tablaDeSimbolos, encontrado.getRol(), funcionesDeclaraciones.getType(tablaDeSimbolos, listas),
+                                Simbolo.Rol.VARIABLE);
+                    }
+                }
 
             } else {
                 //no existe entonces declararla

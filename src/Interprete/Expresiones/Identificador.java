@@ -429,7 +429,7 @@ public class Identificador extends Entorno implements Expresion {
                                         "La funcion Mode() no es valida"));
                                 return Operacion.tipoDato.ERRORSEMANTICO;
                             }
-                            break;
+                            //break;
 
                         default:
                             //funcion creada por mi, verificar si existe
@@ -654,7 +654,9 @@ public class Identificador extends Entorno implements Expresion {
                     if (o instanceof Simbolo) {
                         return ((Simbolo) o).getValor();
                     } else {
-                        return o;
+                        ArrayList<Object> holo = new ArrayList<>();
+                        holo.add(o);
+                        return holo;
                     }
                 }
             } else {

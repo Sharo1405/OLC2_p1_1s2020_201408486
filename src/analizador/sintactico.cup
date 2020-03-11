@@ -83,7 +83,7 @@ nonterminal WHILEE, DOWHILE;
 nonterminal SENTENCIATRANSFERENCIA;
 nonterminal FORR, INICIALIZACION;
 nonterminal Expresion E;
-nonterminal EIZQUIERDA;
+nonterminal ArrayList<Expresion> EIZQUIERDA;
 nonterminal ArrayList<Expresion> EDERECHA;
 nonterminal AST FACTORIZANDO;
 nonterminal Expresion FUNCIONESMETODOSDECLARACIONES;
@@ -211,9 +211,15 @@ FACTORIZANDO::= id:id igual FUNCIONESMETODOSDECLARACIONES:v {:
                     RESULT = new LlamadaFunciones(id.toLowerCase(), null, idleft +1, idright +1);
                 :} 
 
-               |id acorchete E ccorchete EIZQUIERDA igual E {::}
-               |id acorchete acorchete E ccorchete ccorchete EIZQUIERDA igual E {::}
-               |id acorchete E ccorchete EIZQUIERDA igual E puntoycoma{::}
+               |id:id acorchete E:e1 ccorchete EIZQUIERDA:lista igual E:e2 {:
+                    RESULT = new AsignacionCorcheteSimple(id,e1,lista,e2,idleft +1, idright +1);
+               :}
+               |id acorchete acorchete E ccorchete ccorchete EIZQUIERDA igual E {:
+               
+               :}
+               |id:id acorchete E:e1 ccorchete EIZQUIERDA:lista igual E:e2 puntoycoma{:
+                    RESULT = new AsignacionCorcheteSimple(id,e1,lista,e2,idleft +1, idright +1);
+               :}
                |id acorchete acorchete E ccorchete ccorchete EIZQUIERDA igual E puntoycoma{::};
 
 
@@ -236,9 +242,19 @@ BLOQUESENTENCIAS::= allave CUERPO cllave{::}
                    |allave cllave{::};
 
 
-EIZQUIERDA::= EIZQUIERDA acorchete E ccorchete {::}            
-            | EIZQUIERDA acorchete acorchete E ccorchete ccorchete {::}
-            | ;
+EIZQUIERDA::= EIZQUIERDA:lista acorchete E:e ccorchete {:
+                EIzquierdaCorcheteSimple cor = new EIzquierdaCorcheteSimple(e, eleft +1, eright +1);
+                RESULT = lista;
+                RESULT.add(cor);
+            :}   
+            | EIZQUIERDA:lista acorchete acorchete E:e ccorchete ccorchete {:
+                EIzquierdaCorcheteDoble cor = new EIzquierdaCorcheteDoble(e, eleft +1, eright +1);
+                RESULT = lista;
+                RESULT.add(cor);
+            :}
+            | {:
+                RESULT = new ArrayList<Expresion>();
+              :};
 
 EDERECHA::= EDERECHA:lista acorchete E:e ccorchete {:
                 EDerechaCorcheteSimple cor = new EDerechaCorcheteSimple(e, eleft +1, eright +1); 

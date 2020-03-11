@@ -94,9 +94,9 @@ public class Entorno {
             Operacion.tipoDato tipo, Simbolo.Rol nuevoRol) {
         try {
             for (Entorno e = lista; e != null; e = e.padreANTERIOR) {
-                for (Simbolo simbolo : tablaS) {
+                for (Simbolo simbolo : e.tablaS) {
 
-                    if (simbolo.getId() == id.toLowerCase()) {
+                    if (simbolo.getId().equals(id.toLowerCase())) {
                         if (rol == simbolo.getRol()) {
                             simbolo.setValor(valorNuevo);
                             simbolo.setTipo(tipo);

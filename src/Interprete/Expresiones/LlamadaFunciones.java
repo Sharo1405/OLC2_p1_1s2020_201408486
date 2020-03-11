@@ -59,7 +59,7 @@ public class LlamadaFunciones implements Expresion {
                                 paraImprimir2 += String.valueOf(clp.ejecutar(tablaDeSimbolos, listas));
                                 paraImprimir2 += "]";
                             }
-                            listas.impresiones.add(paraImprimir2 + "\n");                            
+                            listas.impresiones.add(paraImprimir2 + "\n");
                             break;
 
                         case LISTA:
@@ -67,11 +67,29 @@ public class LlamadaFunciones implements Expresion {
                             String paraImprimir = "";
                             if (imp instanceof Simbolo) {
                                 Simbolo s = (Simbolo) imp;
-                                ArrayList<Object> ar = (ArrayList<Object>) s.getValor();
-                                ConcatenarListaParaPrint clp = new ConcatenarListaParaPrint(ar);
-                                paraImprimir += "{";
-                                paraImprimir += String.valueOf(clp.ejecutar(tablaDeSimbolos, listas));
-                                paraImprimir += "}";
+
+                                if (s.getValor() instanceof Simbolo) {
+                                    Simbolo simbolito = (Simbolo) s.getValor();
+                                    ConcatenarListaParaPrint clp = new ConcatenarListaParaPrint(simbolito);
+                                    paraImprimir += "{ {";
+                                    paraImprimir += String.valueOf(clp.ejecutar(tablaDeSimbolos, listas));
+                                    paraImprimir += "} }";
+                                } else {
+                                    if (s.getTipo().equals(Operacion.tipoDato.LISTA)) {
+                                        ArrayList<Object> ar = (ArrayList<Object>) s.getValor();
+                                        ConcatenarListaParaPrint clp = new ConcatenarListaParaPrint(ar);
+                                        paraImprimir += "{ {";
+                                        paraImprimir += String.valueOf(clp.ejecutar(tablaDeSimbolos, listas));
+                                        paraImprimir += "} }";
+                                    } else {
+                                        ArrayList<Object> ar = (ArrayList<Object>) s.getValor();
+                                        ConcatenarListaParaPrint clp = new ConcatenarListaParaPrint(ar);
+                                        paraImprimir += "{";
+                                        paraImprimir += String.valueOf(clp.ejecutar(tablaDeSimbolos, listas));
+                                        paraImprimir += "}";
+                                    }
+                                }
+
                             } else if (imp instanceof ArrayList) {
                                 ArrayList<Object> ar = (ArrayList<Object>) imp;
                                 ConcatenarListaParaPrint clp = new ConcatenarListaParaPrint(ar);
@@ -96,7 +114,12 @@ public class LlamadaFunciones implements Expresion {
                             //aqui van todos los demas tipos
                             Object impri = Parametros.getValue(tablaDeSimbolos, listas);
                             if (impri instanceof ArrayList) {
-                                listas.impresiones.add(String.valueOf(((ArrayList) impri).get(0)) + "\n");
+                                //listas.impresiones.add(String.valueOf(((ArrayList) impri).get(0)) + "\n");
+                                String paraImprimir22 = "";
+                                ConcatenarListaParaPrint clp = new ConcatenarListaParaPrint((ArrayList) impri);
+                                paraImprimir22 += clp.ejecutar(tablaDeSimbolos, listas) + "\n";
+                                listas.impresiones.add(paraImprimir22);
+
                             } else {
                                 listas.impresiones.add(String.valueOf(impri) + "\n");
                             }
