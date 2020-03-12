@@ -214,11 +214,12 @@ FACTORIZANDO::= id:id igual FUNCIONESMETODOSDECLARACIONES:v {:
                |id:id acorchete E:e1 ccorchete EIZQUIERDA:lista igual E:e2 {:
                     RESULT = new AsignacionCorcheteSimple(id,e1,lista,e2,idleft +1, idright +1);
                :}
-               |id acorchete acorchete E ccorchete ccorchete EIZQUIERDA igual E {:
-               
+               |id:id acorchete acorchete E:e1 ccorchete ccorchete EIZQUIERDA:lista igual E:e2 {:
+                    RESULT = new AsignacionCorcheteDoble(id,e1,lista,e2,idleft +1, idright +1);
                :}
                |id:id acorchete E:e1 ccorchete EIZQUIERDA:lista igual E:e2 puntoycoma{:
                     RESULT = new AsignacionCorcheteSimple(id,e1,lista,e2,idleft +1, idright +1);
+                    
                :}
                |id acorchete acorchete E ccorchete ccorchete EIZQUIERDA igual E puntoycoma{::};
 

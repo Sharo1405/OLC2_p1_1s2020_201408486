@@ -17,19 +17,19 @@ import java.util.ArrayList;
  *
  * @author sharolin
  */
-public class AsignacionCorcheteSimple extends Entorno implements Instruccion {
+public class AsignacionCorcheteDoble extends Entorno implements Instruccion {
 
     private String idVariable;
-    private Expresion Indice; //[ E ]
+    private Expresion Indice; //[[ E ]]
     private ArrayList<Expresion> EIzquierda = new ArrayList<>();
     private Expresion ValorAsignar;
     private int linea;
     private int columna;
 
-    public AsignacionCorcheteSimple() {
+    public AsignacionCorcheteDoble() {
     }
 
-    public AsignacionCorcheteSimple(String idVariable, Expresion Indice, ArrayList<Expresion> EIzqui, Expresion ValorAsignar, int linea, int columna) {
+    public AsignacionCorcheteDoble(String idVariable, Expresion Indice, ArrayList<Expresion> EIzqui, Expresion ValorAsignar, int linea, int columna) {
         this.idVariable = idVariable;
         this.Indice = Indice;
         this.EIzquierda = EIzqui;
@@ -237,30 +237,87 @@ public class AsignacionCorcheteSimple extends Entorno implements Instruccion {
         return "null";
     }
 
-    public Object setearElPrimeroLista(Object elObjeto, int indice, Object valorAsignar, Operacion.tipoDato tipo) {
+    public ArrayList rellenarConValores(ArrayList<Object> arraysito, Operacion.tipoDato tipo, int indice) {
 
+        int posicion = indice - arraysito.size();
+        switch (tipo) {
+            case ENTERO:
+                for (int i = 0; i < posicion - 1; i++) {
+                    ArrayList<Object> newValor = new ArrayList<>();
+                    newValor.add(0);
+                    arraysito.add(newValor);
+                }
+                break;
+
+            case DECIMAL:
+                for (int i = 0; i < posicion - 1; i++) {
+                    ArrayList<Object> newValor = new ArrayList<>();
+                    newValor.add(0.0);
+                    arraysito.add(newValor);
+                }
+                break;
+
+            case BOOLEAN:
+                for (int i = 0; i < posicion - 1; i++) {
+                    ArrayList<Object> newValor = new ArrayList<>();
+                    newValor.add(false);
+                    arraysito.add(newValor);
+                }
+                break;
+
+            default:
+                for (int i = 0; i < posicion - 1; i++) {
+                    ArrayList<Object> newValor = new ArrayList<>();
+                    newValor.add("null");
+                    arraysito.add(newValor);
+                }
+                break;
+        }
+
+        return arraysito;
+    }
+
+    public Object setearElPrimeroLista(Object elObjeto, int indice, Object valorAsignar, Operacion.tipoDato tipo) {
+        //CAMBIARLO A DOBLE CORCHETE
         if (valorAsignar instanceof Simbolo) {
             //simbolo solo sera si es lista o es vector hecho con la funcion C
             //no se puede insertar una lista a menos que tenga un vector dentro de cualquier cantidad
             ArrayList<Object> nuevo = (ArrayList<Object>) elObjeto;
             Simbolo sim = (Simbolo) valorAsignar;
-            if (sim.getTipoItems().equals(Operacion.tipoDato.VECTOR)) {
-                if (indice > ((ArrayList) elObjeto).size()) {
-                    ArrayList<Object> relleno = rellenarConValores(nuevo, tipo, indice);
-                    relleno.add(sim.getValor());
+            if (sim.getTipo().equals(Operacion.tipoDato.VECTOR) || sim.getTipo().equals(Operacion.tipoDato.ENTERO)
+                    || sim.getTipo().equals(Operacion.tipoDato.BOOLEAN) || sim.getTipo().equals(Operacion.tipoDato.CADENA)
+                    || sim.getTipo().equals(Operacion.tipoDato.DECIMAL)) {
+
+                if (sim.getTipo().equals(Operacion.tipoDato.VECTOR)) {
+                    ArrayList<Object> vect = (ArrayList<Object>) sim.getValor();
+                    if (vect.size() > 1) {
+                        return Operacion.tipoDato.ERRORSEMANTICO;
+                    } else {
+                        if (indice > ((ArrayList) elObjeto).size()) {
+                            ArrayList<Object> relleno = rellenarConValores(nuevo, tipo, indice);
+                            relleno.add(sim.getValor());
+                        } else {
+                            nuevo.set(indice - 1, sim.getValor());
+                        }
+                    }
                 } else {
-                    nuevo.set(indice - 1, sim.getValor());
+                    if (indice > ((ArrayList) elObjeto).size()) {
+                        ArrayList<Object> relleno = rellenarConValores(nuevo, tipo, indice);
+                        relleno.add(sim.getValor());
+                    } else {
+                        nuevo.set(indice - 1, sim.getValor());
+                    }
                 }
             } else {
-                if (indice > ((ArrayList) elObjeto).size()) {
-                    ArrayList<Object> relleno = rellenarConValores(nuevo, tipo, indice);
-                    relleno.add(sim.getValor());
-                } else {
-                    nuevo.set(indice - 1, sim.getValor());
-                }
+                return Operacion.tipoDato.ERRORSEMANTICO;
             }
 
         } else if (elObjeto instanceof ArrayList) {
+            ArrayList<Object> val = new ArrayList<>();
+            if (val.size() > 1) {
+                return Operacion.tipoDato.ERRORSEMANTICO;
+            }
+
             ArrayList<Object> nuevo = (ArrayList<Object>) elObjeto;
             if (indice > ((ArrayList) elObjeto).size()) {
                 ArrayList<Object> relleno = rellenarConValores(nuevo, tipo, indice);
@@ -269,7 +326,7 @@ public class AsignacionCorcheteSimple extends Entorno implements Instruccion {
                 nuevo.set(indice - 1, valorAsignar);
             }
         }
-        return "null";
+        return Operacion.tipoDato.ERRORSEMANTICO;
     }
 
     @Override
@@ -309,31 +366,8 @@ public class AsignacionCorcheteSimple extends Entorno implements Instruccion {
                         if (tipoDelId.equals(Operacion.tipoDato.VECTOR) || tipoDelId.equals(Operacion.tipoDato.BOOLEAN)
                                 || tipoDelId.equals(Operacion.tipoDato.CADENA) || tipoDelId.equals(Operacion.tipoDato.DECIMAL)
                                 || tipoDelId.equals(Operacion.tipoDato.ENTERO)) {
-                            if (!tipoDelId.equals(Operacion.tipoDato.VECTOR) && tipoDelId.equals(tipoAsig)) {
-                                setearElPrimero(elObtenido, indiceEntero, valorAsi, tipoDelId);
-                            } else if (tipoDelId.equals(Operacion.tipoDato.VECTOR) && tipoDelId.equals(tipoAsig)) {
-                                listas.errores.add(new NodoError(getLinea(), getColumna(), NodoError.tipoError.Semantico, "Un vector es solo de tipos primitivos: "
-                                        + idVariable + " No se le puede asignar otro vector en sus items"));
-                                return Operacion.tipoDato.ERRORSEMANTICO;
-                            } else {
-                                //comparar los items del vector porque el tipo sera solo el tipo primitivo
-                                if (tipoDelId.equals(Operacion.tipoDato.VECTOR)) {
-                                    if (encontrado.getTipoItems().equals(tipoAsig)) {
-                                        setearElPrimero(elObtenido, indiceEntero, valorAsi, tipoDelId);
-                                    } else {
-                                        setearElPrimero(elObtenido, indiceEntero, valorAsi, tipoDelId);
-                                        encontrado.setTipoItems((Operacion.tipoDato) tipoAsig);
-                                    }
-                                } else {
-                                    //encontrado.setTipo((Operacion.tipoDato) tipoAsig);
-                                    if (encontrado.getTipo().equals(tipoAsig)) {
-                                        setearElPrimero(elObtenido, indiceEntero, valorAsi, tipoDelId);
-                                    } else {
-                                        setearElPrimero(elObtenido, indiceEntero, valorAsi, tipoDelId);
-                                        encontrado.setTipo((Operacion.tipoDato) tipoAsig);
-                                    }
-                                }
-                            }
+                            listas.errores.add(new NodoError(getLinea(), getColumna(), NodoError.tipoError.Semantico,
+                                    "La variable: " + getIdVariable() + " no puede tener un acceso doble [[numero]] porque es de tipo Vector"));
                         } else if (tipoDelId.equals(Operacion.tipoDato.LISTA)) {
 
                             if (tipoDelId.equals(Operacion.tipoDato.LISTA) && tipoDelId.equals(tipoAsig)) {
@@ -513,51 +547,11 @@ public class AsignacionCorcheteSimple extends Entorno implements Instruccion {
         return Operacion.tipoDato.ERRORSEMANTICO;
     }
 
-    public ArrayList rellenarConValores(ArrayList<Object> arraysito, Operacion.tipoDato tipo, int indice) {
-
-        int posicion = indice - arraysito.size();
-        switch (tipo) {
-            case ENTERO:
-                for (int i = 0; i < posicion - 1; i++) {
-                    ArrayList<Object> newValor = new ArrayList<>();
-                    newValor.add(0);
-                    arraysito.add(newValor);
-                }
-                break;
-
-            case DECIMAL:
-                for (int i = 0; i < posicion - 1; i++) {
-                    ArrayList<Object> newValor = new ArrayList<>();
-                    newValor.add(0.0);
-                    arraysito.add(newValor);
-                }
-                break;
-
-            case BOOLEAN:
-                for (int i = 0; i < posicion - 1; i++) {
-                    ArrayList<Object> newValor = new ArrayList<>();
-                    newValor.add(false);
-                    arraysito.add(newValor);
-                }
-                break;
-
-            default:
-                for (int i = 0; i < posicion - 1; i++) {
-                    ArrayList<Object> newValor = new ArrayList<>();
-                    newValor.add("null");
-                    arraysito.add(newValor);
-                }
-                break;
-        }
-
-        return arraysito;
-    }
-
     /**
      * @return the idVariable
      */
     public String getIdVariable() {
-        return idVariable.toLowerCase();
+        return idVariable;
     }
 
     /**
@@ -636,5 +630,4 @@ public class AsignacionCorcheteSimple extends Entorno implements Instruccion {
     public void setColumna(int columna) {
         this.columna = columna;
     }
-
 }
