@@ -29,8 +29,7 @@ import Interprete.Entorno.Entorno;
 import Interprete.ErrorImpresion;
 import Interprete.NodoError;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import TablaDeSimbolosGrafica.*;
 
 /**
  *
@@ -424,9 +423,9 @@ public class GUI extends javax.swing.JFrame {
         int entro = 0;
         System.out.println("Inicia la evaluacion de cadena...");
         JPanel pan = (JPanel) jTabbedPane1.getSelectedComponent();
-        
+
         LinkedList<NodoError> errorSemanti = new LinkedList<>();
-        
+
         RTextScrollPane scrolito = (RTextScrollPane) pan.getComponent(0);
         RSyntaxTextArea codigooriginal = (RSyntaxTextArea) scrolito.getViewport().getComponent(0);
         Reader leyendo = new StringReader(codigooriginal.getText());
@@ -435,17 +434,20 @@ public class GUI extends javax.swing.JFrame {
 
         EscribirHTML(analizador.Lexico.errorLexico, parser.errorSintactico, errorSemanti);
         try {
-            parser.parse();            
-            Entorno global = new Entorno();            
+            parser.parse();
+            Entorno global = new Entorno();
             ErrorImpresion erorImpresion = new ErrorImpresion();
             //parser.//.ejecutarTODO(tablaDeSimbolos, errorSemanti, imprimir);
-            
+
             Ejecutar eje = new Ejecutar();
-            eje.ejecutarTODO(global, erorImpresion, parser.arbol);
-            
+            Entorno actual = eje.ejecutarTODO(global, erorImpresion, parser.arbol);
+
             ImprimirConsola(erorImpresion.impresiones);
-            
+
             EscribirHTML(Lexico.errorLexico, parser.errorSintactico, erorImpresion.errores);
+
+            EscribirDotTS ReporteTS = new EscribirDotTS();
+            ReporteTS.EscribirGrafica(actual);
             entro = 1;
         } catch (Exception ex) {
             //ex.printStackTrace();
@@ -615,7 +617,7 @@ public class GUI extends javax.swing.JFrame {
         // TODO add your handling code here:
         //ARBOL DE ANALISIS SINTACTICO
 
-        //ANALIZAR EL FS
+        //ANALIZAR 
         int entro = 0;
         System.out.println("Inicia la evaluacion de cadena...");
         JPanel pan = (JPanel) jTabbedPane1.getSelectedComponent();
@@ -645,6 +647,16 @@ public class GUI extends javax.swing.JFrame {
     private void jMenuItem13ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem13ActionPerformed
         // TODO add your handling code here:
         //TABLA DE SIMBOLOS
+        int entro = 0;
+
+        try {
+            File archivo = new File("C:\\Users\\sharolin\\Desktop\\ReporteArbol\\ts.png");
+            if (archivo.exists()) {
+                Desktop.getDesktop().open(archivo);
+            }
+        } catch (IOException ex) {
+            System.out.println("NO SE PUEDE ABRIR EL REPORTE DE TS ALGO SALIO MAL TS.PNG ...!!!");
+        }
     }//GEN-LAST:event_jMenuItem13ActionPerformed
 
     /**

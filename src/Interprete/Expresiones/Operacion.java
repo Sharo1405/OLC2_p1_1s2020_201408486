@@ -34,7 +34,8 @@ public class Operacion {
         NULO,
         DEFAULT,
         ERRORSEMANTICO,
-        ID
+        ID,
+        VACIO
     }
 
     public Operacion() {

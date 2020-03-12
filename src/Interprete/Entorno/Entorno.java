@@ -16,6 +16,7 @@ import java.util.Map;
  */
 public class Entorno {
 
+    public int numero = 0;
     public Entorno padreANTERIOR;
     public LinkedList<Simbolo> tablaS;
 

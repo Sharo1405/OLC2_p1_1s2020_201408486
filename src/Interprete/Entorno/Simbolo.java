@@ -17,11 +17,11 @@ import java.util.LinkedList;
 public class Simbolo {
 
     private String id;
-    private Object valor; //valor concreto o nodo del arbol
+    private Object valor = "---vacio---"; //valor concreto o nodo del arbol
     private int fila;
     private int columna;
     private Operacion.tipoDato tipo;
-    private Operacion.tipoDato tipoItems;
+    private Operacion.tipoDato tipoItems = Operacion.tipoDato.VACIO;
     private Rol rol;
     private LinkedList<Expresion> parametros = new LinkedList<Expresion>();
     private LinkedList<Expresion> retornos = new LinkedList<Expresion>();

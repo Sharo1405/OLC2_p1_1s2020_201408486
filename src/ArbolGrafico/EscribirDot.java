@@ -23,7 +23,7 @@ public class EscribirDot {
     public void EscribirGrafica(Nodo raiz) {
         contador = 0;
         StringBuffer concatenacionDot = new StringBuffer();
-        concatenacionDot.append("\ndigraph G {\r\nnode [margin=0, color=chartreuse1, shape=doubleoctagon, style=filled, fontcolor=black];\n");
+        concatenacionDot.append("\ndigraph ARBOL {\r\nnode [margin=0, color=chartreuse1, shape=doubleoctagon, style=filled, fontcolor=black];\n");
         recorrerHijos(raiz, concatenacionDot);
         relacionarHijos(raiz, concatenacionDot);
         concatenacionDot.append("}");
