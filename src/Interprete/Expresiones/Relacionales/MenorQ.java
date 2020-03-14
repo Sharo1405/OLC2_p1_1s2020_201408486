@@ -328,7 +328,113 @@ public class MenorQ extends Operacion implements Expresion {
 
     @Override
     public Operacion.tipoDato getType(Entorno tablaDeSimbolos, ErrorImpresion listas) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        //retornar el valor que de al evaluar los 2 tipos de las expresiones
+        try {
+            Operacion.tipoDato tipo1 = this.getExpresion1().getType(tablaDeSimbolos, listas);
+            Operacion.tipoDato tipo2 = this.getExpresion2().getType(tablaDeSimbolos, listas);
+
+            //verificar que sean los 2 de tipo vector o primitivo
+            if ((tipo1.equals(Operacion.tipoDato.VECTOR) || tipo1.equals(Operacion.tipoDato.BOOLEAN)
+                    || tipo1.equals(Operacion.tipoDato.DECIMAL) || tipo1.equals(Operacion.tipoDato.ENTERO)
+                    || tipo1.equals(Operacion.tipoDato.STRING))
+                    && (tipo2.equals(Operacion.tipoDato.VECTOR) || tipo2.equals(Operacion.tipoDato.BOOLEAN)
+                    || tipo2.equals(Operacion.tipoDato.DECIMAL) || tipo2.equals(Operacion.tipoDato.ENTERO)
+                    || tipo2.equals(Operacion.tipoDato.STRING))) {
+
+                Object valor = this.getExpresion1().getValue(tablaDeSimbolos, listas);
+                Object valor2 = this.getExpresion2().getValue(tablaDeSimbolos, listas);
+
+                ArrayList<Object> exp1 = new ArrayList<>();
+                ArrayList<Object> exp2 = new ArrayList<>();
+                //si son vectores ver que sean de un solo tipo castear a otro tipo para que asi se vea si se puede o no operar
+                if (tipo1.equals(Operacion.tipoDato.VECTOR)) {
+                    ArrayList<Object> array1 = (ArrayList<Object>) valor;
+                    Operacion.tipoDato tipoV1 = this.todoLosTipos(array1);
+                    if (tipoV1.equals(Operacion.tipoDato.ERRORSEMANTICO)) {
+                        listas.errores.add(new NodoError(getLinea(), getColumna(), NodoError.tipoError.Semantico,
+                                "El tipo de la Expreion 1 no es valida para realizar la MENOR QUE"));
+                        return Operacion.tipoDato.ERRORSEMANTICO;
+                    }
+                    ArrayList<Object> valDelValor = (ArrayList<Object>) valor;
+                    if (valDelValor.size() == 1) {
+                        if (valDelValor.get(0) instanceof ArrayList) {
+                            ArrayList<Object> veeeee = (ArrayList<Object>) valDelValor.get(0);
+                            if (veeeee.size() == 1) {
+                                valor = veeeee;
+                            } else {
+                                listas.errores.add(new NodoError(getLinea(), getColumna(), NodoError.tipoError.Semantico,
+                                        "El tipo de la Expreion 1 no es valida para realizar la MENOR QUE"));
+                                return Operacion.tipoDato.ERRORSEMANTICO;
+                            }
+                        }
+                    }
+                    FuncionC fc = new FuncionC();
+                    Object obj = fc.casteoVector(valor, tipoV1, listas);
+                    if (obj instanceof ArrayList) {
+                        exp1 = (ArrayList<Object>) obj;
+                    } else {
+                        listas.errores.add(new NodoError(getLinea(), getColumna(), NodoError.tipoError.Semantico,
+                                "El tipo de la Expreion 1 no es valida para realizar la MENOR QUE"));
+                        return Operacion.tipoDato.ERRORSEMANTICO;
+                    }
+                    tipo1 = this.adivinaTipoValorVECTORTIPOTIPOTIPO(exp1);
+                } else {
+                    exp1 = (ArrayList<Object>) valor;
+                }
+
+                if (tipo2.equals(Operacion.tipoDato.VECTOR)) {
+                    ArrayList<Object> array1 = (ArrayList<Object>) valor2;
+                    Operacion.tipoDato tipoV1 = this.todoLosTipos(array1);
+                    if (tipoV1.equals(Operacion.tipoDato.ERRORSEMANTICO)) {
+                        listas.errores.add(new NodoError(getLinea(), getColumna(), NodoError.tipoError.Semantico,
+                                "El tipo de la Expreion 1 no es valida para realizar la MENOR QUE"));
+                        return Operacion.tipoDato.ERRORSEMANTICO;
+                    }
+                    ArrayList<Object> valDelValor = (ArrayList<Object>) valor2;
+                    if (valDelValor.size() == 1) {
+                        if (valDelValor.get(0) instanceof ArrayList) {
+                            ArrayList<Object> veeeee = (ArrayList<Object>) valDelValor.get(0);
+                            if (veeeee.size() == 1) {
+                                valor2 = veeeee;
+                            } else {
+                                listas.errores.add(new NodoError(getLinea(), getColumna(), NodoError.tipoError.Semantico,
+                                        "El tipo de la Expreion 1 no es valida para realizar la MENOR QUE"));
+                                return Operacion.tipoDato.ERRORSEMANTICO;
+                            }
+                        }
+                    }
+                    FuncionC fc = new FuncionC();
+                    Object obj = fc.casteoVector(valor2, tipoV1, listas);
+                    if (obj instanceof ArrayList) {
+                        exp2 = (ArrayList<Object>) obj;
+                    } else {
+                        listas.errores.add(new NodoError(getLinea(), getColumna(), NodoError.tipoError.Semantico,
+                                "El tipo de la Expreion 1 no es valida para realizar la MENOR QUE"));
+                        return Operacion.tipoDato.ERRORSEMANTICO;
+                    }
+
+                    tipo2 = this.adivinaTipoValorVECTORTIPOTIPOTIPO(exp2);
+                } else {
+                    exp2 = (ArrayList<Object>) valor2;
+                }
+
+                Operacion.tipoDato ti = this.tipoResultanteRELACIONALES(tipo1, tipo2, tablaDeSimbolos, listas);
+                if (ti.equals(Operacion.tipoDato.BOOLEAN) || ti.equals(Operacion.tipoDato.DECIMAL)
+                        || ti.equals(Operacion.tipoDato.ENTERO) || ti.equals(Operacion.tipoDato.STRING)) {
+                    return Operacion.tipoDato.BOOLEAN;
+                } else {
+                    return Operacion.tipoDato.ERRORSEMANTICO;
+                }
+
+            } else {
+                listas.errores.add(new NodoError(this.getLinea(), this.getColumna(), NodoError.tipoError.Semantico, "Tipo de datos EXP1: "
+                        + String.valueOf(tipo1) + " EXP2: " + String.valueOf(tipo2) + "No son validos para operarse como MENOR QUE entre si"));
+                return Operacion.tipoDato.ERRORSEMANTICO;
+            }
+        } catch (Exception e) {
+            System.out.println("Error en la clase MENOR QUE en el getType()");
+            return Operacion.tipoDato.ERRORSEMANTICO;
+        }
     }
 
 }
