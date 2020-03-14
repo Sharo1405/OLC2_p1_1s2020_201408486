@@ -78,6 +78,22 @@ public class Operacion {
         return normal;
     }
 
+    //Solo relacionales
+    public tipoDato tipoResultanteRELACIONALES(tipoDato izquierda, tipoDato derecha, Entorno lista, ErrorImpresion impresion) {
+        if ((izquierda == tipoDato.DECIMAL && derecha == tipoDato.ENTERO)
+                || (izquierda == tipoDato.ENTERO && derecha == tipoDato.DECIMAL)
+                || (izquierda == tipoDato.DECIMAL && derecha == tipoDato.DECIMAL)
+                || (izquierda == tipoDato.ENTERO && derecha == tipoDato.ENTERO)) {
+            return tipoDato.DECIMAL;
+        } else if (izquierda == tipoDato.BOOLEAN && derecha == tipoDato.BOOLEAN) {
+            return tipoDato.BOOLEAN;
+        } else if (izquierda == tipoDato.STRING && derecha == tipoDato.STRING) {
+            return tipoDato.STRING;
+        } else {
+            return tipoDato.ERRORSEMANTICO;
+        }
+    }
+
     //solo para aritmeticas
     public tipoDato tipoResultante(tipoDato izquierda, tipoDato derecha, Entorno lista, ErrorImpresion impresion) {
         if (izquierda == tipoDato.STRING || derecha == tipoDato.STRING) {
