@@ -78,6 +78,15 @@ public class Operacion {
         return normal;
     }
 
+    //Solo logicas
+    public tipoDato tipoResultanteLOGICAS(tipoDato izquierda, tipoDato derecha, Entorno lista, ErrorImpresion impresion) {
+        if (izquierda == tipoDato.BOOLEAN && derecha == tipoDato.BOOLEAN) {
+            return tipoDato.BOOLEAN;
+        } else {
+            return tipoDato.ERRORSEMANTICO;
+        }
+    }
+
     //Solo relacionales
     public tipoDato tipoResultanteRELACIONALES(tipoDato izquierda, tipoDato derecha, Entorno lista, ErrorImpresion impresion) {
         if ((izquierda == tipoDato.DECIMAL && derecha == tipoDato.ENTERO)
