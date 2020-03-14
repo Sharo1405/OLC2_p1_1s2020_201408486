@@ -44,16 +44,16 @@ public class Ejecutar extends Entorno {
 
         LinkedList<Expresion> ParaRetorno = new LinkedList<>();
         ParaRetorno.add(new Cadena());
-        Simbolo si = new Simbolo("print", null, 0, 0, Operacion.tipoDato.CADENA, Simbolo.Rol.FUNCION, ParaRetorno, ParaRetorno);
+        Simbolo si = new Simbolo("print", null, 0, 0, Operacion.tipoDato.STRING, Simbolo.Rol.FUNCION, ParaRetorno, ParaRetorno);
         Simbolo si2 = new Simbolo("c", null, 0, 0, Operacion.tipoDato.VECTOR, Simbolo.Rol.FUNCION, ParaRetorno, ParaRetorno);
-        Simbolo si3 = new Simbolo("typeof", null, 0, 0, Operacion.tipoDato.CADENA, Simbolo.Rol.FUNCION, ParaRetorno, ParaRetorno);
+        Simbolo si3 = new Simbolo("typeof", null, 0, 0, Operacion.tipoDato.STRING, Simbolo.Rol.FUNCION, ParaRetorno, ParaRetorno);
         Simbolo si4 = new Simbolo("stringlength", null, 0, 0, Operacion.tipoDato.ENTERO, Simbolo.Rol.FUNCION, ParaRetorno, ParaRetorno);
         Simbolo si5 = new Simbolo("ncol", null, 0, 0, Operacion.tipoDato.ENTERO, Simbolo.Rol.FUNCION, ParaRetorno, ParaRetorno);
         Simbolo si6 = new Simbolo("nrow", null, 0, 0, Operacion.tipoDato.ENTERO, Simbolo.Rol.FUNCION, ParaRetorno, ParaRetorno);
         Simbolo si7 = new Simbolo("length", null, 0, 0, Operacion.tipoDato.ENTERO, Simbolo.Rol.FUNCION, ParaRetorno, ParaRetorno);
-        Simbolo si8 = new Simbolo("remove", null, 0, 0, Operacion.tipoDato.CADENA, Simbolo.Rol.FUNCION, ParaRetorno, ParaRetorno);
-        Simbolo si9 = new Simbolo("tolowercase", null, 0, 0, Operacion.tipoDato.CADENA, Simbolo.Rol.FUNCION, ParaRetorno, ParaRetorno);
-        Simbolo si10 = new Simbolo("touppercase", null, 0, 0, Operacion.tipoDato.CADENA, Simbolo.Rol.FUNCION, ParaRetorno, ParaRetorno);
+        Simbolo si8 = new Simbolo("remove", null, 0, 0, Operacion.tipoDato.STRING, Simbolo.Rol.FUNCION, ParaRetorno, ParaRetorno);
+        Simbolo si9 = new Simbolo("tolowercase", null, 0, 0, Operacion.tipoDato.STRING, Simbolo.Rol.FUNCION, ParaRetorno, ParaRetorno);
+        Simbolo si10 = new Simbolo("touppercase", null, 0, 0, Operacion.tipoDato.STRING, Simbolo.Rol.FUNCION, ParaRetorno, ParaRetorno);
         Simbolo si11 = new Simbolo("trunk", null, 0, 0, Operacion.tipoDato.DECIMAL, Simbolo.Rol.FUNCION, ParaRetorno, ParaRetorno);
         Simbolo si12 = new Simbolo("round", null, 0, 0, Operacion.tipoDato.DECIMAL, Simbolo.Rol.FUNCION, ParaRetorno, ParaRetorno);
         Simbolo si13 = new Simbolo("mean", null, 0, 0, Operacion.tipoDato.DECIMAL, Simbolo.Rol.FUNCION, ParaRetorno, ParaRetorno);

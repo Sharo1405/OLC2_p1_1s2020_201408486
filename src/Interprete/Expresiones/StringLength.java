@@ -31,7 +31,7 @@ public class StringLength implements Expresion {
 
         try {
             Operacion.tipoDato ti = getExp().getType(tablaDeSimbolos, listas);
-            if (ti.equals(Operacion.tipoDato.CADENA)) {
+            if (ti.equals(Operacion.tipoDato.STRING)) {
                 Object obj = getExp().getValue(tablaDeSimbolos, listas);
                 if (obj instanceof Simbolo) {
                     Simbolo sim = (Simbolo) obj;

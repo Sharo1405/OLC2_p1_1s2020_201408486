@@ -257,8 +257,8 @@ public class FuncionC implements Expresion {
 
         if (listaTipo.contains(Operacion.tipoDato.LISTA)) {
             return Operacion.tipoDato.LISTA;
-        } else if (listaTipo.contains(Operacion.tipoDato.CADENA)) {
-            return Operacion.tipoDato.CADENA;
+        } else if (listaTipo.contains(Operacion.tipoDato.STRING)) {
+            return Operacion.tipoDato.STRING;
         } else if (listaTipo.contains(Operacion.tipoDato.DECIMAL)) {
             return Operacion.tipoDato.DECIMAL;
         } else if (listaTipo.contains(Operacion.tipoDato.ENTERO)) {
@@ -267,6 +267,8 @@ public class FuncionC implements Expresion {
             return Operacion.tipoDato.BOOLEAN;
         } else if (listaTipo.contains(Operacion.tipoDato.DECIMAL)) {
             return Operacion.tipoDato.DECIMAL;
+        } else if (listaTipo.contains(Operacion.tipoDato.NULO)) {
+            return Operacion.tipoDato.NULO;
         } else if (listaTipo.contains(Operacion.tipoDato.VECTOR)) {
             return Operacion.tipoDato.VECTOR;
         } else {
@@ -286,7 +288,7 @@ public class FuncionC implements Expresion {
                 for (Object object1 : holi) {
                     tipostipos.add(tipodelItemVector(object1));
                 }
-            }else{
+            } else {
                 tipostipos.add(tipodelItemVector(object));
             }
         }
@@ -312,7 +314,7 @@ public class FuncionC implements Expresion {
         } else if (item instanceof Double) {
             return Operacion.tipoDato.DECIMAL;
         } else if (item instanceof String) {
-            return Operacion.tipoDato.CADENA;
+            return Operacion.tipoDato.STRING;
         } else if (item instanceof Boolean) {
             return Operacion.tipoDato.BOOLEAN;
         }
@@ -374,7 +376,7 @@ public class FuncionC implements Expresion {
             case DECIMAL:
                 return Double.parseDouble(String.valueOf(item));
 
-            case CADENA:
+            case STRING:
                 return String.valueOf(item);
 
             case BOOLEAN:

@@ -30,7 +30,7 @@ public class ToUpperCasee implements Expresion{
     public Object getValue(Entorno tablaDeSimbolos, ErrorImpresion listas) {
         try {
             Operacion.tipoDato tt = exp.getType(tablaDeSimbolos, listas);
-            if(tt.equals(Operacion.tipoDato.CADENA)){
+            if(tt.equals(Operacion.tipoDato.STRING)){
                 Object objt = getExp().getValue(tablaDeSimbolos, listas);                
                 if(objt instanceof ArrayList){
                     ArrayList<Object> ar = (ArrayList<Object>) objt;
@@ -58,7 +58,7 @@ public class ToUpperCasee implements Expresion{
 
     @Override
     public Operacion.tipoDato getType(Entorno tablaDeSimbolos, ErrorImpresion listas) {
-       return Operacion.tipoDato.CADENA;
+       return Operacion.tipoDato.STRING;
     }
 
     /**

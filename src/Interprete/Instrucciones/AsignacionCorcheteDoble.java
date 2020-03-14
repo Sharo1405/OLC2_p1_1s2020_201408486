@@ -285,7 +285,7 @@ public class AsignacionCorcheteDoble extends Entorno implements Instruccion {
             ArrayList<Object> nuevo = (ArrayList<Object>) elObjeto;
             Simbolo sim = (Simbolo) valorAsignar;
             if (sim.getTipo().equals(Operacion.tipoDato.VECTOR) || sim.getTipo().equals(Operacion.tipoDato.ENTERO)
-                    || sim.getTipo().equals(Operacion.tipoDato.BOOLEAN) || sim.getTipo().equals(Operacion.tipoDato.CADENA)
+                    || sim.getTipo().equals(Operacion.tipoDato.BOOLEAN) || sim.getTipo().equals(Operacion.tipoDato.STRING)
                     || sim.getTipo().equals(Operacion.tipoDato.DECIMAL)) {
 
                 if (sim.getTipo().equals(Operacion.tipoDato.VECTOR)) {
@@ -364,7 +364,7 @@ public class AsignacionCorcheteDoble extends Entorno implements Instruccion {
 
                     if (EIzquierda.size() == 0) {
                         if (tipoDelId.equals(Operacion.tipoDato.VECTOR) || tipoDelId.equals(Operacion.tipoDato.BOOLEAN)
-                                || tipoDelId.equals(Operacion.tipoDato.CADENA) || tipoDelId.equals(Operacion.tipoDato.DECIMAL)
+                                || tipoDelId.equals(Operacion.tipoDato.STRING) || tipoDelId.equals(Operacion.tipoDato.DECIMAL)
                                 || tipoDelId.equals(Operacion.tipoDato.ENTERO)) {
                             listas.errores.add(new NodoError(getLinea(), getColumna(), NodoError.tipoError.Semantico,
                                     "La variable: " + getIdVariable() + " no puede tener un acceso doble [[numero]] porque es de tipo Vector"));

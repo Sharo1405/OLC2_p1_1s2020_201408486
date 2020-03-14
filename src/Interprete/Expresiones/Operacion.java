@@ -7,6 +7,7 @@ package Interprete.Expresiones;
 
 import Interprete.Entorno.*;
 import Interprete.ErrorImpresion;
+import Interprete.NodoError;
 import java.util.ArrayList;
 
 /**
@@ -23,7 +24,7 @@ public class Operacion {
     private int cantExp;
 
     public enum tipoDato {
-        CADENA,
+        STRING,
         ENTERO,
         DECIMAL,
         BOOLEAN,
@@ -57,12 +58,30 @@ public class Operacion {
 
     }
 
+    public ArrayList<Object> sacarVectorNormal(ArrayList<Object> array) {
+
+        ArrayList<Object> normal = new ArrayList<>();
+        for (Object object : array) {
+            if (object instanceof ArrayList) {
+                ArrayList<Object> vectorsito = (ArrayList<Object>) object;
+                if (vectorsito.size() == 1) {
+                    Object item = vectorsito.get(0);
+                    normal.add(item);
+                } else {
+                    return new ArrayList<>();
+                }
+            } else {
+                normal.add(object);
+            }
+        }
+
+        return normal;
+    }
+
     //solo para aritmeticas
     public tipoDato tipoResultante(tipoDato izquierda, tipoDato derecha, Entorno lista, ErrorImpresion impresion) {
-        if (izquierda == tipoDato.NULO || derecha == tipoDato.NULO) {
-            return tipoDato.ERRORSEMANTICO;
-        } else if (izquierda == tipoDato.CADENA || derecha == tipoDato.CADENA) {
-            return tipoDato.CADENA;
+        if (izquierda == tipoDato.STRING || derecha == tipoDato.STRING) {
+            return tipoDato.STRING;
         } else if ((izquierda == tipoDato.DECIMAL && derecha == tipoDato.ENTERO) || (izquierda == tipoDato.ENTERO && derecha == tipoDato.DECIMAL)
                 || (izquierda == tipoDato.DECIMAL && derecha == tipoDato.DECIMAL)) {
             return tipoDato.DECIMAL;
@@ -78,8 +97,8 @@ public class Operacion {
 
         if (listaTipo.contains(tipoDato.LISTA)) {
             return tipoDato.LISTA;
-        } else if (listaTipo.contains(tipoDato.CADENA)) {
-            return tipoDato.CADENA;
+        } else if (listaTipo.contains(tipoDato.STRING)) {
+            return tipoDato.STRING;
         } else if (listaTipo.contains(tipoDato.DECIMAL)) {
             return tipoDato.DECIMAL;
         } else if (listaTipo.contains(tipoDato.ENTERO)) {
@@ -93,6 +112,168 @@ public class Operacion {
         } else {
             return tipoDato.ERRORSEMANTICO;
         }
+    }
+
+    public Object adivinaTipoValor(Object item) {
+
+        if (item instanceof Integer) {
+            return Integer.parseInt(String.valueOf(item));
+        } else if (item instanceof Double) {
+            return Double.parseDouble(String.valueOf(item));
+        } else if (item instanceof String) {
+            return String.valueOf(item);
+        } else if (item instanceof Boolean) {
+            return Boolean.parseBoolean(String.valueOf(item));
+        }
+
+        return Operacion.tipoDato.ERRORSEMANTICO;
+    }
+
+    //
+    public tipoDato tipoResultanteVECTOR(ArrayList<tipoDato> listaTipo) {
+
+        if (listaTipo.contains(tipoDato.LISTA)) {
+            return tipoDato.ERRORSEMANTICO;
+        } else if (listaTipo.contains(tipoDato.STRING)) {
+            return tipoDato.STRING;
+        } else if (listaTipo.contains(tipoDato.DECIMAL)) {
+            return tipoDato.DECIMAL;
+        } else if (listaTipo.contains(tipoDato.ENTERO)) {
+            return tipoDato.ENTERO;
+        } else if (listaTipo.contains(tipoDato.BOOLEAN)) {
+            return tipoDato.BOOLEAN;
+        } else if (listaTipo.contains(tipoDato.DECIMAL)) {
+            return tipoDato.DECIMAL;
+        } else if (listaTipo.contains(tipoDato.VECTOR)) {
+            return tipoDato.ERRORSEMANTICO;
+        } else {
+            return tipoDato.ERRORSEMANTICO;
+        }
+    }
+
+    public Operacion.tipoDato adivinaTipoValorVECTOR(Object item) {
+
+        if (item instanceof Integer) {
+            return tipoDato.ENTERO;
+        } else if (item instanceof Double) {
+            return tipoDato.DECIMAL;
+        } else if (item instanceof String) {
+            return tipoDato.STRING;
+        } else if (item instanceof Boolean) {
+            return tipoDato.BOOLEAN;
+        }
+
+        return tipoDato.ERRORSEMANTICO;
+    }
+
+    public Operacion.tipoDato adivinaTipoValorVECTORTIPOTIPOTIPO(ArrayList<Object> v) {
+
+        for (Object object : v) {
+            if (object instanceof ArrayList) {
+                ArrayList<Object> vectorsito = (ArrayList<Object>) object;
+                if (vectorsito.size() == 1) {
+                    Object item = vectorsito.get(0);
+                    return adivinaTipoValorVECTOR(item);
+                } else {
+                    return tipoDato.ERRORSEMANTICO;
+                }
+            } else {
+                return adivinaTipoValorVECTOR(object);
+            }
+        }
+
+        return tipoDato.ERRORSEMANTICO;
+    }
+
+    public tipoDato todoLosTipos(Object vector) {
+
+        ArrayList<Object> v = new ArrayList<>();
+        if (vector instanceof ArrayList) {
+            v = (ArrayList<Object>) vector;
+        } else {
+            return tipoDato.ERRORSEMANTICO;
+        }
+
+        ArrayList<Operacion.tipoDato> tipos = new ArrayList<>();
+        for (Object object : v) {
+            if (object instanceof ArrayList) {
+                ArrayList<Object> vectorsito = (ArrayList<Object>) object;
+                if (vectorsito.size() == 1) {
+                    Object item = vectorsito.get(0);
+                    tipos.add(adivinaTipoValorVECTOR(item));
+                } else {
+                    return tipoDato.ERRORSEMANTICO;
+                }
+            } else {
+                return tipoDato.ERRORSEMANTICO;
+            }
+        }
+
+        return tipoResultanteVECTOR(tipos);
+    }
+
+    public Object casteoVector(Object arrayDevuelto, Operacion.tipoDato tipoElementosArray, ErrorImpresion listas) {
+
+        ArrayList<Object> arregloNuevo = new ArrayList<>();
+        ArrayList<Object> arreDevolver = new ArrayList<>();
+        if (arrayDevuelto instanceof ArrayList) {
+            arregloNuevo = (ArrayList<Object>) arrayDevuelto;
+
+            //verificar que cada nodo del vector sea de tipo array si es simbolo es porque es otro vector u otra lista
+            for (Object object : arregloNuevo) {
+
+                if (object instanceof Simbolo) {
+                    listas.errores.add(new NodoError(getLinea(), getColumna(), NodoError.tipoError.Semantico,
+                            "Vector con mas de una dimension no es valido"));
+                    return Operacion.tipoDato.ERRORSEMANTICO;
+                }
+            }
+
+            if (arregloNuevo.size() == 1) {
+                for (Object object1 : arregloNuevo) {
+                    arreDevolver.add(casteoItemsVector(tipoElementosArray, object1));
+                }
+            } else {
+                for (Object object : arregloNuevo) {
+                    ArrayList<Object> posicion = (ArrayList<Object>) object;
+                    if (posicion.size() == 1) {
+                        for (Object object1 : posicion) {
+                            ArrayList<Object> nue = new ArrayList<>();
+                            nue.add(casteoItemsVector(tipoElementosArray, object1));
+                            arreDevolver.add(nue);
+                        }
+                    } else {
+                        for (Object object1 : posicion) {
+                            arreDevolver.add(object1);
+
+                        }
+                    }
+                }
+            }
+
+            return arreDevolver;
+        }
+
+        return Operacion.tipoDato.ERRORSEMANTICO;
+    }
+
+    public Object casteoItemsVector(Operacion.tipoDato tipo, Object item) {
+
+        switch (tipo) {
+            case ENTERO:
+                return Integer.parseInt(String.valueOf(item));
+
+            case DECIMAL:
+                return Double.parseDouble(String.valueOf(item));
+
+            case STRING:
+                return String.valueOf(item);
+
+            case BOOLEAN:
+                return Boolean.parseBoolean(String.valueOf(item));
+        }
+
+        return Operacion.tipoDato.ERRORSEMANTICO;
     }
 
     /**

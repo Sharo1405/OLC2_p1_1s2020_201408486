@@ -358,7 +358,7 @@ E::= resta:s E:e1 {:
         RESULT = new Decimal( Double.parseDouble(n), Operacion.tipoDato.DECIMAL , nleft +1, nright +1);
     :}      
     |cadena:n{:
-        RESULT = new Cadena(n.toLowerCase(), Operacion.tipoDato.CADENA , nleft +1, nright +1);
+        RESULT = new Cadena(n.toLowerCase(), Operacion.tipoDato.STRING , nleft +1, nright +1);
     :}         
     |truee:n{:
         RESULT = new Booleano(true, Operacion.tipoDato.BOOLEAN , nleft +1, nright +1);
@@ -367,7 +367,8 @@ E::= resta:s E:e1 {:
         RESULT = new Booleano(false, Operacion.tipoDato.BOOLEAN , nleft +1, nright +1);
     :}         
     |nulo:n{:
-        RESULT = new Nulo("nulo", Operacion.tipoDato.NULO , nleft +1, nright +1);
+        RESULT = new Cadena("NULL", Operacion.tipoDato.STRING , nleft +1, nright +1); 
+                     //Nulo("null", Operacion.tipoDato.NULO , nleft +1, nright +1);
     :}         
     |defaultt:n {:
         RESULT = new Defaultt("default", Operacion.tipoDato.DEFAULT , nleft +1, nright +1);

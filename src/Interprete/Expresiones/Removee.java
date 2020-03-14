@@ -30,7 +30,7 @@ public class Removee implements Expresion {
         try {
 
             Operacion.tipoDato tt = getExp().getType(tablaDeSimbolos, listas);
-            if (tt.equals(Operacion.tipoDato.CADENA)) {
+            if (tt.equals(Operacion.tipoDato.STRING)) {
                 Object CadenasRemove = getExp().getValue(tablaDeSimbolos, listas);
                 if (CadenasRemove instanceof ArrayList) {
                     ArrayList<Object> lis = (ArrayList) CadenasRemove;
@@ -55,7 +55,7 @@ public class Removee implements Expresion {
 
     @Override
     public Operacion.tipoDato getType(Entorno tablaDeSimbolos, ErrorImpresion listas) {
-        return Operacion.tipoDato.CADENA;
+        return Operacion.tipoDato.STRING;
     }
 
     /**

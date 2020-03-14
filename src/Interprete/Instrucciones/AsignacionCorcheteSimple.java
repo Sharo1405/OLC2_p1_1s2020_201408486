@@ -307,7 +307,7 @@ public class AsignacionCorcheteSimple extends Entorno implements Instruccion {
 
                     if (EIzquierda.size() == 0) {
                         if (tipoDelId.equals(Operacion.tipoDato.VECTOR) || tipoDelId.equals(Operacion.tipoDato.BOOLEAN)
-                                || tipoDelId.equals(Operacion.tipoDato.CADENA) || tipoDelId.equals(Operacion.tipoDato.DECIMAL)
+                                || tipoDelId.equals(Operacion.tipoDato.STRING) || tipoDelId.equals(Operacion.tipoDato.DECIMAL)
                                 || tipoDelId.equals(Operacion.tipoDato.ENTERO)) {
                             if (!tipoDelId.equals(Operacion.tipoDato.VECTOR) && tipoDelId.equals(tipoAsig)) {
                                 setearElPrimero(elObtenido, indiceEntero, valorAsi, tipoDelId);
