@@ -79,7 +79,11 @@ nonterminal BloqueSentencias BLOQUESENTENCIAS;
 nonterminal Expresion DECLARACIONES;
 nonterminal AST IFSSS;
 nonterminal LinkedList<IffLista> IF_LISTA;
-nonterminal SWITCHH, SWITCHBLOQUESUPS, SWITCHBLOQUES, SWITCHCASEDEFAULTS, SWITCHCASEDEFAULT;
+nonterminal Switchh SWITCHH;
+nonterminal LinkedList<SwicthBloques> SWITCHBLOQUESUPS;
+nonterminal SwicthBloques SWITCHBLOQUES;
+nonterminal LinkedList<AST> SWITCHCASEDEFAULTS;
+nonterminal AST SWITCHCASEDEFAULT;
 nonterminal WhileCiclo WHILEE;
 nonterminal DoWhile DOWHILE;
 nonterminal AST SENTENCIATRANSFERENCIA;
@@ -132,7 +136,9 @@ SENTENCIA::= FACTORIZANDO:v{:
        | IFSSS:v{:
             RESULT = v;
         :}
-       | SWITCHH{::}
+       | SWITCHH:v{:
+            RESULT = v;
+        :}
        | WHILEE:v{:
             RESULT = v;
         :}
@@ -170,20 +176,53 @@ DOWHILE::= doo:e BLOQUESENTENCIAS:sentenciasEjecutar whilee aparentesis E:condic
          :};
 
 
+SWITCHH::= switchh:e aparentesis E:condicion cparentesis allave SWITCHBLOQUESUPS:bloques SWITCHCASEDEFAULTS:listaCaseDefault cllave{:
+                RESULT = new Switchh(condicion, eleft +1, eright +1, bloques, listaCaseDefault);
+          :}
+          | switchh:e aparentesis E:condicion cparentesis allave SWITCHBLOQUESUPS:bloques cllave{:
+                RESULT = new Switchh(condicion, eleft +1, eright +1, bloques, new LinkedList<AST>());
+          :}
+          | switchh:e aparentesis E:condicion cparentesis allave SWITCHCASEDEFAULTS:def cllave{:
+                RESULT = new Switchh(condicion, eleft +1, eright +1, new LinkedList<SwicthBloques>(), def);
+          :}    
+          | switchh:e aparentesis E:condicion cparentesis allave cllave{:
+                RESULT = new Switchh(condicion, eleft +1, eright +1, new LinkedList<SwicthBloques>(), new LinkedList<AST>());
+          :};
 
 
 
-SWITCHH::= switchh aparentesis E cparentesis allave SWITCHBLOQUESUPS SWITCHCASEDEFAULTS cllave{::}
-          | switchh aparentesis E cparentesis allave SWITCHBLOQUESUPS cllave{::}
-          | switchh aparentesis E cparentesis allave SWITCHCASEDEFAULTS cllave{::}
-          | switchh aparentesis E cparentesis allave cllave{::};
+SWITCHBLOQUESUPS::= SWITCHBLOQUES:i{:
+                        RESULT = new LinkedList<SwicthBloques>();
+                        RESULT.add(i);
+                  :}
+                  | SWITCHBLOQUESUPS:f SWITCHBLOQUES:dnodo{:
+                        RESULT = f;
+                        RESULT.add(dnodo);
+                  :};
+
+SWITCHBLOQUES::= SWITCHCASEDEFAULTS:listaCase CUERPO:cuerpo{:                    
+                    BloqueSentencias blo = new BloqueSentencias(cuerpoleft +1, cuerporight +1, cuerpo);
+                    RESULT = new SwicthBloques(listaCase, blo);
+                :};
 
 
+SWITCHCASEDEFAULTS::= SWITCHCASEDEFAULTS:f SWITCHCASEDEFAULT:dnodo{:
+                    RESULT = f;
+                    RESULT.add(dnodo);
+              :}
+              | SWITCHCASEDEFAULT:i{:
+                    RESULT = new LinkedList<AST>();
+                    RESULT.add(i);
+              :};
 
-SWITCHBLOQUESUPS::= SWITCHBLOQUES{::}
-                  | SWITCHBLOQUESUPS SWITCHBLOQUES{::};
+SWITCHCASEDEFAULT::= casee E:e dospuntos{:
+                RESULT = new Casee(e, eleft, eright);
+             :}
+             | defaultt:d dospuntos {:
+                RESULT = new Defaul(dleft, dright);
+             :}; 
 
-SWITCHBLOQUES::= SWITCHCASEDEFAULTS CUERPO{::};
+
 
 SENTENCIATRANSFERENCIA::= continuee:e{:
                             RESULT = new Continuee(eleft +1, eright +1);
@@ -197,13 +236,6 @@ SENTENCIATRANSFERENCIA::= continuee:e{:
                         | returnn:ee aparentesis E:e cparentesis{:
                             RESULT = new Retorno(e, eeleft +1, eeright +1);
                         :};
-
-SWITCHCASEDEFAULTS::= SWITCHCASEDEFAULTS SWITCHCASEDEFAULT{::}
-              | SWITCHCASEDEFAULT{::};
-
-SWITCHCASEDEFAULT::= casee E dospuntos{::}
-             | defaultt dospuntos {::}; 
-
 
 
 
