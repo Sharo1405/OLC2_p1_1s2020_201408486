@@ -75,12 +75,13 @@ terminal String cadena, ERnumero, ERdecimal, id;
 nonterminal S;
 nonterminal LinkedList<AST> CUERPO;
 nonterminal AST SENTENCIA;
-nonterminal BLOQUESENTENCIAS;
+nonterminal BloqueSentencias BLOQUESENTENCIAS;
 nonterminal Expresion DECLARACIONES;
-nonterminal IFSSS, IF_LISTA;
+nonterminal AST IFSSS;
+nonterminal LinkedList<IffLista> IF_LISTA;
 nonterminal SWITCHH, SWITCHBLOQUESUPS, SWITCHBLOQUES, SWITCHCASEDEFAULTS, SWITCHCASEDEFAULT;
 nonterminal WHILEE, DOWHILE;
-nonterminal SENTENCIATRANSFERENCIA;
+nonterminal AST SENTENCIATRANSFERENCIA;
 nonterminal FORR, INICIALIZACION;
 nonterminal Expresion E;
 nonterminal ArrayList<Expresion> EIZQUIERDA;
@@ -127,14 +128,20 @@ CUERPO::= CUERPO:im SENTENCIA:i {:
 SENTENCIA::= FACTORIZANDO:v{:
             RESULT = v;
         :}            
-       | IFSSS{::}
+       | IFSSS:v{:
+            RESULT = v;
+        :}
        | SWITCHH{::}
        | WHILEE{::}
        | DOWHILE puntoycoma{::}
        | DOWHILE{::}
        | FORR{::}
-       | SENTENCIATRANSFERENCIA puntoycoma{::}
-       | SENTENCIATRANSFERENCIA{::};     
+       | SENTENCIATRANSFERENCIA:v puntoycoma{:
+            RESULT = v;
+        :}
+       | SENTENCIATRANSFERENCIA:v{:
+            RESULT = v;
+        :};     
        
          
 
@@ -167,10 +174,18 @@ SWITCHBLOQUESUPS::= SWITCHBLOQUES{::}
 
 SWITCHBLOQUES::= SWITCHCASEDEFAULTS CUERPO{::};
 
-SENTENCIATRANSFERENCIA::= continuee{::}
-                        | breakk{::}
-                        | returnn{::}
-                        | returnn aparentesis E cparentesis{::};
+SENTENCIATRANSFERENCIA::= continuee:e{:
+                            RESULT = new Continuee(eleft +1, eright +1);
+                        :}
+                        | breakk:e{:
+                            RESULT = new Breakk(eleft +1, eright +1);
+                        :}
+                        | returnn:e{:
+                            RESULT = new Retorno(eleft +1, eright +1);
+                        :}
+                        | returnn:ee aparentesis E:e cparentesis{:
+                            RESULT = new Retorno(e, eeleft +1, eeright +1);
+                        :};
 
 SWITCHCASEDEFAULTS::= SWITCHCASEDEFAULTS SWITCHCASEDEFAULT{::}
               | SWITCHCASEDEFAULT{::};
@@ -181,11 +196,25 @@ SWITCHCASEDEFAULT::= casee E dospuntos{::}
 
 
 
-IFSSS::= IF_LISTA  elsee  BLOQUESENTENCIAS{::}
-             | IF_LISTA{::};
+IFSSS::= IF_LISTA:ifs  elsee:e  BLOQUESENTENCIAS:bloque{:
+            RESULT = new Iff(bloque, ifs,eleft +1, eright +1);
+        :}
+       | IF_LISTA:lista{:
+           RESULT = new  Iff(null, lista, listaleft +1, listaright +1);
+        :};
 
-IF_LISTA::= iff aparentesis E cparentesis BLOQUESENTENCIAS{::}
-          | IF_LISTA elsee iff aparentesis E cparentesis BLOQUESENTENCIAS{::};
+IF_LISTA::= iff:id aparentesis E:e cparentesis BLOQUESENTENCIAS:bloque{:
+                LinkedList<IffLista> nodoAST = new LinkedList<IffLista>();
+
+                nodoAST.addLast(new IffLista(e, bloque, idleft +1, idright +1));
+                RESULT = nodoAST;
+          :}
+          | IF_LISTA:listaifs elsee iff:id aparentesis E:e cparentesis BLOQUESENTENCIAS:bloque{:
+                LinkedList<IffLista> nodoAST = listaifs;
+
+                nodoAST.addLast(new IffLista(e, bloque, idleft +1, idright +1));
+                RESULT = nodoAST; 
+          :};
 
 
 
@@ -239,8 +268,12 @@ FUNCIONESMETODOSDECLARACIONES::= functionn aparentesis cparentesis BLOQUESENTENC
 
                         
 
-BLOQUESENTENCIAS::= allave CUERPO cllave{::}
-                   |allave cllave{::};
+BLOQUESENTENCIAS::= allave CUERPO:cuerpo cllave{:
+                        RESULT = new BloqueSentencias(cuerpoleft +1, cuerporight +1, cuerpo);
+                    :}
+                   |allave:cuerpo cllave{:
+                        RESULT = new BloqueSentencias(cuerpoleft +1, cuerporight +1);
+                    :};
 
 
 EIZQUIERDA::= EIZQUIERDA:lista acorchete E:e ccorchete {:
