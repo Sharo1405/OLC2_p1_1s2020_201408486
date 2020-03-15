@@ -37,6 +37,8 @@ public class BloqueSentencias implements Instruccion {
     public Object ejecutar(Entorno tablaDeSimbolos, ErrorImpresion listas) {
         try {
 
+            Entorno actual = new Entorno(tablaDeSimbolos);
+            
             for (AST sentencia : listaSentencias) {
 
                 if (sentencia instanceof Instruccion) {
@@ -48,7 +50,7 @@ public class BloqueSentencias implements Instruccion {
                     } else if (ins instanceof Retorno) {
                         return ins;
                     } else {
-                        Object ss = ins.ejecutar(tablaDeSimbolos, listas);
+                        Object ss = ins.ejecutar(actual, listas);
                     }
                 } else {//funciones 
                     Expresion exp = (Expresion) sentencia;
@@ -56,7 +58,7 @@ public class BloqueSentencias implements Instruccion {
                         //return exp.getValue(entorno, linstanceoftas);
                         return exp;
                     } else {
-                        Object sss = exp.getValue(tablaDeSimbolos, listas);
+                        Object sss = exp.getValue(actual, listas);
                     }
                 }
             }

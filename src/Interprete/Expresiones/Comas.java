@@ -54,7 +54,7 @@ public class Comas extends Operacion implements Expresion{
     
     @Override
     public Object getValue(Entorno tablaDeSimbolos, ErrorImpresion listas) {
-        
+        devolverLista = new ArrayList<>();
         
         obtenerLista(getExpresion1(), getExpresion2(), tablaDeSimbolos, listas);                
         return devolverLista;
@@ -63,6 +63,7 @@ public class Comas extends Operacion implements Expresion{
     @Override
     public Operacion.tipoDato getType(Entorno tablaDeSimbolos, ErrorImpresion listas) {
                 
+        devolverTipos = new ArrayList<>();
         obtenerListaTipos(getExpresion1(), getExpresion2(), tablaDeSimbolos, listas);                    
         return tipoResultanteLISTA(devolverTipos);
     }

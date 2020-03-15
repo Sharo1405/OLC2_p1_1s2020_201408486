@@ -81,7 +81,7 @@ nonterminal AST IFSSS;
 nonterminal LinkedList<IffLista> IF_LISTA;
 nonterminal SWITCHH, SWITCHBLOQUESUPS, SWITCHBLOQUES, SWITCHCASEDEFAULTS, SWITCHCASEDEFAULT;
 nonterminal WhileCiclo WHILEE;
-nonterminal DOWHILE;
+nonterminal DoWhile DOWHILE;
 nonterminal AST SENTENCIATRANSFERENCIA;
 nonterminal FORR, INICIALIZACION;
 nonterminal Expresion E;
@@ -136,8 +136,12 @@ SENTENCIA::= FACTORIZANDO:v{:
        | WHILEE:v{:
             RESULT = v;
         :}
-       | DOWHILE puntoycoma{::}
-       | DOWHILE{::}
+       | DOWHILE:v puntoycoma{:
+            RESULT = v;
+        :}
+       | DOWHILE:v{:
+            RESULT = v;
+        :}
        | FORR{::}
        | SENTENCIATRANSFERENCIA:v puntoycoma{:
             RESULT = v;
@@ -161,7 +165,9 @@ WHILEE::= whilee:e aparentesis E:condicion cparentesis BLOQUESENTENCIAS:bloque{:
             RESULT = new WhileCiclo(condicion, bloque, eleft +1, eright +1);
          :};
 
-DOWHILE::= doo BLOQUESENTENCIAS whilee aparentesis E cparentesis{::};
+DOWHILE::= doo:e BLOQUESENTENCIAS:sentenciasEjecutar whilee aparentesis E:condicion cparentesis{:
+            RESULT = new DoWhile(sentenciasEjecutar, condicion, eleft +1, eright +1);
+         :};
 
 
 

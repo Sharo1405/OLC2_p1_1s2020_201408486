@@ -43,22 +43,6 @@ public class Entorno {
         this.tablaS = new LinkedList<Simbolo>();
     }
 
-    /*public Simbolo getEnActual(String id, Simbolo.Rol rol) {
-
-        try {
-            Simbolo encontrado = new Simbolo();
-            encontrado = tablaS.contains(id.toLowerCase());
-            if (encontrado != null) {
-                if (rol == encontrado.getRol()) {
-                    return encontrado;
-                }
-            }
-        } catch (Exception e) {
-            System.out.println("Error en la clase Entorno GetEnActual");
-        }
-
-        return null;
-    }*/
     public Simbolo get(String id, Entorno actual, Simbolo.Rol rol) {
         try {
 
@@ -80,10 +64,6 @@ public class Entorno {
 
     public void setSimbolo(String id, Simbolo nuevoSimbolo, Entorno TablaSimbolos) {
         try {
-            /*if (!this.tablaS.contains(id.toLowerCase())) {
-                this.tablaS.put(id.toLowerCase(), nuevoSimbolo);
-            }*/
-
             TablaSimbolos.tablaS.add(nuevoSimbolo);
 
         } catch (Exception e) {

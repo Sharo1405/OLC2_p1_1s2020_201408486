@@ -18,7 +18,7 @@ import java.util.LinkedList;
  */
 public class FuncionC implements Expresion {
 
-    private ArrayList<Expresion> listaExpresiones;
+    private ArrayList<Expresion> listaExpresiones = new ArrayList<>();
     private int linea;
     private int columna;
 
@@ -293,18 +293,7 @@ public class FuncionC implements Expresion {
             }
         }
 
-        return tipoResultanteLISTA(tipostipos);
-
-        //---------------------------------        
-        /*Object i = asdf.get(0);
-        if (i instanceof ArrayList) {
-            ArrayList<Object> ii = (ArrayList<Object>) i;
-            Object iii = ii.get(0);
-            return tipodelItemVector(iii);
-        } else {
-            return tipodelItemVector(i);
-        }*/
-        //return Operacion.tipoDato.ERRORSEMANTICO;
+        return tipoResultanteLISTA(tipostipos);     
     }
 
     public Operacion.tipoDato tipodelItemVector(Object item) {

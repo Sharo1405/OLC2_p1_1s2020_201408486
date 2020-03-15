@@ -37,11 +37,14 @@ public class Iff implements Instruccion {
     @Override
     public Object ejecutar(Entorno tablaDeSimbolos, ErrorImpresion listas) {
         try {
+            
+            Entorno actual = new Entorno(tablaDeSimbolos);
+            
             entro = false;
             for (IffLista ifLista : ejecutarIFS) {
-                Object ob = ifLista.condicion.getValue(tablaDeSimbolos, listas);
+                Object ob = ifLista.condicion.getValue(actual, listas);
 
-                Operacion.tipoDato tipo = ifLista.condicion.getType(tablaDeSimbolos, listas);
+                Operacion.tipoDato tipo = ifLista.condicion.getType(actual, listas);
                 if (tipo == Operacion.tipoDato.BOOLEAN) {
 
                     ArrayList<Object> valDelValor = (ArrayList<Object>) ob;
@@ -76,14 +79,14 @@ public class Iff implements Instruccion {
                                 } else if (ins instanceof Retorno) {//este nunca va a llegar
                                     return ins;
                                 } else {
-                                    Object aal = ins.ejecutar(tablaDeSimbolos, listas);
+                                    Object aal = ins.ejecutar(actual, listas);
                                 }
                             } else {//funciones 
                                 Expresion exp = (Expresion) nodo;
                                 if (exp instanceof Retorno) {
                                     return exp;
                                 } else {
-                                    Object aal = exp.getValue(tablaDeSimbolos, listas);
+                                    Object aal = exp.getValue(actual, listas);
 
                                     if (aal instanceof ArrayList) {
                                         return aal;
@@ -103,7 +106,7 @@ public class Iff implements Instruccion {
 
             if (entro == false && ejecutarELSE != null) {
 
-                Object reto = ejecutarELSE.ejecutar(tablaDeSimbolos, listas);
+                Object reto = ejecutarELSE.ejecutar(actual, listas);
 
                 if (reto instanceof Breakk) {
                     return reto;
