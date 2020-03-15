@@ -80,7 +80,8 @@ nonterminal Expresion DECLARACIONES;
 nonterminal AST IFSSS;
 nonterminal LinkedList<IffLista> IF_LISTA;
 nonterminal SWITCHH, SWITCHBLOQUESUPS, SWITCHBLOQUES, SWITCHCASEDEFAULTS, SWITCHCASEDEFAULT;
-nonterminal WHILEE, DOWHILE;
+nonterminal WhileCiclo WHILEE;
+nonterminal DOWHILE;
 nonterminal AST SENTENCIATRANSFERENCIA;
 nonterminal FORR, INICIALIZACION;
 nonterminal Expresion E;
@@ -132,7 +133,9 @@ SENTENCIA::= FACTORIZANDO:v{:
             RESULT = v;
         :}
        | SWITCHH{::}
-       | WHILEE{::}
+       | WHILEE:v{:
+            RESULT = v;
+        :}
        | DOWHILE puntoycoma{::}
        | DOWHILE{::}
        | FORR{::}
@@ -154,7 +157,9 @@ INICIALIZACION::= id inn E {::};
                  
 
 
-WHILEE::= whilee aparentesis E cparentesis BLOQUESENTENCIAS{::};
+WHILEE::= whilee:e aparentesis E:condicion cparentesis BLOQUESENTENCIAS:bloque{:
+            RESULT = new WhileCiclo(condicion, bloque, eleft +1, eright +1);
+         :};
 
 DOWHILE::= doo BLOQUESENTENCIAS whilee aparentesis E cparentesis{::};
 

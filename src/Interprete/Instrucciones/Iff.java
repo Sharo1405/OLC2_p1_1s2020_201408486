@@ -51,8 +51,6 @@ public class Iff implements Instruccion {
                             if (veeeee.size() == 1) {
                                 ob = veeeee;
                             } else {
-                                listas.errores.add(new NodoError(getLinea(), getCol(), NodoError.tipoError.Semantico,
-                                        "El tipo de la Expreion 1 no es valida para realizar la MAYOR QUE"));
                                 return Operacion.tipoDato.ERRORSEMANTICO;
                             }
                         }
@@ -86,6 +84,10 @@ public class Iff implements Instruccion {
                                     return exp;
                                 } else {
                                     Object aal = exp.getValue(tablaDeSimbolos, listas);
+
+                                    if (aal instanceof ArrayList) {
+                                        return aal;
+                                    }
                                 }
                             }
                         }
@@ -108,6 +110,8 @@ public class Iff implements Instruccion {
                 } else if (reto instanceof Continuee) {
                     return reto;
                 } else if (reto instanceof Retorno) {
+                    return reto;
+                } else if (reto instanceof ArrayList) {
                     return reto;
                 }
             }
