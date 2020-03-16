@@ -15,7 +15,7 @@ import java.util.ArrayList;
  *
  * @author sharolin
  */
-public class Meann implements Expresion {
+public class Meann extends Operacion implements Expresion {
 
     private Expresion exp;
     private int linea;
@@ -34,9 +34,32 @@ public class Meann implements Expresion {
 
         Double suma = 0.0;
         try {
-            
-            if(vectorValores.size() == 1){
-                Object nu =  vectorValores.get(0);
+
+            if (vectorValores.size() == 1) {
+                Object ob = new Object();
+                ArrayList<Object> valDelValor = (ArrayList<Object>) vectorValores;
+                if (valDelValor.size() == 1) {
+                    if (valDelValor.get(0) instanceof ArrayList) {
+                        ArrayList<Object> veeeee = (ArrayList<Object>) valDelValor.get(0);
+                        if (veeeee.size() == 1) {
+                            ob = veeeee;
+                        } else {
+                            return Operacion.tipoDato.ERRORSEMANTICO;
+                        }
+                        vectorValores = (ArrayList<Object>) ob;
+
+                        Operacion.tipoDato tipo1 = this.adivinaTipoValorVECTORTIPOTIPOTIPO(vectorValores);
+                        if (tipo1.equals(Operacion.tipoDato.ENTERO) || tipo1.equals(Operacion.tipoDato.DECIMAL)) {
+                            //no pasa nada
+                        } else {
+                            listas.errores.add(new NodoError(getLinea(), getColumna(), NodoError.tipoError.Semantico, "El parametro de la funcion "
+                                    + "Mean() no es valido, Ya que el vector no es tipo Numerico"));
+                            return Operacion.tipoDato.ERRORSEMANTICO;
+                        }
+                    }
+                }
+
+                Object nu = vectorValores.get(0);
                 Double v = Double.parseDouble(String.valueOf(nu));
                 return v;
             }
@@ -44,7 +67,7 @@ public class Meann implements Expresion {
                 if (vectorValore instanceof ArrayList) {
                     ArrayList<Object> valor = (ArrayList<Object>) vectorValore;
                     if (valor.size() == 1) {
-                        Object nu =  valor.get(0);
+                        Object nu = valor.get(0);
                         Double v = Double.parseDouble(String.valueOf(nu));
                         suma = suma + v;
                     } else {
@@ -73,7 +96,7 @@ public class Meann implements Expresion {
                     ArrayList<Object> me = new ArrayList<>();
                     me.add(media);
                     return me;
-                    
+
                 } else if (ob instanceof Simbolo) {
                     Simbolo sb = (Simbolo) ob;
                     ArrayList<Object> vect = (ArrayList<Object>) sb.getValor();

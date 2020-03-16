@@ -6,6 +6,7 @@
 package Interprete.Expresiones.Aritmeticas;
 
 import Interprete.Entorno.Entorno;
+import Interprete.Entorno.Simbolo;
 import Interprete.ErrorImpresion;
 import Interprete.Expresiones.Expresion;
 import Interprete.Expresiones.FuncionC;
@@ -43,6 +44,10 @@ public class Suma extends Operacion implements Expresion {
 
                 Object valor = this.getExpresion1().getValue(tablaDeSimbolos, listas);
                 Object valor2 = this.getExpresion2().getValue(tablaDeSimbolos, listas);
+                
+                
+                valor = this.obtenerValorSimbolo(valor);
+                valor2 = this.obtenerValorSimbolo(valor2);
 
                 ArrayList<Object> exp1 = new ArrayList<>();
                 ArrayList<Object> exp2 = new ArrayList<>();
@@ -156,6 +161,9 @@ public class Suma extends Operacion implements Expresion {
                 Object valor = this.getExpresion1().getValue(tablaDeSimbolos, listas);
                 Object valor2 = this.getExpresion2().getValue(tablaDeSimbolos, listas);
 
+                valor = this.obtenerValorSimbolo(valor);
+                valor2 = this.obtenerValorSimbolo(valor2);
+                
                 ArrayList<Object> exp1 = new ArrayList<>();
                 ArrayList<Object> exp2 = new ArrayList<>();
                 //si son vectores ver que sean de un solo tipo castear a otro tipo para que asi se vea si se puede o no operar

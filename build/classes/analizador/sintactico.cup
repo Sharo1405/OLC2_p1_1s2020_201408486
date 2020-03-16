@@ -149,6 +149,7 @@ SENTENCIA::= FACTORIZANDO:v{:
             RESULT = v;
         :}
        | FORR{::}
+
        | SENTENCIATRANSFERENCIA:v puntoycoma{:
             RESULT = v;
         :}
@@ -165,6 +166,9 @@ FORR::= forr aparentesis INICIALIZACION cparentesis BLOQUESENTENCIAS{::};
 
 INICIALIZACION::= id inn E {::};
                  
+
+
+
 
 
 WHILEE::= whilee:e aparentesis E:condicion cparentesis BLOQUESENTENCIAS:bloque{:
@@ -293,14 +297,26 @@ FACTORIZANDO::= id:id igual FUNCIONESMETODOSDECLARACIONES:v {:
                     RESULT = new AsignacionCorcheteSimple(id,e1,lista,e2,idleft +1, idright +1);
                     
                :}
-               |id acorchete acorchete E ccorchete ccorchete EIZQUIERDA igual E puntoycoma{::};
+               |id:id acorchete acorchete E:e1 ccorchete ccorchete EIZQUIERDA:lista igual E:e2 puntoycoma{:
+                    RESULT = new AsignacionCorcheteDoble(id,e1,lista,e2,idleft +1, idright +1);
+               :};
 
 
 
-FUNCIONESMETODOSDECLARACIONES::= functionn aparentesis cparentesis BLOQUESENTENCIAS{::}
-                   |functionn aparentesis E cparentesis BLOQUESENTENCIAS{::}
-                   |aparentesis cparentesis flecha BLOQUESENTENCIAS{::}
-                   |aparentesis E cparentesis flecha BLOQUESENTENCIAS{::}
+FUNCIONESMETODOSDECLARACIONES::= functionn:e aparentesis cparentesis BLOQUESENTENCIAS:bloque{:
+                        RESULT = new FuncionNormal(null, bloque, eleft +1, eright +1);
+                    :}
+                   |functionn:e aparentesis E:para cparentesis BLOQUESENTENCIAS:bloque{:
+                        RESULT = new FuncionNormal(para, bloque, eleft +1, eright +1);
+                    :}
+                   |aparentesis cparentesis flecha BLOQUESENTENCIAS{:
+                
+                    :}
+                   |aparentesis E cparentesis flecha BLOQUESENTENCIAS{:
+            
+                    :}
+
+
                    |E:e {:
                         RESULT = new ExpresionValor(e, eleft +1, eright +1);
                     :}

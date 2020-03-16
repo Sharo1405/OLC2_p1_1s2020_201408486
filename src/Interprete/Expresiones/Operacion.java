@@ -281,6 +281,20 @@ public class Operacion {
 
         return Operacion.tipoDato.ERRORSEMANTICO;
     }
+    
+    
+    public Object obtenerValorSimbolo(Object esSimbolo){
+        
+        if(esSimbolo instanceof  Simbolo){
+            Simbolo si = (Simbolo) esSimbolo;
+            return si.getValor();
+        }else{
+            return esSimbolo;
+        }
+        
+    }
+    
+    
 
     public Object casteoItemsVector(Operacion.tipoDato tipo, Object item) {
 

@@ -30,6 +30,9 @@ public class Lengthh implements Expresion {
             Simbolo existente = (Simbolo) obDevuelto;
             if (existente.getTipo().equals(Operacion.tipoDato.LISTA)) {
 
+                ArrayList<Object> nev = new ArrayList<>();
+                return nev.add(((ArrayList) existente.getValor()).size());
+                
             } else if (existente.getTipo().equals(Operacion.tipoDato.ARRAY)) {
 
             } else {

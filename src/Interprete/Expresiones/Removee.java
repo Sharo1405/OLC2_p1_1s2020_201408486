@@ -14,7 +14,7 @@ import java.util.function.ObjDoubleConsumer;
  *
  * @author sharolin
  */
-public class Removee implements Expresion {
+public class Removee extends Operacion implements Expresion {
 
     private Expresion exp;
 
@@ -36,7 +36,7 @@ public class Removee implements Expresion {
                     ArrayList<Object> lis = (ArrayList) CadenasRemove;
                     ArrayList<Object> o1 = (ArrayList) lis.get(0);
                     ArrayList<Object> o2 = (ArrayList) lis.get(1);
-                    
+
                     String CadOriginal = String.valueOf(o1.get(0)).toLowerCase();
                     String CadRemover = String.valueOf(o2.get(0)).toLowerCase();
 
@@ -44,6 +44,56 @@ public class Removee implements Expresion {
                     return CadOriginal;
                 }
 
+            } else if (tt.equals(Operacion.tipoDato.VECTOR)) {
+
+                Object ob = getExp().getValue(tablaDeSimbolos, listas);
+                ArrayList<Object> valDelValor = (ArrayList<Object>) ob;
+                if (valDelValor.size() == 2) {
+
+                    ArrayList<Object> valDelValorPOS1 = (ArrayList<Object>) valDelValor.get(0);
+                    ArrayList<Object> valDelValorPOS2 = (ArrayList<Object>) valDelValor.get(1);
+
+                    if (valDelValorPOS1.size() == 1) {
+                        if (valDelValor.get(0) instanceof ArrayList) {
+                            ArrayList<Object> veeeee = (ArrayList<Object>) valDelValor.get(0);
+                            if (veeeee.size() == 1) {
+                                valDelValorPOS1 = veeeee;
+                            } else {
+                                return Operacion.tipoDato.ERRORSEMANTICO;
+                            }
+                        }
+                    }
+
+                    if (valDelValorPOS2.size() == 1) {
+                        if (valDelValor.get(0) instanceof ArrayList) {
+                            ArrayList<Object> veeeee2 = (ArrayList<Object>) valDelValor.get(1);
+                            if (veeeee2.size() == 1) {
+                                valDelValorPOS2 = veeeee2;
+                            } else {
+                                return Operacion.tipoDato.ERRORSEMANTICO;
+                            }
+                        }
+                    }
+
+                    Operacion.tipoDato tipo1 = this.adivinaTipoValorVECTORTIPOTIPOTIPO(valDelValorPOS1);
+                    Operacion.tipoDato tipo2 = this.adivinaTipoValorVECTORTIPOTIPOTIPO(valDelValorPOS2);
+
+                    if (tipo1.equals(Operacion.tipoDato.STRING) && tipo2.equals(Operacion.tipoDato.STRING)) {
+
+                        ArrayList<Object> lis = (ArrayList) valDelValorPOS1;
+                        ArrayList<Object> o1 = (ArrayList) lis.get(0);
+
+                        ArrayList<Object> lis2 = (ArrayList) valDelValorPOS2;
+                        ArrayList<Object> o2 = (ArrayList) lis2.get(0);
+
+                        String CadOriginal = String.valueOf(o1.get(0)).toLowerCase();
+                        String CadRemover = String.valueOf(o2.get(0)).toLowerCase();
+
+                        CadOriginal = CadOriginal.replace(CadRemover, "");
+                        return CadOriginal;
+
+                    }
+                }
             }
 
         } catch (Exception e) {

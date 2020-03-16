@@ -106,6 +106,8 @@ public class Factorizando_id_igual extends Entorno implements Instruccion {
                     }
                 }
             }
+        }else if(funcionesDeclaraciones instanceof FuncionNormal){
+            
         }
 
         return "ok";

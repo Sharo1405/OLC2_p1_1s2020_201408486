@@ -15,7 +15,7 @@ import java.util.ArrayList;
  *
  * @author sharolin
  */
-public class ModaTrim implements Expresion {
+public class ModaTrim extends Operacion implements Expresion {
 
     private Expresion exp;
     private int linea;
@@ -41,6 +41,29 @@ public class ModaTrim implements Expresion {
         try {
 
             if (vectorValores.size() == 1) {
+                Object ob = new Object();
+                ArrayList<Object> valDelValor = (ArrayList<Object>) vectorValores;
+                if (valDelValor.size() == 1) {
+                    if (valDelValor.get(0) instanceof ArrayList) {
+                        ArrayList<Object> veeeee = (ArrayList<Object>) valDelValor.get(0);
+                        if (veeeee.size() == 1) {
+                            ob = veeeee;
+                        } else {
+                            return Operacion.tipoDato.ERRORSEMANTICO;
+                        }
+                        vectorValores = (ArrayList<Object>) ob;
+
+                        Operacion.tipoDato tipo1 = this.adivinaTipoValorVECTORTIPOTIPOTIPO(vectorValores);
+                        if (tipo1.equals(Operacion.tipoDato.ENTERO) || tipo1.equals(Operacion.tipoDato.DECIMAL)) {
+                            //no pasa nada
+                        } else {
+                            listas.errores.add(new NodoError(getLinea(), getColumna(), NodoError.tipoError.Semantico, "El parametro de la funcion "
+                                    + "Mode() no es valido, Ya que el vector no es tipo Numerico"));
+                            return Operacion.tipoDato.ERRORSEMANTICO;
+                        }
+                    }
+                }
+
                 Object nu = vectorValores.get(0);
                 Double v = Double.parseDouble(String.valueOf(nu));
                 return v;
@@ -128,6 +151,33 @@ public class ModaTrim implements Expresion {
                         ArrayList<Object> array1 = (ArrayList<Object>) izquierdo;
                         ArrayList<Object> array2 = (ArrayList<Object>) derecho;
 
+                        
+                        if (tipoE2.equals(Operacion.tipoDato.VECTOR)) {
+                            Object ob = derecho;
+                            ArrayList<Object> valDelValor = (ArrayList<Object>) ob;
+                            if (valDelValor.size() == 1) {
+                                if (valDelValor.get(0) instanceof ArrayList) {
+                                    ArrayList<Object> veeeee = (ArrayList<Object>) valDelValor.get(0);
+                                    if (veeeee.size() == 1) {
+                                        derecho = veeeee;
+                                    } else {
+                                        return Operacion.tipoDato.ERRORSEMANTICO;
+                                    }
+                                }
+                            }
+
+                            array2 = (ArrayList<Object>) derecho;
+                            Operacion.tipoDato tipo1 = this.adivinaTipoValorVECTORTIPOTIPOTIPO(array2);
+                            if (tipo1.equals(Operacion.tipoDato.ENTERO) || tipo1.equals(Operacion.tipoDato.DECIMAL)) {
+                                //no pasa nada
+                            } else {
+                                listas.errores.add(new NodoError(getLinea(), getColumna(), NodoError.tipoError.Semantico, "El parametro de la funcion "
+                                        + "Mode() no es valido, Ya que el TRIM no es tipo Numerico"));
+                                return Operacion.tipoDato.ERRORSEMANTICO;
+                            }
+                        }
+                        
+
                         if (array1.size() >= 1 && array2.size() == 1) {
                             Object media = sacarModa(tablaDeSimbolos, listas, array1, array2);
                             ArrayList<Object> me = new ArrayList<>();
@@ -145,6 +195,33 @@ public class ModaTrim implements Expresion {
                         ArrayList<Object> array1 = (ArrayList<Object>) sim.getValor();
                         ArrayList<Object> array2 = (ArrayList<Object>) derecho;
 
+                        
+                        if (tipoE2.equals(Operacion.tipoDato.VECTOR)) {
+                            Object ob = derecho;
+                            ArrayList<Object> valDelValor = (ArrayList<Object>) ob;
+                            if (valDelValor.size() == 1) {
+                                if (valDelValor.get(0) instanceof ArrayList) {
+                                    ArrayList<Object> veeeee = (ArrayList<Object>) valDelValor.get(0);
+                                    if (veeeee.size() == 1) {
+                                        derecho = veeeee;
+                                    } else {
+                                        return Operacion.tipoDato.ERRORSEMANTICO;
+                                    }
+                                }
+                            }
+
+                            array2 = (ArrayList<Object>) derecho;
+                            Operacion.tipoDato tipo1 = this.adivinaTipoValorVECTORTIPOTIPOTIPO(array2);
+                            if (tipo1.equals(Operacion.tipoDato.ENTERO) || tipo1.equals(Operacion.tipoDato.DECIMAL)) {
+                                //no pasa nada
+                            } else {
+                                listas.errores.add(new NodoError(getLinea(), getColumna(), NodoError.tipoError.Semantico, "El parametro de la funcion "
+                                        + "Mode() no es valido, Ya que el TRIM no es tipo Numerico"));
+                                return Operacion.tipoDato.ERRORSEMANTICO;
+                            }
+                        }
+                        
+                        
                         if (array1.size() >= 1 && array2.size() == 1) {
                             Object media = sacarModa(tablaDeSimbolos, listas, array1, array2);
                             ArrayList<Object> me = new ArrayList<>();
@@ -163,6 +240,33 @@ public class ModaTrim implements Expresion {
                         ArrayList<Object> array1 = (ArrayList<Object>) izquierdo;
                         ArrayList<Object> array2 = (ArrayList<Object>) sim.getValor();
 
+                        
+                        if (tipoE2.equals(Operacion.tipoDato.VECTOR)) {
+                            Object ob = derecho;
+                            ArrayList<Object> valDelValor = (ArrayList<Object>) ob;
+                            if (valDelValor.size() == 1) {
+                                if (valDelValor.get(0) instanceof ArrayList) {
+                                    ArrayList<Object> veeeee = (ArrayList<Object>) valDelValor.get(0);
+                                    if (veeeee.size() == 1) {
+                                        derecho = veeeee;
+                                    } else {
+                                        return Operacion.tipoDato.ERRORSEMANTICO;
+                                    }
+                                }
+                            }
+
+                            array2 = (ArrayList<Object>) derecho;
+                            Operacion.tipoDato tipo1 = this.adivinaTipoValorVECTORTIPOTIPOTIPO(array2);
+                            if (tipo1.equals(Operacion.tipoDato.ENTERO) || tipo1.equals(Operacion.tipoDato.DECIMAL)) {
+                                //no pasa nada
+                            } else {
+                                listas.errores.add(new NodoError(getLinea(), getColumna(), NodoError.tipoError.Semantico, "El parametro de la funcion "
+                                        + "Mode() no es valido, Ya que el TRIM no es tipo Numerico"));
+                                return Operacion.tipoDato.ERRORSEMANTICO;
+                            }
+                        }
+                        
+                        
                         if (array1.size() >= 1 && array2.size() == 1) {
                             Object media = sacarModa(tablaDeSimbolos, listas, array1, array2);
                             ArrayList<Object> me = new ArrayList<>();
@@ -182,6 +286,33 @@ public class ModaTrim implements Expresion {
                         ArrayList<Object> array1 = (ArrayList<Object>) sim2.getValor();
                         ArrayList<Object> array2 = (ArrayList<Object>) sim.getValor();
 
+                        
+                        if (tipoE2.equals(Operacion.tipoDato.VECTOR)) {
+                            Object ob = derecho;
+                            ArrayList<Object> valDelValor = (ArrayList<Object>) ob;
+                            if (valDelValor.size() == 1) {
+                                if (valDelValor.get(0) instanceof ArrayList) {
+                                    ArrayList<Object> veeeee = (ArrayList<Object>) valDelValor.get(0);
+                                    if (veeeee.size() == 1) {
+                                        derecho = veeeee;
+                                    } else {
+                                        return Operacion.tipoDato.ERRORSEMANTICO;
+                                    }
+                                }
+                            }
+
+                            array2 = (ArrayList<Object>) derecho;
+                            Operacion.tipoDato tipo1 = this.adivinaTipoValorVECTORTIPOTIPOTIPO(array2);
+                            if (tipo1.equals(Operacion.tipoDato.ENTERO) || tipo1.equals(Operacion.tipoDato.DECIMAL)) {
+                                //no pasa nada
+                            } else {
+                                listas.errores.add(new NodoError(getLinea(), getColumna(), NodoError.tipoError.Semantico, "El parametro de la funcion "
+                                        + "Mode() no es valido, Ya que el TRIM no es tipo Numerico"));
+                                return Operacion.tipoDato.ERRORSEMANTICO;
+                            }
+                        }
+                        
+                        
                         if (array1.size() >= 1 && array2.size() == 1) {
                             Object media = sacarModa(tablaDeSimbolos, listas, array1, array2);
                             ArrayList<Object> me = new ArrayList<>();

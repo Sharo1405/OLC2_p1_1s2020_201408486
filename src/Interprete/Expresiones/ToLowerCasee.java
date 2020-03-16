@@ -14,7 +14,7 @@ import java.util.ArrayList;
  *
  * @author sharolin
  */
-public class ToLowerCasee implements Expresion{
+public class ToLowerCasee extends Operacion implements Expresion{
 
     private Expresion exp;
 
@@ -46,6 +46,46 @@ public class ToLowerCasee implements Expresion{
                     return sd.toLowerCase();  
                 }
                 
+            }else if (tt.equals(Operacion.tipoDato.VECTOR)) {
+
+                Object ob = getExp().getValue(tablaDeSimbolos, listas);
+                ArrayList<Object> valDelValor = (ArrayList<Object>) ob;
+                if (valDelValor.size() == 1) {
+                    if (valDelValor.get(0) instanceof ArrayList) {
+                        ArrayList<Object> veeeee = (ArrayList<Object>) valDelValor.get(0);
+                        if (veeeee.size() == 1) {
+                            ob = veeeee;
+                        } else {
+                            return Operacion.tipoDato.ERRORSEMANTICO;
+                        }
+                    }
+                }
+
+                ArrayList<Object> exp1 = new ArrayList<>();
+                exp1 = (ArrayList<Object>) ob;
+                Operacion.tipoDato tipo1 = this.adivinaTipoValorVECTORTIPOTIPOTIPO(exp1);
+
+                if (tipo1.equals(Operacion.tipoDato.STRING)) {
+                    if (exp1.size() == 1) {
+
+                        for (Object object : exp1) {
+                            String sd = String.valueOf(object);
+                            return sd.toLowerCase();
+                        }
+
+                    } else {
+                        String sd = "";
+                        for (Object object : exp1) {
+                            if (object instanceof ArrayList) {
+                                ArrayList<Object> ar = (ArrayList<Object>) object;
+                                Object dev = ar.get(0);
+                                sd += String.valueOf(dev) + " ";
+
+                            }
+                        }
+                        return sd.toLowerCase();
+                    }
+                }
             }
             
         } catch (Exception e) {

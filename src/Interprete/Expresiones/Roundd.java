@@ -14,7 +14,7 @@ import java.util.ArrayList;
  *
  * @author sharolin
  */
-public class Roundd implements Expresion{
+public class Roundd extends Operacion implements Expresion {
 
     private Expresion exp;
 
@@ -24,8 +24,7 @@ public class Roundd implements Expresion{
     public Roundd(Expresion exp) {
         this.exp = exp;
     }
-        
-    
+
     @Override
     public Object getValue(Entorno tablaDeSimbolos, ErrorImpresion listas) {
         try {
@@ -39,7 +38,7 @@ public class Roundd implements Expresion{
                     Object dd = arre.get(0);
                     Double dou = Double.parseDouble(String.valueOf(dd));
                     return (int) Math.round(dou);
-                    
+
                 } else if (ob instanceof Simbolo) {
 
                     Simbolo sim = (Simbolo) ob;
@@ -49,6 +48,37 @@ public class Roundd implements Expresion{
                     return (int) Math.round(dou);
                 }
 
+            } else if (tt.equals(Operacion.tipoDato.VECTOR)) {
+
+                Object ob = getExp().getValue(tablaDeSimbolos, listas);
+                ArrayList<Object> valDelValor = (ArrayList<Object>) ob;
+                if (valDelValor.size() == 1) {
+                    if (valDelValor.get(0) instanceof ArrayList) {
+                        ArrayList<Object> veeeee = (ArrayList<Object>) valDelValor.get(0);
+                        if (veeeee.size() == 1) {
+                            ob = veeeee;
+                        } else {
+                            return Operacion.tipoDato.ERRORSEMANTICO;
+                        }
+                    }
+                }
+
+                ArrayList<Object> exp1 = new ArrayList<>();
+                exp1 = (ArrayList<Object>) ob;
+                Operacion.tipoDato tipo1 = this.adivinaTipoValorVECTORTIPOTIPOTIPO(exp1);
+
+                if (tipo1.equals(Operacion.tipoDato.DECIMAL) || tipo1.equals(Operacion.tipoDato.ENTERO)) {
+                    if (exp1.size() == 1) {
+
+                        ArrayList<Object> arre = (ArrayList<Object>) exp1;
+                        Object dd = arre.get(0);
+                        Double dou = Double.parseDouble(String.valueOf(dd));
+                        return (int) Math.round(dou);
+
+                    } else {
+                        return Operacion.tipoDato.ERRORSEMANTICO;
+                    }
+                }
             }
 
         } catch (Exception e) {
@@ -76,5 +106,5 @@ public class Roundd implements Expresion{
     public void setExp(Expresion exp) {
         this.exp = exp;
     }
-    
+
 }
