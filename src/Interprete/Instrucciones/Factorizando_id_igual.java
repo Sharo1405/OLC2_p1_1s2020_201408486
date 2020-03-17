@@ -9,9 +9,13 @@ import Interprete.Entorno.Entorno;
 import Interprete.Entorno.Simbolo;
 import Interprete.ErrorImpresion;
 import Interprete.Expresiones.Expresion;
+import Interprete.Expresiones.Identificador;
 import Interprete.Expresiones.Operacion;
 import Interprete.NodoError;
+import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -34,50 +38,174 @@ public class Factorizando_id_igual extends Entorno implements Instruccion {
         this.columna = columna;
     }
 
+    public Object sacarCopiaPorValor(Object valorClonar) throws CloneNotSupportedException {
+
+        if (valorClonar instanceof ArrayList) {
+            ArrayList<Object> array = (ArrayList<Object>) valorClonar;
+            array = (ArrayList<Object>) array.clone();
+            ArrayList<Object> nuevesitooo = new ArrayList<>();
+            for (Object object : array) {
+                if (object instanceof Simbolo) {
+                    Simbolo sim = (Simbolo) object;
+                    nuevesitooo.add(sacarCopiaPorValorDOS(sim.javaClone()));
+                } else if (object instanceof ArrayList) {
+                    ArrayList<Object> vec = (ArrayList<Object>) object;
+                    nuevesitooo.add(sacarCopiaPorValorDOS(vec));
+                }else{
+                    nuevesitooo.add(array.get(0));
+                }
+            }
+            return nuevesitooo;
+        } else if (valorClonar instanceof Simbolo) {
+            Simbolo sim = (Simbolo) valorClonar;
+            sim = (Simbolo) sim.javaClone();
+
+            Simbolo nuevecito = new Simbolo();
+            nuevecito.setFila(sim.getFila());
+            nuevecito.setColumna(sim.getColumna());
+            nuevecito.setId(sim.getId());
+            nuevecito.setParametros((LinkedList<Expresion>) sim.getParametros().clone());
+            nuevecito.setRetornos((LinkedList<Expresion>) sim.getRetornos().clone());
+            nuevecito.setRol(sim.getRol());
+            nuevecito.setTipo(sim.getTipo());
+            nuevecito.setTipoItems(sim.getTipoItems());
+            nuevecito.setValor(sacarCopiaPorValorDOS(sim.getValor()));
+
+            return nuevecito;
+        }
+        return Operacion.tipoDato.ERRORSEMANTICO;
+    }
+
+    public Object sacarCopiaPorValorDOS(Object valorClonar) throws CloneNotSupportedException {
+        if (valorClonar instanceof ArrayList) {
+            ArrayList<Object> array = (ArrayList<Object>) valorClonar;
+            array = (ArrayList<Object>) array.clone();
+            ArrayList<Object> nuevesitooo = new ArrayList<>();
+            for (Object object : array) {
+                if (object instanceof Simbolo) {
+                    Simbolo sim = (Simbolo) object;
+                    nuevesitooo.add(sacarCopiaPorValorDOS(sim.javaClone()));
+                } else if (object instanceof ArrayList) {
+                    ArrayList<Object> vec = (ArrayList<Object>) object;
+                    nuevesitooo.add(sacarCopiaPorValorDOS(vec));
+                }else{
+                    nuevesitooo.add(array.get(0));
+                }
+            }
+            return nuevesitooo;
+        } else if (valorClonar instanceof Simbolo) {
+            Simbolo sim = (Simbolo) valorClonar;
+            sim = (Simbolo) sim.javaClone();
+
+            Simbolo nuevecito = new Simbolo();
+            nuevecito.setFila(sim.getFila());
+            nuevecito.setColumna(sim.getColumna());
+            nuevecito.setId(sim.getId());
+            nuevecito.setParametros((LinkedList<Expresion>) sim.getParametros().clone());
+            nuevecito.setRetornos((LinkedList<Expresion>) sim.getRetornos().clone());
+            nuevecito.setRol(sim.getRol());
+            nuevecito.setTipo(sim.getTipo());
+            nuevecito.setTipoItems(sim.getTipoItems());
+            nuevecito.setValor(sacarCopiaPorValorDOS(sim.getValor()));
+
+            return nuevecito;
+        }
+        return Operacion.tipoDato.ERRORSEMANTICO;
+    }
+
+    public Object clonarRecursivamente() {
+
+        return Operacion.tipoDato.ERRORSEMANTICO;
+    }
+
     @Override
     public Object ejecutar(Entorno tablaDeSimbolos, ErrorImpresion listas) {
-        if (funcionesDeclaraciones instanceof ExpresionValor) {
-            //declaro una variable o le cambio el valor si ya existe
+        try {
+            if (funcionesDeclaraciones instanceof ExpresionValor) {
+                //declaro una variable o le cambio el valor si ya existe
 
-            Simbolo encontrado = this.get(this.id.toLowerCase(), tablaDeSimbolos, Simbolo.Rol.VARIABLE);
-            if (encontrado != null) {
-                //si exite entonces solo cambiar valor
-                Object dvuleo = funcionesDeclaraciones.getValue(tablaDeSimbolos, listas);
-                if (dvuleo instanceof Operacion.tipoDato) {
-                    Operacion.tipoDato to = (Operacion.tipoDato) dvuleo;
-                    if (to.equals(Operacion.tipoDato.ERRORSEMANTICO)) {
-                        listas.errores.add(new NodoError(getLinea(), getColumna(), NodoError.tipoError.Semantico, "No se puede"
-                                + " realizar la declarcion de la variable: " + getId() + " ya que su valor a asignar no es valido"));
-                        return Operacion.tipoDato.ERRORSEMANTICO;
-                    } else {
-                        int declarada = setValorSimbolo(this.id.toLowerCase(), dvuleo,
-                                tablaDeSimbolos, encontrado.getRol(), funcionesDeclaraciones.getType(tablaDeSimbolos, listas),
-                                Simbolo.Rol.VARIABLE);
+                Simbolo encontrado = this.get(this.id.toLowerCase(), tablaDeSimbolos, Simbolo.Rol.VARIABLE);
+                if (encontrado != null) {
+                    //si exite entonces solo cambiar valor
+                    Object dvuleo2 = funcionesDeclaraciones.getValue(tablaDeSimbolos, listas);
+
+                    if (funcionesDeclaraciones instanceof ExpresionValor) {
+                        ExpresionValor e = (ExpresionValor) funcionesDeclaraciones;
+                        if (e.getValor() instanceof Identificador) {
+                            Identificador i = (Identificador) e.getValor();
+                            if (i.getType(tablaDeSimbolos, listas).equals(Operacion.tipoDato.LISTA)
+                                    && i.getEDerecha().size() == 0) {
+                                Simbolo si = new Simbolo("", dvuleo2, getLinea(), getColumna(), Operacion.tipoDato.LISTA, Simbolo.Rol.VARIABLE);
+                                dvuleo2 = si;
+                            }
+                        }
                     }
+
+                    Object dvuleo = sacarCopiaPorValor(dvuleo2);
+
+                    if (dvuleo instanceof Operacion.tipoDato) {
+                        Operacion.tipoDato to = (Operacion.tipoDato) dvuleo;
+                        if (to.equals(Operacion.tipoDato.ERRORSEMANTICO)) {
+                            listas.errores.add(new NodoError(getLinea(), getColumna(), NodoError.tipoError.Semantico, "No se puede"
+                                    + " realizar la declarcion de la variable: " + getId() + " ya que su valor a asignar no es valido"));
+                            return Operacion.tipoDato.ERRORSEMANTICO;
+                        } else {
+                            int declarada = setValorSimbolo(this.id.toLowerCase(), dvuleo,
+                                    tablaDeSimbolos, encontrado.getRol(), funcionesDeclaraciones.getType(tablaDeSimbolos, listas),
+                                    Simbolo.Rol.VARIABLE);
+                        }
+                    } else {
+
+                        if (dvuleo instanceof Simbolo) {
+                            Simbolo simiii = (Simbolo) dvuleo;
+                            int declarada = setValorSimbolo(this.id.toLowerCase(), simiii.getValor(),
+                                    tablaDeSimbolos, encontrado.getRol(), simiii.getTipo(),
+                                    Simbolo.Rol.VARIABLE);
+                        } else {
+                            int declarada = setValorSimbolo(this.id.toLowerCase(), dvuleo,
+                                    tablaDeSimbolos, encontrado.getRol(), funcionesDeclaraciones.getType(tablaDeSimbolos, listas),
+                                    Simbolo.Rol.VARIABLE);
+                        }
+                    }
+
                 } else {
+                    //no existe entonces declararla
+                    //VERIFICAR SI LO QUE TRAE ES UN SIMBOLO
+                    Object objetoo2 = funcionesDeclaraciones.getValue(tablaDeSimbolos, listas);
 
-                    if (dvuleo instanceof Simbolo) {
-                        Simbolo simiii = (Simbolo) dvuleo;
-                        int declarada = setValorSimbolo(this.id.toLowerCase(), simiii.getValor(),
-                                tablaDeSimbolos, encontrado.getRol(), simiii.getTipo(),
-                                Simbolo.Rol.VARIABLE);
-                    } else {
-                        int declarada = setValorSimbolo(this.id.toLowerCase(), dvuleo,
-                                tablaDeSimbolos, encontrado.getRol(), funcionesDeclaraciones.getType(tablaDeSimbolos, listas),
-                                Simbolo.Rol.VARIABLE);
+                    //si exite entonces solo cambiar valor
+                    if (funcionesDeclaraciones instanceof ExpresionValor) {
+                        ExpresionValor e = (ExpresionValor) funcionesDeclaraciones;
+                        if (e.getValor() instanceof Identificador) {
+                            Identificador i = (Identificador) e.getValor();
+                            if (i.getType(tablaDeSimbolos, listas).equals(Operacion.tipoDato.LISTA)
+                                    && i.getEDerecha().size() == 0) {
+                                Simbolo si = new Simbolo("", objetoo2, getLinea(), getColumna(), Operacion.tipoDato.LISTA, Simbolo.Rol.VARIABLE);
+                                objetoo2 = si;
+                            }
+                        }
                     }
-                }
 
-            } else {
-                //no existe entonces declararla
-                //VERIFICAR SI LO QUE TRAE ES UN SIMBOLO
-                Object objetoo = funcionesDeclaraciones.getValue(tablaDeSimbolos, listas);
-                if (objetoo instanceof Operacion.tipoDato) {
-                    Operacion.tipoDato to = (Operacion.tipoDato) objetoo;
-                    if (to.equals(Operacion.tipoDato.ERRORSEMANTICO)) {
-                        listas.errores.add(new NodoError(getLinea(), getColumna(), NodoError.tipoError.Semantico, "No se puede"
-                                + " realizar la declarcion de la variable: " + getId() + " ya que su valor a asignar no es valido"));
-                        return Operacion.tipoDato.ERRORSEMANTICO;
+                    Object objetoo = sacarCopiaPorValor(objetoo2);
+                    if (objetoo instanceof Operacion.tipoDato) {
+                        Operacion.tipoDato to = (Operacion.tipoDato) objetoo;
+                        if (to.equals(Operacion.tipoDato.ERRORSEMANTICO)) {
+                            listas.errores.add(new NodoError(getLinea(), getColumna(), NodoError.tipoError.Semantico, "No se puede"
+                                    + " realizar la declarcion de la variable: " + getId() + " ya que su valor a asignar no es valido"));
+                            return Operacion.tipoDato.ERRORSEMANTICO;
+                        } else {
+                            if (objetoo instanceof Simbolo) {
+                                Simbolo sbl = (Simbolo) objetoo;
+                                sbl.setColumna(getColumna());
+                                sbl.setFila(getLinea());
+                                sbl.setId(getId());
+                                this.setSimbolo(getId().toLowerCase(), sbl, tablaDeSimbolos);
+                            } else {
+                                Simbolo nuevo = new Simbolo(id.toLowerCase(), objetoo, linea, columna,
+                                        funcionesDeclaraciones.getType(tablaDeSimbolos, listas), Simbolo.Rol.VARIABLE);
+                                this.setSimbolo(id.toLowerCase(), nuevo, tablaDeSimbolos);
+                            }
+                        }
                     } else {
                         if (objetoo instanceof Simbolo) {
                             Simbolo sbl = (Simbolo) objetoo;
@@ -85,29 +213,20 @@ public class Factorizando_id_igual extends Entorno implements Instruccion {
                             sbl.setFila(getLinea());
                             sbl.setId(getId());
                             this.setSimbolo(getId().toLowerCase(), sbl, tablaDeSimbolos);
+
                         } else {
                             Simbolo nuevo = new Simbolo(id.toLowerCase(), objetoo, linea, columna,
                                     funcionesDeclaraciones.getType(tablaDeSimbolos, listas), Simbolo.Rol.VARIABLE);
                             this.setSimbolo(id.toLowerCase(), nuevo, tablaDeSimbolos);
                         }
                     }
-                } else {
-                    if (objetoo instanceof Simbolo) {
-                        Simbolo sbl = (Simbolo) objetoo;
-                        sbl.setColumna(getColumna());
-                        sbl.setFila(getLinea());
-                        sbl.setId(getId());
-                        this.setSimbolo(getId().toLowerCase(), sbl, tablaDeSimbolos);
-
-                    } else {
-                        Simbolo nuevo = new Simbolo(id.toLowerCase(), objetoo, linea, columna,
-                                funcionesDeclaraciones.getType(tablaDeSimbolos, listas), Simbolo.Rol.VARIABLE);
-                        this.setSimbolo(id.toLowerCase(), nuevo, tablaDeSimbolos);
-                    }
                 }
+            } else if (funcionesDeclaraciones instanceof FuncionNormal) {
+
             }
-        }else if(funcionesDeclaraciones instanceof FuncionNormal){
-            
+        } catch (Exception e) {
+            System.out.println("Error en Factorizando_id_igual Ejecutar()");
+            return Operacion.tipoDato.ERRORSEMANTICO;
         }
 
         return "ok";

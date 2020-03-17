@@ -364,9 +364,15 @@ public class AsignacionCorcheteSimple extends Entorno implements Instruccion {
                                     tipoSaberSimboloArray = Operacion.tipoDato.ERRORSEMANTICO;
                                 }
                             } else {
-                                ArrayList<Object> ara = (ArrayList<Object>) simbolito.getValor();
-                                tipoSaberSimboloArray = simbolito.getTipo();
-                                elObtenido = ara.get(indiceEntero - 1);
+                                if (indiceEntero == 1) {
+                                    ArrayList<Object> ara = (ArrayList<Object>) simbolito.getValor();
+                                    tipoSaberSimboloArray = simbolito.getTipo();
+                                    elObtenido = ara;
+                                } else {
+                                    ArrayList<Object> ara = (ArrayList<Object>) simbolito.getValor();
+                                    tipoSaberSimboloArray = simbolito.getTipo();
+                                    elObtenido = ara.get(indiceEntero - 1);
+                                }
                             }
                         } else {
                             //tipoDelId = Operacion.tipoDato.VECTOR;

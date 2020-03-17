@@ -14,7 +14,11 @@ import java.util.LinkedList;
  *
  * @author sharolin
  */
-public class Simbolo {
+public class Simbolo implements Cloneable {
+
+    public Object javaClone() throws CloneNotSupportedException {
+        return this.clone();
+    }
 
     private String id;
     private Object valor = "---vacio---"; //valor concreto o nodo del arbol
@@ -43,8 +47,6 @@ public class Simbolo {
         this.tipoItems = tipoItems;
         this.rol = rol;
     }
-    
-    
 
     public Simbolo(String id, Object valor, int fila, int columna, Operacion.tipoDato tipo, Rol rol,
             LinkedList<Expresion> parametros, LinkedList<Expresion> retornos) { //funcion
