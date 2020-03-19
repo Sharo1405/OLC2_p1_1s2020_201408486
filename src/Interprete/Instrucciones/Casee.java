@@ -9,6 +9,7 @@ import Interprete.Entorno.Entorno;
 import Interprete.ErrorImpresion;
 import Interprete.Expresiones.Expresion;
 import Interprete.Expresiones.Operacion;
+import Interprete.Expresiones.Retorno2;
 
 /**
  *
@@ -29,9 +30,12 @@ public class Casee implements Expresion {
     @Override
     public Object getValue(Entorno tablaDeSimbolos, ErrorImpresion listas) {
         try {
-
-            return valorCase.getValue(tablaDeSimbolos, listas);
-
+            Object ob = valorCase.getValue(tablaDeSimbolos, listas);
+            if (ob instanceof Retorno2) {
+                Retorno2 r = (Retorno2) ob;
+                ob = r.getValue(tablaDeSimbolos, listas);
+            }
+            return ob;
         } catch (Exception e) {
             System.out.println("Error en la clase Casee getValue");
         }
@@ -41,7 +45,13 @@ public class Casee implements Expresion {
     @Override
     public Operacion.tipoDato getType(Entorno tablaDeSimbolos, ErrorImpresion listas) {
         try {
+            Object ob = valorCase.getValue(tablaDeSimbolos, listas);
+            if (ob instanceof Retorno2) {
+                Retorno2 r = (Retorno2) ob;
+                return r.getType(tablaDeSimbolos, listas);
+            }
             return valorCase.getType(tablaDeSimbolos, listas);
+
         } catch (Exception e) {
             System.out.println("Error en la clase Casee getTipo");
         }

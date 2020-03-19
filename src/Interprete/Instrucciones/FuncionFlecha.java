@@ -11,30 +11,29 @@ import Interprete.ErrorImpresion;
 import Interprete.Expresiones.Comas;
 import Interprete.Expresiones.Expresion;
 import Interprete.Expresiones.Operacion;
-import Interprete.Expresiones.TipoDato.Booleano;
 import java.util.LinkedList;
 
 /**
  *
  * @author sharolin
  */
-public class FuncionNormal implements Expresion {
-
+public class FuncionFlecha implements Expresion{
+    
     private Expresion parametros;
     private BloqueSentencias bloqueSentencias;
     private int linea;
     private int columna;
 
-    public FuncionNormal() {
+    public FuncionFlecha() {
     }
 
-    public FuncionNormal(Expresion parametros, BloqueSentencias bloqueSentencias, int linea, int columna) {
+    public FuncionFlecha(Expresion parametros, BloqueSentencias bloqueSentencias, int linea, int columna) {
         this.parametros = parametros;
         this.bloqueSentencias = bloqueSentencias;
         this.linea = linea;
         this.columna = columna;
     }
-
+    
     private void obtenerLista(Expresion expre1, Expresion expre2, Entorno tablaDeSimbolos, ErrorImpresion listas,
             LinkedList<Expresion> listaParas) {
 
@@ -47,6 +46,8 @@ public class FuncionNormal implements Expresion {
             listaParas.add(expre2);
         }
     }
+    
+    
 
     @Override
     public Object getValue(Entorno tablaDeSimbolos, ErrorImpresion listas) {
@@ -69,7 +70,6 @@ public class FuncionNormal implements Expresion {
             System.out.println("Error en la clase FuncionNormal Ejecutar()");
             return Operacion.tipoDato.ERRORSEMANTICO;
         }
-        //return Operacion.tipoDato.ERRORSEMANTICO;
     }
 
     @Override
@@ -132,4 +132,5 @@ public class FuncionNormal implements Expresion {
     public void setColumna(int columna) {
         this.columna = columna;
     }
+    
 }

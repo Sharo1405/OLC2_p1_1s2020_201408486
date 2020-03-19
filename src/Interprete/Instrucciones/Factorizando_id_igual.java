@@ -11,6 +11,7 @@ import Interprete.ErrorImpresion;
 import Interprete.Expresiones.Expresion;
 import Interprete.Expresiones.Identificador;
 import Interprete.Expresiones.Operacion;
+import Interprete.Expresiones.Retorno2;
 import Interprete.NodoError;
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -51,7 +52,7 @@ public class Factorizando_id_igual extends Entorno implements Instruccion {
                 } else if (object instanceof ArrayList) {
                     ArrayList<Object> vec = (ArrayList<Object>) object;
                     nuevesitooo.add(sacarCopiaPorValorDOS(vec));
-                }else{
+                } else {
                     nuevesitooo.add(array.get(0));
                 }
             }
@@ -88,7 +89,7 @@ public class Factorizando_id_igual extends Entorno implements Instruccion {
                 } else if (object instanceof ArrayList) {
                     ArrayList<Object> vec = (ArrayList<Object>) object;
                     nuevesitooo.add(sacarCopiaPorValorDOS(vec));
-                }else{
+                } else {
                     nuevesitooo.add(array.get(0));
                 }
             }
@@ -128,6 +129,14 @@ public class Factorizando_id_igual extends Entorno implements Instruccion {
                 if (encontrado != null) {
                     //si exite entonces solo cambiar valor
                     Object dvuleo2 = funcionesDeclaraciones.getValue(tablaDeSimbolos, listas);
+                    Operacion.tipoDato tipo = Operacion.tipoDato.VACIO;
+                    if (dvuleo2 instanceof Retorno2) {
+                        Retorno2 r = (Retorno2) dvuleo2;
+                        dvuleo2 = r.getValue(tablaDeSimbolos, listas);
+                        tipo = r.getType(tablaDeSimbolos, listas);
+                    }else{
+                        tipo = funcionesDeclaraciones.getType(tablaDeSimbolos, listas);
+                    }
 
                     if (funcionesDeclaraciones instanceof ExpresionValor) {
                         ExpresionValor e = (ExpresionValor) funcionesDeclaraciones;
@@ -151,7 +160,7 @@ public class Factorizando_id_igual extends Entorno implements Instruccion {
                             return Operacion.tipoDato.ERRORSEMANTICO;
                         } else {
                             int declarada = setValorSimbolo(this.id.toLowerCase(), dvuleo,
-                                    tablaDeSimbolos, encontrado.getRol(), funcionesDeclaraciones.getType(tablaDeSimbolos, listas),
+                                    tablaDeSimbolos, encontrado.getRol(), tipo,
                                     Simbolo.Rol.VARIABLE);
                         }
                     } else {
@@ -163,7 +172,7 @@ public class Factorizando_id_igual extends Entorno implements Instruccion {
                                     Simbolo.Rol.VARIABLE);
                         } else {
                             int declarada = setValorSimbolo(this.id.toLowerCase(), dvuleo,
-                                    tablaDeSimbolos, encontrado.getRol(), funcionesDeclaraciones.getType(tablaDeSimbolos, listas),
+                                    tablaDeSimbolos, encontrado.getRol(), tipo,
                                     Simbolo.Rol.VARIABLE);
                         }
                     }
@@ -172,7 +181,16 @@ public class Factorizando_id_igual extends Entorno implements Instruccion {
                     //no existe entonces declararla
                     //VERIFICAR SI LO QUE TRAE ES UN SIMBOLO
                     Object objetoo2 = funcionesDeclaraciones.getValue(tablaDeSimbolos, listas);
+                    Operacion.tipoDato tipo = Operacion.tipoDato.VACIO;
+                    if (objetoo2 instanceof Retorno2) {
+                        Retorno2 r = (Retorno2) objetoo2;
+                        objetoo2 = r.getValue(tablaDeSimbolos, listas);
+                        tipo = r.getType(tablaDeSimbolos, listas);
+                    }else{
+                        tipo = funcionesDeclaraciones.getType(tablaDeSimbolos, listas);
+                    }
 
+                    
                     //si exite entonces solo cambiar valor
                     if (funcionesDeclaraciones instanceof ExpresionValor) {
                         ExpresionValor e = (ExpresionValor) funcionesDeclaraciones;
@@ -202,7 +220,7 @@ public class Factorizando_id_igual extends Entorno implements Instruccion {
                                 this.setSimbolo(getId().toLowerCase(), sbl, tablaDeSimbolos);
                             } else {
                                 Simbolo nuevo = new Simbolo(id.toLowerCase(), objetoo, linea, columna,
-                                        funcionesDeclaraciones.getType(tablaDeSimbolos, listas), Simbolo.Rol.VARIABLE);
+                                        tipo, Simbolo.Rol.VARIABLE);
                                 this.setSimbolo(id.toLowerCase(), nuevo, tablaDeSimbolos);
                             }
                         }
@@ -216,13 +234,21 @@ public class Factorizando_id_igual extends Entorno implements Instruccion {
 
                         } else {
                             Simbolo nuevo = new Simbolo(id.toLowerCase(), objetoo, linea, columna,
-                                    funcionesDeclaraciones.getType(tablaDeSimbolos, listas), Simbolo.Rol.VARIABLE);
+                                    tipo, Simbolo.Rol.VARIABLE);
                             this.setSimbolo(id.toLowerCase(), nuevo, tablaDeSimbolos);
                         }
                     }
                 }
-            } else if (funcionesDeclaraciones instanceof FuncionNormal) {
+            } else if (funcionesDeclaraciones instanceof FuncionNormal || funcionesDeclaraciones instanceof FuncionFlecha) {
 
+                Object objetoo = funcionesDeclaraciones.getValue(tablaDeSimbolos, listas);
+
+                if (objetoo instanceof Simbolo) {
+                    Simbolo si = (Simbolo) objetoo;
+                    si.setId(getId());
+                    si.setRol(Simbolo.Rol.FUNCION);
+                    this.setSimbolo(getId(), si, tablaDeSimbolos);
+                }
             }
         } catch (Exception e) {
             System.out.println("Error en Factorizando_id_igual Ejecutar()");

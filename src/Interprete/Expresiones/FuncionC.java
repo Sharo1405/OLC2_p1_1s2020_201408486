@@ -8,6 +8,7 @@ package Interprete.Expresiones;
 import Interprete.Entorno.Entorno;
 import Interprete.Entorno.Simbolo;
 import Interprete.ErrorImpresion;
+import Interprete.Expresiones.Retorno2;
 import Interprete.NodoError;
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -35,7 +36,14 @@ public class FuncionC implements Expresion {
 
         for (int i = 0; i < listaExpresiones.size(); i++) {
             Expresion actual = listaExpresiones.get(i);
-            Operacion.tipoDato tipoo = actual.getType(tablaDeSimbolos, listas);
+            Object dvuleo2 = actual.getValue(tablaDeSimbolos, listas);
+            Operacion.tipoDato tipoo = Operacion.tipoDato.VACIO;
+            if (dvuleo2 instanceof Retorno2) {
+                Retorno2 r = (Retorno2) dvuleo2;
+                dvuleo2 = r.getValue(tablaDeSimbolos, listas);
+                tipoo = r.getType(tablaDeSimbolos, listas);
+            }
+            tipoo = actual.getType(tablaDeSimbolos, listas);
             switch (tipoo) {
                 case LISTA:
                     return Operacion.tipoDato.LISTA;
@@ -195,7 +203,12 @@ public class FuncionC implements Expresion {
                             ArrayList<Object> valorRetorno1 = new ArrayList<>();
                             Expresion actual1 = listaExpresiones.get(0);
                             Object v1 = actual1.getValue(tablaDeSimbolos, listas); //aqui viene la lista
-                            Operacion.tipoDato tipoV1 = actual1.getType(tablaDeSimbolos, listas); //tipo de la lista
+                            Operacion.tipoDato tipoV1 = Operacion.tipoDato.VACIO;
+                            if (v1 instanceof Retorno2) {
+                                v1 = ((Retorno2) v1).getValue(tablaDeSimbolos, listas);
+                                tipoV1 = ((Retorno2) v1).getType(tablaDeSimbolos, listas);
+                            }
+                            tipoV1 = actual1.getType(tablaDeSimbolos, listas); //tipo de la lista
                             //aca ya tengo el arrayList con todos sus atributos necesito volver todo de una dimension y saber el tipo para castear
                             //pero primero pasar todo a una nueva lista
                             v1 = casteoLista(v1, tipoV1, listas);
@@ -218,7 +231,12 @@ public class FuncionC implements Expresion {
                             ArrayList<Object> valorRetorno = new ArrayList<>();
                             Expresion actual = listaExpresiones.get(0);
                             Object v = actual.getValue(tablaDeSimbolos, listas);
-                            Operacion.tipoDato tipoV = actual.getType(tablaDeSimbolos, listas);
+                            Operacion.tipoDato tipoV = Operacion.tipoDato.VACIO;
+                            if (v instanceof Retorno2) {
+                                v = ((Retorno2) v).getValue(tablaDeSimbolos, listas);
+                                tipoV1 = ((Retorno2) v).getType(tablaDeSimbolos, listas);
+                            }
+                            tipoV = actual.getType(tablaDeSimbolos, listas);
                             v = casteoVector(v, tipoV, listas);
                             if (v instanceof Operacion.tipoDato) {
                                 if (((Operacion.tipoDato) v).equals(Operacion.tipoDato.ERRORSEMANTICO)) {
@@ -293,7 +311,7 @@ public class FuncionC implements Expresion {
             }
         }
 
-        return tipoResultanteLISTA(tipostipos);     
+        return tipoResultanteLISTA(tipostipos);
     }
 
     public Operacion.tipoDato tipodelItemVector(Object item) {

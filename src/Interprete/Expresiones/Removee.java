@@ -7,6 +7,7 @@ package Interprete.Expresiones;
 
 import Interprete.Entorno.Entorno;
 import Interprete.ErrorImpresion;
+import Interprete.Expresiones.Retorno2;
 import java.util.ArrayList;
 import java.util.function.ObjDoubleConsumer;
 
@@ -29,11 +30,21 @@ public class Removee extends Operacion implements Expresion {
     public Object getValue(Entorno tablaDeSimbolos, ErrorImpresion listas) {
         try {
 
-            Operacion.tipoDato tt = getExp().getType(tablaDeSimbolos, listas);
+            //Object CadenasRemove = getExp().getValue(tablaDeSimbolos, listas);
+            Object ob = getExp().getValue(tablaDeSimbolos, listas);
+            Operacion.tipoDato tt = Operacion.tipoDato.VACIO;            
+            if (ob instanceof Retorno2) {
+                Retorno2 r = (Retorno2) ob;
+                ob = r.getValue(tablaDeSimbolos, listas);
+                tt = r.getType(tablaDeSimbolos, listas);
+            } else {
+                tt = getExp().getType(tablaDeSimbolos, listas);
+            }
+            
             if (tt.equals(Operacion.tipoDato.STRING)) {
-                Object CadenasRemove = getExp().getValue(tablaDeSimbolos, listas);
-                if (CadenasRemove instanceof ArrayList) {
-                    ArrayList<Object> lis = (ArrayList) CadenasRemove;
+                
+                if (ob instanceof ArrayList) {
+                    ArrayList<Object> lis = (ArrayList) ob;
                     ArrayList<Object> o1 = (ArrayList) lis.get(0);
                     ArrayList<Object> o2 = (ArrayList) lis.get(1);
 
@@ -45,8 +56,7 @@ public class Removee extends Operacion implements Expresion {
                 }
 
             } else if (tt.equals(Operacion.tipoDato.VECTOR)) {
-
-                Object ob = getExp().getValue(tablaDeSimbolos, listas);
+                
                 ArrayList<Object> valDelValor = (ArrayList<Object>) ob;
                 if (valDelValor.size() == 2) {
 

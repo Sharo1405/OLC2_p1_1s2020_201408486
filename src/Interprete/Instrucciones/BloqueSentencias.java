@@ -55,8 +55,7 @@ public class BloqueSentencias implements Instruccion {
                 } else {//funciones 
                     Expresion exp = (Expresion) sentencia;
                     if (exp instanceof Retorno) {
-                        //return exp.getValue(entorno, linstanceoftas);
-                        return exp;
+                        return exp.getValue(actual, listas);
                     } else {
                         Object sss = exp.getValue(actual, listas);
                     }

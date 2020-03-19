@@ -43,6 +43,23 @@ public class Entorno {
         this.tablaS = new LinkedList<Simbolo>();
     }
 
+    public Simbolo getParaFuncion(String id, Entorno actual, Simbolo.Rol rol) {
+        try {
+
+            for (Simbolo simbolo : actual.tablaS) {
+                if (simbolo.getId().equals(id.toLowerCase())) {
+                    if (rol == simbolo.getRol()) {
+                        return simbolo;
+                    }
+                }
+            }
+
+        } catch (Exception e) {
+            System.out.println("Error en la clase Entorno get()");
+        }
+        return null;
+    }
+
     public Simbolo get(String id, Entorno actual, Simbolo.Rol rol) {
         try {
 

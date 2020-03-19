@@ -10,6 +10,7 @@ import Interprete.Entorno.Simbolo;
 import Interprete.ErrorImpresion;
 import Interprete.Expresiones.Expresion;
 import Interprete.Expresiones.Operacion;
+import Interprete.Expresiones.Retorno2;
 import Interprete.NodoError;
 import java.util.ArrayList;
 
@@ -288,9 +289,18 @@ public class AsignacionCorcheteSimple extends Entorno implements Instruccion {
             Simbolo encontrado = this.get(getIdVariable(), tablaDeSimbolos, Simbolo.Rol.VARIABLE);
             if (encontrado != null) {
                 //PRIMER INDICE
-                Operacion.tipoDato tiIndice1 = getIndice().getType(tablaDeSimbolos, listas);
+                Object valor = getIndice().getValue(tablaDeSimbolos, listas);
+                Operacion.tipoDato tiIndice1 = Operacion.tipoDato.VACIO;
+                if (valor instanceof Retorno2) {
+                    Retorno2 r = (Retorno2) valor;
+                    valor = r.getValue(tablaDeSimbolos, listas);
+                    tiIndice1 = r.getType(tablaDeSimbolos, listas);
+                } else {
+                    tiIndice1 = getIndice().getType(tablaDeSimbolos, listas);
+                }
+
                 if (tiIndice1.equals(Operacion.tipoDato.ENTERO)) {
-                    Object valor = getIndice().getValue(tablaDeSimbolos, listas);
+
                     ArrayList<Object> val = (ArrayList<Object>) valor;
                     Object v = val.get(0);
                     int indiceEntero = Integer.parseInt(String.valueOf(v));
@@ -402,7 +412,15 @@ public class AsignacionCorcheteSimple extends Entorno implements Instruccion {
 
                                     if (izq instanceof EIzquierdaCorcheteSimple) {
                                         EIzquierdaCorcheteSimple cs = (EIzquierdaCorcheteSimple) izq;
-                                        tipoIdiceFor = cs.getType(tablaDeSimbolos, listas);
+                                        Object asigIndice = cs.getValue(tablaDeSimbolos, listas);
+                                        if (asigIndice instanceof Retorno2) {
+                                            Retorno2 r = (Retorno2) asigIndice;
+                                            asigIndice = r.getValue(tablaDeSimbolos, listas);
+                                            tipoIdiceFor = r.getType(tablaDeSimbolos, listas);
+                                        } else {
+                                            tipoIdiceFor = cs.getType(tablaDeSimbolos, listas);
+                                        }
+
                                         if (!tipoIdiceFor.equals(Operacion.tipoDato.ENTERO)) {
                                             listas.errores.add(new NodoError(getLinea(), getColumna(), NodoError.tipoError.Semantico,
                                                     "El acceso a la variable de id: " + idVariable
@@ -411,7 +429,6 @@ public class AsignacionCorcheteSimple extends Entorno implements Instruccion {
                                             return Operacion.tipoDato.ERRORSEMANTICO;
                                         }
 
-                                        Object asigIndice = cs.getValue(tablaDeSimbolos, listas);
                                         ArrayList<Object> ss = (ArrayList<Object>) asigIndice;
                                         Object idn = ss.get(0);
                                         indiceFor = Integer.parseInt(String.valueOf(idn));
@@ -420,7 +437,15 @@ public class AsignacionCorcheteSimple extends Entorno implements Instruccion {
 
                                     } else if (izq instanceof EIzquierdaCorcheteDoble) {
                                         EIzquierdaCorcheteDoble cs = (EIzquierdaCorcheteDoble) izq;
-                                        tipoIdiceFor = cs.getType(tablaDeSimbolos, listas);
+                                        Object asigIndice = cs.getValue(tablaDeSimbolos, listas);
+                                        if (asigIndice instanceof Retorno2) {
+                                            Retorno2 r = (Retorno2) asigIndice;
+                                            asigIndice = r.getValue(tablaDeSimbolos, listas);
+                                            tipoIdiceFor = r.getType(tablaDeSimbolos, listas);
+                                        } else {
+                                            tipoIdiceFor = cs.getType(tablaDeSimbolos, listas);
+                                        }
+
                                         if (!tipoIdiceFor.equals(Operacion.tipoDato.ENTERO)) {
                                             listas.errores.add(new NodoError(getLinea(), getColumna(), NodoError.tipoError.Semantico,
                                                     "El acceso a la variable de id: " + idVariable
@@ -429,7 +454,6 @@ public class AsignacionCorcheteSimple extends Entorno implements Instruccion {
                                             return Operacion.tipoDato.ERRORSEMANTICO;
                                         }
 
-                                        Object asigIndice = cs.getValue(tablaDeSimbolos, listas);
                                         ArrayList<Object> ss = (ArrayList<Object>) asigIndice;
                                         Object idn = ss.get(0);
                                         indiceFor = Integer.parseInt(String.valueOf(idn));
@@ -449,7 +473,15 @@ public class AsignacionCorcheteSimple extends Entorno implements Instruccion {
 
                                     if (izq instanceof EIzquierdaCorcheteSimple) {
                                         EIzquierdaCorcheteSimple cs = (EIzquierdaCorcheteSimple) izq;
-                                        tipoIdiceFor = cs.getType(tablaDeSimbolos, listas);
+                                        Object asigIndice = cs.getValue(tablaDeSimbolos, listas);
+                                        if (asigIndice instanceof Retorno2) {
+                                            Retorno2 r = (Retorno2) asigIndice;
+                                            asigIndice = r.getValue(tablaDeSimbolos, listas);
+                                            tipoIdiceFor = r.getType(tablaDeSimbolos, listas);
+                                        } else {
+                                            tipoIdiceFor = cs.getType(tablaDeSimbolos, listas);
+                                        }
+
                                         if (!tipoIdiceFor.equals(Operacion.tipoDato.ENTERO)) {
                                             listas.errores.add(new NodoError(getLinea(), getColumna(), NodoError.tipoError.Semantico,
                                                     "El acceso a la variable de id: " + idVariable
@@ -458,7 +490,6 @@ public class AsignacionCorcheteSimple extends Entorno implements Instruccion {
                                             return Operacion.tipoDato.ERRORSEMANTICO;
                                         }
 
-                                        Object asigIndice = cs.getValue(tablaDeSimbolos, listas);
                                         ArrayList<Object> ss = (ArrayList<Object>) asigIndice;
                                         Object idn = ss.get(0);
                                         indiceFor = Integer.parseInt(String.valueOf(idn));
@@ -467,7 +498,15 @@ public class AsignacionCorcheteSimple extends Entorno implements Instruccion {
 
                                     } else if (izq instanceof EIzquierdaCorcheteDoble) {
                                         EIzquierdaCorcheteDoble cs = (EIzquierdaCorcheteDoble) izq;
-                                        tipoIdiceFor = cs.getType(tablaDeSimbolos, listas);
+                                        Object asigIndice = cs.getValue(tablaDeSimbolos, listas);
+                                        if (asigIndice instanceof Retorno2) {
+                                            Retorno2 r = (Retorno2) asigIndice;
+                                            asigIndice = r.getValue(tablaDeSimbolos, listas);
+                                            tipoIdiceFor = r.getType(tablaDeSimbolos, listas);
+                                        } else {
+                                            tipoIdiceFor = cs.getType(tablaDeSimbolos, listas);
+                                        }
+
                                         if (!tipoIdiceFor.equals(Operacion.tipoDato.ENTERO)) {
                                             listas.errores.add(new NodoError(getLinea(), getColumna(), NodoError.tipoError.Semantico,
                                                     "El acceso a la variable de id: " + idVariable
@@ -476,7 +515,6 @@ public class AsignacionCorcheteSimple extends Entorno implements Instruccion {
                                             return Operacion.tipoDato.ERRORSEMANTICO;
                                         }
 
-                                        Object asigIndice = cs.getValue(tablaDeSimbolos, listas);
                                         ArrayList<Object> ss = (ArrayList<Object>) asigIndice;
                                         Object idn = ss.get(0);
                                         indiceFor = Integer.parseInt(String.valueOf(idn));

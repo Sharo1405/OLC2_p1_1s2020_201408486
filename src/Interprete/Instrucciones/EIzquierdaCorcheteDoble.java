@@ -9,12 +9,13 @@ import Interprete.Entorno.Entorno;
 import Interprete.ErrorImpresion;
 import Interprete.Expresiones.Expresion;
 import Interprete.Expresiones.Operacion;
+import Interprete.Expresiones.Retorno2;
 
 /**
  *
  * @author sharolin
  */
-public class EIzquierdaCorcheteDoble implements Expresion{
+public class EIzquierdaCorcheteDoble implements Expresion {
 
     private Expresion exp;
     private int linea;
@@ -27,16 +28,25 @@ public class EIzquierdaCorcheteDoble implements Expresion{
         this.setExp(exp);
         this.setLinea(linea);
         this.setColumna(columna);
-    }   
-        
-    
+    }
+
     @Override
     public Object getValue(Entorno tablaDeSimbolos, ErrorImpresion listas) {
-        return getExp().getValue(tablaDeSimbolos, listas);
+        Object ob = getExp().getValue(tablaDeSimbolos, listas);
+        if (ob instanceof Retorno2) {
+            Retorno2 r = (Retorno2) ob;
+            return r.getValue(tablaDeSimbolos, listas);
+        }
+        return ob;
     }
 
     @Override
     public Operacion.tipoDato getType(Entorno tablaDeSimbolos, ErrorImpresion listas) {
+        Object ob = getExp().getValue(tablaDeSimbolos, listas);
+        if (ob instanceof Retorno2) {
+            Retorno2 r = (Retorno2) ob;
+            return r.getType(tablaDeSimbolos, listas);
+        }
         return getExp().getType(tablaDeSimbolos, listas);
     }
 
@@ -81,5 +91,5 @@ public class EIzquierdaCorcheteDoble implements Expresion{
     public void setColumna(int columna) {
         this.columna = columna;
     }
-    
+
 }

@@ -8,6 +8,7 @@ package Interprete.Expresiones;
 import Interprete.Entorno.Entorno;
 import Interprete.Entorno.Simbolo;
 import Interprete.ErrorImpresion;
+import Interprete.Expresiones.Retorno2;
 import java.util.ArrayList;
 
 /**
@@ -29,9 +30,18 @@ public class ToLowerCasee extends Operacion implements Expresion{
     @Override
     public Object getValue(Entorno tablaDeSimbolos, ErrorImpresion listas) {
         try {
-            Operacion.tipoDato tt = exp.getType(tablaDeSimbolos, listas);
+            Object objt = getExp().getValue(tablaDeSimbolos, listas);
+            Operacion.tipoDato tt = Operacion.tipoDato.VACIO;            
+            if (objt instanceof Retorno2) {
+                objt = ((Retorno2) objt).getValue(tablaDeSimbolos, listas);
+                tt = ((Retorno2) objt).getType(tablaDeSimbolos, listas);                
+            }else{
+                tt = getExp().getType(tablaDeSimbolos, listas);
+            }
+            
+            
             if(tt.equals(Operacion.tipoDato.STRING)){
-                Object objt = getExp().getValue(tablaDeSimbolos, listas);                
+                
                 if(objt instanceof ArrayList){
                     ArrayList<Object> ar = (ArrayList<Object>) objt;
                     Object dev = ar.get(0);
@@ -48,13 +58,12 @@ public class ToLowerCasee extends Operacion implements Expresion{
                 
             }else if (tt.equals(Operacion.tipoDato.VECTOR)) {
 
-                Object ob = getExp().getValue(tablaDeSimbolos, listas);
-                ArrayList<Object> valDelValor = (ArrayList<Object>) ob;
+                ArrayList<Object> valDelValor = (ArrayList<Object>) objt;
                 if (valDelValor.size() == 1) {
                     if (valDelValor.get(0) instanceof ArrayList) {
                         ArrayList<Object> veeeee = (ArrayList<Object>) valDelValor.get(0);
                         if (veeeee.size() == 1) {
-                            ob = veeeee;
+                            objt = veeeee;
                         } else {
                             return Operacion.tipoDato.ERRORSEMANTICO;
                         }
@@ -62,7 +71,7 @@ public class ToLowerCasee extends Operacion implements Expresion{
                 }
 
                 ArrayList<Object> exp1 = new ArrayList<>();
-                exp1 = (ArrayList<Object>) ob;
+                exp1 = (ArrayList<Object>) objt;
                 Operacion.tipoDato tipo1 = this.adivinaTipoValorVECTORTIPOTIPOTIPO(exp1);
 
                 if (tipo1.equals(Operacion.tipoDato.STRING)) {

@@ -7,6 +7,7 @@ package Interprete.Expresiones;
 
 import Interprete.Entorno.Entorno;
 import Interprete.ErrorImpresion;
+import Interprete.Expresiones.Retorno2;
 import java.util.LinkedList;
 
 /**
@@ -31,12 +32,23 @@ public class EDerechaCorcheteSimple implements Expresion{
    
     @Override
     public Object getValue(Entorno tablaDeSimbolos, ErrorImpresion listas) {
-        return getValor().getValue(tablaDeSimbolos, listas);
+        Object dvuleo2 = valor.getValue(tablaDeSimbolos, listas);
+        if (dvuleo2 instanceof Retorno2) {
+            Retorno2 r = (Retorno2) dvuleo2;
+            dvuleo2 = r.getValue(tablaDeSimbolos, listas);
+            return dvuleo2;
+        }
+        return dvuleo2;
     }
 
     
     @Override
     public Operacion.tipoDato getType(Entorno tablaDeSimbolos, ErrorImpresion listas) {
+        Object dvuleo2 = valor.getValue(tablaDeSimbolos, listas);
+        if (dvuleo2 instanceof Retorno2) {
+            Retorno2 r = (Retorno2) dvuleo2;            
+            return r.getType(tablaDeSimbolos, listas);
+        }
         return getValor().getType(tablaDeSimbolos, listas);
     }    
 

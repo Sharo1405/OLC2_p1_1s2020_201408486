@@ -7,6 +7,7 @@ package Interprete.Expresiones;
 
 import Interprete.Entorno.Entorno;
 import Interprete.ErrorImpresion;
+import Interprete.Expresiones.Retorno2;
 import Interprete.NodoError;
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -35,8 +36,16 @@ public class Ternario implements Expresion {
     public Object getValue(Entorno entorno, ErrorImpresion listas) {
         try {
             Object cndicion = condicion.getValue(entorno, listas);
+            Operacion.tipoDato tipoo = Operacion.tipoDato.VACIO;
+            if (cndicion instanceof Retorno2) {
+                cndicion = ((Retorno2) cndicion).getValue(entorno, listas);
+                tipoo = ((Retorno2) cndicion).getType(entorno, listas);                
+            }else{
+                tipoo = condicion.getType(entorno, listas);
+            }
+
             if (cndicion != Operacion.tipoDato.ERRORSEMANTICO) {
-                Operacion.tipoDato tipoo = condicion.getType(entorno, listas);
+                
                 if (tipoo == Operacion.tipoDato.BOOLEAN) {
                     ArrayList<Object> valDelValor = (ArrayList<Object>) cndicion;
                     if (valDelValor.size() == 1) {

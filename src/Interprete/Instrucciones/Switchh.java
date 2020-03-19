@@ -11,6 +11,7 @@ import Interprete.ErrorImpresion;
 import Interprete.Expresiones.Expresion;
 import Interprete.Expresiones.Operacion;
 import Interprete.Expresiones.Relacionales.IgualIgual;
+import Interprete.Expresiones.Retorno2;
 import Interprete.NodoError;
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -40,7 +41,12 @@ public class Switchh implements Instruccion {
         try {
 
             Object ob = condicion.getValue(tablaDeSimbolos, listas);
-
+            if(ob instanceof Retorno2){
+                Retorno2 r = (Retorno2) ob;
+                ob = r.getValue(tablaDeSimbolos, listas);
+            }
+            
+            
             ArrayList<Object> valDelValor = (ArrayList<Object>) ob;
             if (valDelValor.size() == 1) {
                 if (valDelValor.get(0) instanceof ArrayList) {
@@ -81,7 +87,7 @@ public class Switchh implements Instruccion {
 
                         if (retorno instanceof Breakk) {
                             return null;
-                        } else if (retorno instanceof Retorno) {
+                        } else if (retorno instanceof Retorno2) {
                             return retorno;
                         } else if (retorno instanceof ArrayList) {
                             return retorno;
@@ -94,6 +100,12 @@ public class Switchh implements Instruccion {
                         IgualIgual relacion = new IgualIgual(getLinea(), getCol(), condicion, ((Casee) instru).getValorCase());
 
                         ob = relacion.getValue(tablaDeSimbolos, listas);
+                        if(ob instanceof Retorno2){
+                            Retorno2 r = (Retorno2) ob;
+                            ob = r.getValue(tablaDeSimbolos, listas);
+                        }
+                        
+                        
                         Boolean pruebita = false;
                         ArrayList<Object> valDelValor2 = (ArrayList<Object>) ob;
                         if (valDelValor2.size() == 1) {
@@ -120,11 +132,11 @@ public class Switchh implements Instruccion {
 
                             if (retorno instanceof Breakk) {
                                 return null;
-                            } else if (retorno instanceof Retorno) {
+                            } else if (retorno instanceof Retorno2) {
                                 return retorno;
-                            } else if (retorno instanceof ArrayList) {
+                            } /*else if (retorno instanceof ArrayList) {
                                 return retorno;
-                            }
+                            }*/
                         }
 
                     }

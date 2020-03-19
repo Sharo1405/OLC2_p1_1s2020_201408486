@@ -8,6 +8,7 @@ package Interprete.Expresiones;
 import Interprete.Entorno.Entorno;
 import Interprete.Entorno.Simbolo;
 import Interprete.ErrorImpresion;
+import Interprete.Expresiones.Retorno2;
 import java.util.ArrayList;
 
 /**
@@ -28,10 +29,18 @@ public class Roundd extends Operacion implements Expresion {
     @Override
     public Object getValue(Entorno tablaDeSimbolos, ErrorImpresion listas) {
         try {
-            Operacion.tipoDato tt = getExp().getType(tablaDeSimbolos, listas);
+            Object ob = getExp().getValue(tablaDeSimbolos, listas);
+            Operacion.tipoDato tt = Operacion.tipoDato.VACIO;
+            if (ob instanceof Retorno2) {
+                Retorno2 r = (Retorno2) ob;
+                ob = r.getValue(tablaDeSimbolos, listas);
+                tt = r.getType(tablaDeSimbolos, listas);
+            } else {
+                tt = getExp().getType(tablaDeSimbolos, listas);
+            }
+
             if (tt.equals(Operacion.tipoDato.DECIMAL) || tt.equals(Operacion.tipoDato.ENTERO)) {
 
-                Object ob = getExp().getValue(tablaDeSimbolos, listas);
                 if (ob instanceof ArrayList) {
 
                     ArrayList<Object> arre = (ArrayList<Object>) ob;
@@ -50,7 +59,7 @@ public class Roundd extends Operacion implements Expresion {
 
             } else if (tt.equals(Operacion.tipoDato.VECTOR)) {
 
-                Object ob = getExp().getValue(tablaDeSimbolos, listas);
+                //Object ob = getExp().getValue(tablaDeSimbolos, listas);
                 ArrayList<Object> valDelValor = (ArrayList<Object>) ob;
                 if (valDelValor.size() == 1) {
                     if (valDelValor.get(0) instanceof ArrayList) {

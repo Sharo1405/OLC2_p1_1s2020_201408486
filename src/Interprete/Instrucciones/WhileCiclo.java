@@ -9,6 +9,7 @@ import Interprete.Entorno.Entorno;
 import Interprete.ErrorImpresion;
 import Interprete.Expresiones.Expresion;
 import Interprete.Expresiones.Operacion;
+import Interprete.Expresiones.Retorno2;
 import Interprete.NodoError;
 import java.util.ArrayList;
 
@@ -37,8 +38,15 @@ public class WhileCiclo implements Instruccion {
     public Object ejecutar(Entorno tablaDeSimbolos, ErrorImpresion listas) {
         try {
             Object ob = condicion.getValue(tablaDeSimbolos, listas);
+            Operacion.tipoDato tipo = Operacion.tipoDato.VACIO;
+            if (ob instanceof Retorno2) {
+                Retorno2 r = (Retorno2) ob;
+                ob = r.getValue(tablaDeSimbolos, listas);
+                tipo = r.getType(tablaDeSimbolos, listas);
+            } else {
+                tipo = condicion.getType(tablaDeSimbolos, listas);
+            }
 
-            Operacion.tipoDato tipo = condicion.getType(tablaDeSimbolos, listas);
             if (Operacion.tipoDato.BOOLEAN == tipo) {
 
                 ArrayList<Object> valDelValor = (ArrayList<Object>) ob;
@@ -71,13 +79,18 @@ public class WhileCiclo implements Instruccion {
                         break;
                     } else if (retorno instanceof Continuee) {
                         continue;
-                    } else if (retorno instanceof Retorno) {
-                        return retorno;
-                    } else if (retorno instanceof ArrayList){
+                    } else if (retorno instanceof Retorno2) {
                         return retorno;
                     }
+                    /*else if (retorno instanceof ArrayList){
+                        return retorno;
+                    }*/
 
                     ob = condicion.getValue(tablaDeSimbolos, listas);
+                    if (ob instanceof Retorno2) {
+                        Retorno2 r = (Retorno2) ob;
+                        ob = r.getValue(tablaDeSimbolos, listas);
+                    }
 
                     ArrayList<Object> valDelValor2 = (ArrayList<Object>) ob;
                     if (valDelValor2.size() == 1) {

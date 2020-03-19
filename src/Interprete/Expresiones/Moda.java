@@ -8,6 +8,7 @@ package Interprete.Expresiones;
 import Interprete.Entorno.Entorno;
 import Interprete.Entorno.Simbolo;
 import Interprete.ErrorImpresion;
+import Interprete.Expresiones.Retorno2;
 import Interprete.NodoError;
 import java.util.ArrayList;
 
@@ -109,10 +110,19 @@ public class Moda extends Operacion implements Expresion {
     @Override
     public Object getValue(Entorno tablaDeSimbolos, ErrorImpresion listas) {
         try {
-            Operacion.tipoDato ti = getExp().getType(tablaDeSimbolos, listas);
+            Object ob = getExp().getValue(tablaDeSimbolos, listas);
+            Operacion.tipoDato ti = Operacion.tipoDato.VACIO;
+            if (ob instanceof Retorno2) {
+                Retorno2 r = (Retorno2) ob;
+                ob = r.getValue(tablaDeSimbolos, listas);
+                ti = r.getType(tablaDeSimbolos, listas);
+            } else {
+                ti = getExp().getType(tablaDeSimbolos, listas);
+            }
+
             if (ti.equals(Operacion.tipoDato.ENTERO) || ti.equals(Operacion.tipoDato.DECIMAL)) {
                 //el valor del exp podria ser un simbolo o un array 
-                Object ob = getExp().getValue(tablaDeSimbolos, listas);
+
                 if (ob instanceof ArrayList) {
                     Object media = sacarModa(tablaDeSimbolos, listas, (ArrayList<Object>) ob);
                     ArrayList<Object> me = new ArrayList<>();
@@ -133,7 +143,7 @@ public class Moda extends Operacion implements Expresion {
                 }
             } else if (ti.equals(Operacion.tipoDato.VECTOR)) {
                 //si es de tipo vector hay que castear cada valor a numerico sino truena si se puede jajajaja
-                Object ob = getExp().getValue(tablaDeSimbolos, listas);
+                //Object ob = getExp().getValue(tablaDeSimbolos, listas);
                 if (ob instanceof ArrayList) {
                     Object media = sacarModa(tablaDeSimbolos, listas, (ArrayList<Object>) ob);
                     ArrayList<Object> me = new ArrayList<>();

@@ -9,6 +9,7 @@ import Interprete.Entorno.Entorno;
 import Interprete.ErrorImpresion;
 import Interprete.Expresiones.Expresion;
 import Interprete.Expresiones.Operacion;
+import Interprete.Expresiones.Retorno2;
 
 /**
  *
@@ -32,11 +33,21 @@ public class EIzquierdaCorcheteSimple implements Expresion{
     
     @Override
     public Object getValue(Entorno tablaDeSimbolos, ErrorImpresion listas) {
-        return exp.getValue(tablaDeSimbolos, listas);
+        Object ob = getExp().getValue(tablaDeSimbolos, listas);
+        if (ob instanceof Retorno2) {
+            Retorno2 r = (Retorno2) ob;
+            return r.getValue(tablaDeSimbolos, listas);
+        }
+        return ob;
     }
 
     @Override
     public Operacion.tipoDato getType(Entorno tablaDeSimbolos, ErrorImpresion listas) {
+        Object ob = getExp().getValue(tablaDeSimbolos, listas);
+        if (ob instanceof Retorno2) {
+            Retorno2 r = (Retorno2) ob;
+            return r.getType(tablaDeSimbolos, listas);
+        }
         return exp.getType(tablaDeSimbolos, listas);
     }
 

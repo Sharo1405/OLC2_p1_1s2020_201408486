@@ -10,6 +10,7 @@ import Interprete.ErrorImpresion;
 import Interprete.Expresiones.Expresion;
 import Interprete.Expresiones.FuncionC;
 import Interprete.Expresiones.Operacion;
+import Interprete.Expresiones.Retorno2;
 import Interprete.NodoError;
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -18,9 +19,8 @@ import java.util.LinkedList;
  *
  * @author sharolin
  */
-public class Multiplicacion extends Operacion implements Expresion{
+public class Multiplicacion extends Operacion implements Expresion {
 
-    
     public Multiplicacion(int linea, int columna, Expresion expresion1, Expresion expresion2) {
         super(linea, columna, expresion1, expresion2);
     }
@@ -32,10 +32,27 @@ public class Multiplicacion extends Operacion implements Expresion{
         //entonces puedo validar que el array sea de tamanio 1 y si trae como vector hacerle un instance of al tipo para asi 
         //saber si se puede o no operar con el mas //primero obtener los tipos
         try {
-            Operacion.tipoDato tipo1 = this.getExpresion1().getType(tablaDeSimbolos, listas);
-            Operacion.tipoDato tipo2 = this.getExpresion2().getType(tablaDeSimbolos, listas);
-           
-            
+
+            Object valor = this.getExpresion1().getValue(tablaDeSimbolos, listas);
+            Operacion.tipoDato tipo1 = Operacion.tipoDato.VACIO;
+            if (valor instanceof Retorno2) {
+                Retorno2 r = (Retorno2) valor;
+                valor = r.getValue(tablaDeSimbolos, listas);
+                tipo1 = r.getType(tablaDeSimbolos, listas);
+            } else {
+                tipo1 = this.getExpresion1().getType(tablaDeSimbolos, listas);
+            }
+
+            Object valor2 = this.getExpresion2().getValue(tablaDeSimbolos, listas);
+            Operacion.tipoDato tipo2 = Operacion.tipoDato.VACIO;
+            if (valor2 instanceof Retorno2) {
+                Retorno2 r = (Retorno2) valor2;
+                valor2 = r.getValue(tablaDeSimbolos, listas);
+                tipo2 = r.getType(tablaDeSimbolos, listas);
+            } else {
+                tipo2 = this.getExpresion2().getType(tablaDeSimbolos, listas);
+            }
+
             //verificar que sean los 2 de tipo vector o primitivo
             if ((tipo1.equals(Operacion.tipoDato.VECTOR) || tipo1.equals(Operacion.tipoDato.BOOLEAN)
                     || tipo1.equals(Operacion.tipoDato.DECIMAL) || tipo1.equals(Operacion.tipoDato.ENTERO)
@@ -44,13 +61,9 @@ public class Multiplicacion extends Operacion implements Expresion{
                     || tipo2.equals(Operacion.tipoDato.DECIMAL) || tipo2.equals(Operacion.tipoDato.ENTERO)
                     || tipo2.equals(Operacion.tipoDato.STRING))) {
 
-                Object valor = this.getExpresion1().getValue(tablaDeSimbolos, listas);
-                Object valor2 = this.getExpresion2().getValue(tablaDeSimbolos, listas);
+                valor = this.obtenerValorSimbolo(valor, tablaDeSimbolos, listas);
+                valor2 = this.obtenerValorSimbolo(valor2, tablaDeSimbolos, listas);
 
-                
-                valor = this.obtenerValorSimbolo(valor);
-                valor2 = this.obtenerValorSimbolo(valor2);
-                
                 ArrayList<Object> exp1 = new ArrayList<>();
                 ArrayList<Object> exp2 = new ArrayList<>();
                 //si son vectores ver que sean de un solo tipo castear a otro tipo para que asi se vea si se puede o no operar
@@ -264,8 +277,25 @@ public class Multiplicacion extends Operacion implements Expresion{
     public Operacion.tipoDato getType(Entorno tablaDeSimbolos, ErrorImpresion listas) {
         //retornar el valor que de al evaluar los 2 tipos de las expresiones
         try {
-            Operacion.tipoDato tipo1 = this.getExpresion1().getType(tablaDeSimbolos, listas);
-            Operacion.tipoDato tipo2 = this.getExpresion2().getType(tablaDeSimbolos, listas);
+            Object valor = this.getExpresion1().getValue(tablaDeSimbolos, listas);
+            Operacion.tipoDato tipo1 = Operacion.tipoDato.VACIO;
+            if (valor instanceof Retorno2) {
+                Retorno2 r = (Retorno2) valor;
+                valor = r.getValue(tablaDeSimbolos, listas);
+                tipo1 = r.getType(tablaDeSimbolos, listas);
+            } else {
+                tipo1 = this.getExpresion1().getType(tablaDeSimbolos, listas);
+            }
+
+            Object valor2 = this.getExpresion2().getValue(tablaDeSimbolos, listas);
+            Operacion.tipoDato tipo2 = Operacion.tipoDato.VACIO;
+            if (valor2 instanceof Retorno2) {
+                Retorno2 r = (Retorno2) valor2;
+                valor2 = r.getValue(tablaDeSimbolos, listas);
+                tipo2 = r.getType(tablaDeSimbolos, listas);
+            } else {
+                tipo2 = this.getExpresion2().getType(tablaDeSimbolos, listas);
+            }
 
             //verificar que sean los 2 de tipo vector o primitivo
             if ((tipo1.equals(Operacion.tipoDato.VECTOR) || tipo1.equals(Operacion.tipoDato.BOOLEAN)
@@ -275,8 +305,8 @@ public class Multiplicacion extends Operacion implements Expresion{
                     || tipo2.equals(Operacion.tipoDato.DECIMAL) || tipo2.equals(Operacion.tipoDato.ENTERO)
                     || tipo2.equals(Operacion.tipoDato.STRING))) {
 
-                Object valor = this.getExpresion1().getValue(tablaDeSimbolos, listas);
-                Object valor2 = this.getExpresion2().getValue(tablaDeSimbolos, listas);
+                valor = this.obtenerValorSimbolo(valor, tablaDeSimbolos, listas);
+                valor2 = this.obtenerValorSimbolo(valor2, tablaDeSimbolos, listas);
 
                 ArrayList<Object> exp1 = new ArrayList<>();
                 ArrayList<Object> exp2 = new ArrayList<>();

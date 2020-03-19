@@ -11,6 +11,7 @@ import Interprete.ErrorImpresion;
 import Interprete.Expresiones.Expresion;
 import Interprete.Expresiones.FuncionC;
 import Interprete.Expresiones.Operacion;
+import Interprete.Expresiones.Retorno2;
 import Interprete.NodoError;
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -26,14 +27,30 @@ public class Suma extends Operacion implements Expresion {
         super(linea, columna, expresion1, expresion2);
     }
 
-    
     @Override
     public Operacion.tipoDato getType(Entorno tablaDeSimbolos, ErrorImpresion listas) {
         //retornar el valor que de al evaluar los 2 tipos de las expresiones
         try {
-            Operacion.tipoDato tipo1 = this.getExpresion1().getType(tablaDeSimbolos, listas);
-            Operacion.tipoDato tipo2 = this.getExpresion2().getType(tablaDeSimbolos, listas);
+            Object valor = this.getExpresion1().getValue(tablaDeSimbolos, listas);
+            Operacion.tipoDato tipo1 = Operacion.tipoDato.VACIO;
+            if(valor instanceof Retorno2){
+                Retorno2 r = (Retorno2) valor;
+                valor = r.getValue(tablaDeSimbolos, listas);
+                tipo1 = r.getType(tablaDeSimbolos, listas);
+            }else{
+                tipo1 = this.getExpresion1().getType(tablaDeSimbolos, listas);
+            }            
             
+            Object valor2 = this.getExpresion2().getValue(tablaDeSimbolos, listas);            
+            Operacion.tipoDato tipo2 = Operacion.tipoDato.VACIO;
+            if(valor2 instanceof Retorno2){
+                Retorno2 r = (Retorno2) valor2;
+                valor2 = r.getValue(tablaDeSimbolos, listas);
+                tipo2 = r.getType(tablaDeSimbolos, listas);
+            }else{
+                tipo2 = this.getExpresion2().getType(tablaDeSimbolos, listas);
+            }
+
             //verificar que sean los 2 de tipo vector o primitivo
             if ((tipo1.equals(Operacion.tipoDato.VECTOR) || tipo1.equals(Operacion.tipoDato.BOOLEAN)
                     || tipo1.equals(Operacion.tipoDato.DECIMAL) || tipo1.equals(Operacion.tipoDato.ENTERO)
@@ -42,12 +59,8 @@ public class Suma extends Operacion implements Expresion {
                     || tipo2.equals(Operacion.tipoDato.DECIMAL) || tipo2.equals(Operacion.tipoDato.ENTERO)
                     || tipo2.equals(Operacion.tipoDato.STRING))) {
 
-                Object valor = this.getExpresion1().getValue(tablaDeSimbolos, listas);
-                Object valor2 = this.getExpresion2().getValue(tablaDeSimbolos, listas);
-                
-                
-                valor = this.obtenerValorSimbolo(valor);
-                valor2 = this.obtenerValorSimbolo(valor2);
+                valor = this.obtenerValorSimbolo(valor, tablaDeSimbolos, listas);
+                valor2 = this.obtenerValorSimbolo(valor2, tablaDeSimbolos, listas);
 
                 ArrayList<Object> exp1 = new ArrayList<>();
                 ArrayList<Object> exp2 = new ArrayList<>();
@@ -87,8 +100,6 @@ public class Suma extends Operacion implements Expresion {
                     exp1 = (ArrayList<Object>) valor;
                 }
 
-                
-                
                 if (tipo2.equals(Operacion.tipoDato.VECTOR)) {
                     ArrayList<Object> array1 = (ArrayList<Object>) valor2;
                     Operacion.tipoDato tipoV1 = this.todoLosTipos(array1);
@@ -126,20 +137,18 @@ public class Suma extends Operacion implements Expresion {
                 }
 
                 return this.tipoResultante(tipo1, tipo2, tablaDeSimbolos, listas);
-                
+
             } else {
                 listas.errores.add(new NodoError(this.getLinea(), this.getColumna(), NodoError.tipoError.Semantico, "Tipo de datos EXP1: "
                         + String.valueOf(tipo1) + " EXP2: " + String.valueOf(tipo2) + "No son validos para operarse como SUMA entre si"));
                 return Operacion.tipoDato.ERRORSEMANTICO;
-            }            
+            }
         } catch (Exception e) {
             System.out.println("Error en la clase SUMA en el getType()");
             return Operacion.tipoDato.ERRORSEMANTICO;
         }
     }
-    
-    
-    
+
     @Override
     public Object getValue(Entorno tablaDeSimbolos, ErrorImpresion listas) {
         //1 con 1  normal //1 con varios y varios con 1: ese uno con cada uno
@@ -147,8 +156,26 @@ public class Suma extends Operacion implements Expresion {
         //entonces puedo validar que el array sea de tamanio 1 y si trae como vector hacerle un instance of al tipo para asi 
         //saber si se puede o no operar con el mas //primero obtener los tipos
         try {
-            Operacion.tipoDato tipo1 = this.getExpresion1().getType(tablaDeSimbolos, listas);
-            Operacion.tipoDato tipo2 = this.getExpresion2().getType(tablaDeSimbolos, listas);
+
+            Object valor = this.getExpresion1().getValue(tablaDeSimbolos, listas);
+            Operacion.tipoDato tipo1 = Operacion.tipoDato.VACIO;
+            if(valor instanceof Retorno2){
+                Retorno2 r = (Retorno2) valor;
+                valor = r.getValue(tablaDeSimbolos, listas);
+                tipo1 = r.getType(tablaDeSimbolos, listas);
+            }else{
+                tipo1 = this.getExpresion1().getType(tablaDeSimbolos, listas);
+            }            
+            
+            Object valor2 = this.getExpresion2().getValue(tablaDeSimbolos, listas);            
+            Operacion.tipoDato tipo2 = Operacion.tipoDato.VACIO;
+            if(valor2 instanceof Retorno2){
+                Retorno2 r = (Retorno2) valor2;
+                valor2 = r.getValue(tablaDeSimbolos, listas);
+                tipo2 = r.getType(tablaDeSimbolos, listas);
+            }else{
+                tipo2 = this.getExpresion2().getType(tablaDeSimbolos, listas);
+            }
 
             //verificar que sean los 2 de tipo vector o primitivo
             if ((tipo1.equals(Operacion.tipoDato.VECTOR) || tipo1.equals(Operacion.tipoDato.BOOLEAN)
@@ -158,12 +185,9 @@ public class Suma extends Operacion implements Expresion {
                     || tipo2.equals(Operacion.tipoDato.DECIMAL) || tipo2.equals(Operacion.tipoDato.ENTERO)
                     || tipo2.equals(Operacion.tipoDato.STRING))) {
 
-                Object valor = this.getExpresion1().getValue(tablaDeSimbolos, listas);
-                Object valor2 = this.getExpresion2().getValue(tablaDeSimbolos, listas);
+                valor = this.obtenerValorSimbolo(valor, tablaDeSimbolos, listas);
+                valor2 = this.obtenerValorSimbolo(valor2, tablaDeSimbolos, listas);
 
-                valor = this.obtenerValorSimbolo(valor);
-                valor2 = this.obtenerValorSimbolo(valor2);
-                
                 ArrayList<Object> exp1 = new ArrayList<>();
                 ArrayList<Object> exp2 = new ArrayList<>();
                 //si son vectores ver que sean de un solo tipo castear a otro tipo para que asi se vea si se puede o no operar
@@ -207,8 +231,6 @@ public class Suma extends Operacion implements Expresion {
                     exp1 = (ArrayList<Object>) valor;
                 }
 
-                
-                
                 if (tipo2.equals(Operacion.tipoDato.VECTOR)) {
                     ArrayList<Object> array1 = (ArrayList<Object>) valor2;
                     Operacion.tipoDato tipoV1 = this.todoLosTipos(array1);
@@ -351,7 +373,7 @@ public class Suma extends Operacion implements Expresion {
                     }
 
                 } else if (normal.size() == normal2.size()) { //----------------------------------------------------------------------
-                    
+
                     ArrayList<Object> vectorParaDevolver = new ArrayList<>();
                     switch (tipoResultante) {
                         case DECIMAL:
@@ -405,5 +427,5 @@ public class Suma extends Operacion implements Expresion {
             return Operacion.tipoDato.ERRORSEMANTICO;
         }
         return Operacion.tipoDato.ERRORSEMANTICO;
-    }    
+    }
 }

@@ -9,6 +9,7 @@ import Interprete.Entorno.Entorno;
 import Interprete.ErrorImpresion;
 import Interprete.Expresiones.Expresion;
 import Interprete.Expresiones.Operacion;
+import Interprete.Expresiones.Retorno2;
 import Interprete.NodoError;
 import java.util.ArrayList;
 
@@ -47,13 +48,22 @@ public class DoWhile implements Instruccion {
                     break;
                 } else if (retorno instanceof Continuee) {
                     continue;
-                } else if (retorno instanceof Retorno) {
+                } else if (retorno instanceof Retorno2) {
                     return retorno;
                 }
 
                 //-----------------------------------------------------------------------------------------------
                 ob = condicion.getValue(tablaDeSimbolos, listas);
-
+                Operacion.tipoDato tipo = Operacion.tipoDato.VACIO;
+                if(ob instanceof Retorno2){
+                    Retorno2 r = (Retorno2) ob;                    
+                    ob = r.getValue(tablaDeSimbolos, listas);
+                    tipo = r.getType(tablaDeSimbolos, listas);
+                }else{
+                    tipo = condicion.getType(tablaDeSimbolos, listas);
+                }
+                
+                
                 ArrayList<Object> valDelValor = (ArrayList<Object>) ob;
                 if (valDelValor.size() == 1) {
                     if (valDelValor.get(0) instanceof ArrayList) {
@@ -76,7 +86,7 @@ public class DoWhile implements Instruccion {
                     prueba = (Boolean) ((ArrayList<Object>) ob).get(0);
                 }
 
-                Operacion.tipoDato tipo = condicion.getType(tablaDeSimbolos, listas);
+                
                 if (tipo == Operacion.tipoDato.BOOLEAN) {
                     //todo cool
                 } else {

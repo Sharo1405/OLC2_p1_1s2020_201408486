@@ -9,6 +9,7 @@ import Interprete.Entorno.Entorno;
 import Interprete.ErrorImpresion;
 import Interprete.Expresiones.Expresion;
 import Interprete.Expresiones.Operacion;
+import Interprete.Expresiones.Retorno2;
 import java.util.LinkedList;
 
 /**
@@ -34,12 +35,22 @@ public class ExpresionValor implements Expresion{
     
     @Override
     public Object getValue(Entorno tablaDeSimbolos, ErrorImpresion listas) {
-        return valor.getValue(tablaDeSimbolos, listas);
+        Object ob = getValor().getValue(tablaDeSimbolos, listas);
+        if (ob instanceof Retorno2) {
+            Retorno2 r = (Retorno2) ob;
+            return r.getValue(tablaDeSimbolos, listas);
+        }
+        return ob;
     }
 
     @Override
     public Operacion.tipoDato getType(Entorno tablaDeSimbolos, ErrorImpresion listas) {
-        return valor.getType(tablaDeSimbolos, listas);
+        Object ob = getValor().getValue(tablaDeSimbolos, listas);
+        if (ob instanceof Retorno2) {
+            Retorno2 r = (Retorno2) ob;
+            return r.getType(tablaDeSimbolos, listas);
+        }
+        return getValor().getType(tablaDeSimbolos, listas);
     } 
 
     /**

@@ -8,6 +8,7 @@ package Interprete.Expresiones;
 import Interprete.Entorno.Entorno;
 import Interprete.Entorno.Simbolo;
 import Interprete.ErrorImpresion;
+import Interprete.Expresiones.Retorno2;
 import Interprete.NodoError;
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -52,6 +53,10 @@ public class Identificador extends Entorno implements Expresion {
                                 if (expre instanceof EDerechaParentesis) {
                                     FuncionC fc = new FuncionC(EDerecha, linea, columna);
                                     Object o = fc.getValue(tablaDeSimbolos, listas);
+                                    if (o instanceof Retorno2) {
+                                        o = ((Retorno2) o).getValue(tablaDeSimbolos, listas);
+                                    }
+
                                     if (o instanceof Operacion.tipoDato) {
                                         listas.errores.add(new NodoError(getLinea(), getColumna(), NodoError.tipoError.Semantico,
                                                 "Parametro no valido para la funcion C, el tipo pude ser lo invalido"));
@@ -77,6 +82,9 @@ public class Identificador extends Entorno implements Expresion {
                                 if (expre instanceof EDerechaParentesis) {
                                     Listas fc = new Listas(expre, getLinea(), getColumna());
                                     Object o = fc.getValue(tablaDeSimbolos, listas);
+                                    if (o instanceof Retorno2) {
+                                        o = ((Retorno2) o).getValue(tablaDeSimbolos, listas);
+                                    }
                                     if (o instanceof Operacion.tipoDato) {
                                         listas.errores.add(new NodoError(getLinea(), getColumna(), NodoError.tipoError.Semantico,
                                                 "Parametro no valido para la funcion List(), el tipo pude ser lo invalido"));
@@ -127,8 +135,11 @@ public class Identificador extends Entorno implements Expresion {
                                 Expresion expre = EDerecha.get(0);
                                 if (expre instanceof EDerechaParentesis) {
                                     TypeOff fc = new TypeOff(expre);
-                                    //return fc.getValue(tablaDeSimbolos, listas);
+
                                     Object o = fc.getValue(tablaDeSimbolos, listas);
+                                    if (o instanceof Retorno2) {
+                                        o = ((Retorno2) o).getValue(tablaDeSimbolos, listas);
+                                    }
                                     if (o instanceof Operacion.tipoDato) {
                                         Operacion.tipoDato tt = (Operacion.tipoDato) o;
                                         if (tt.equals(Operacion.tipoDato.ERRORSEMANTICO)) {
@@ -155,7 +166,11 @@ public class Identificador extends Entorno implements Expresion {
                                 Expresion expre = EDerecha.get(0);
                                 if (expre instanceof EDerechaParentesis) {
                                     Lengthh fc = new Lengthh(expre);
-                                    return fc.getValue(tablaDeSimbolos, listas);
+                                    Object o = fc.getValue(tablaDeSimbolos, listas);
+                                    if (o instanceof Retorno2) {
+                                        o = ((Retorno2) o).getValue(tablaDeSimbolos, listas);
+                                    }
+                                    return o;
                                 } else {
                                     listas.errores.add(new NodoError(getLinea(), getColumna(), NodoError.tipoError.Semantico,
                                             "La funcion length no es valida, no es seguiDa de Parentesis"));
@@ -180,6 +195,9 @@ public class Identificador extends Entorno implements Expresion {
                                 if (expre instanceof EDerechaParentesis) {
                                     StringLength fc = new StringLength(expre);
                                     Object o = fc.getValue(tablaDeSimbolos, listas);
+                                    if (o instanceof Retorno2) {
+                                        o = ((Retorno2) o).getValue(tablaDeSimbolos, listas);
+                                    }
                                     if (o instanceof Operacion.tipoDato) {
                                         listas.errores.add(new NodoError(getLinea(), getColumna(), NodoError.tipoError.Semantico,
                                                 "Parametro no valido para la funcion Stringlength, el tipo pude ser lo invalido, se espera CADENA"));
@@ -204,6 +222,9 @@ public class Identificador extends Entorno implements Expresion {
                                 if (expre instanceof EDerechaParentesis) {
                                     Removee fc = new Removee(expre);
                                     Object o = fc.getValue(tablaDeSimbolos, listas);
+                                    if (o instanceof Retorno2) {
+                                        o = ((Retorno2) o).getValue(tablaDeSimbolos, listas);
+                                    }
                                     if (o instanceof Operacion.tipoDato) {
                                         listas.errores.add(new NodoError(getLinea(), getColumna(), NodoError.tipoError.Semantico,
                                                 "Parametro no valido para la funcion Remove, el tipo pude ser lo invalido,se espera CADENA; o el numero de atributos del vector"));
@@ -228,6 +249,9 @@ public class Identificador extends Entorno implements Expresion {
                                 if (expre instanceof EDerechaParentesis) {
                                     ToLowerCasee fc = new ToLowerCasee(expre);
                                     Object o = fc.getValue(tablaDeSimbolos, listas);
+                                    if (o instanceof Retorno2) {
+                                        o = ((Retorno2) o).getValue(tablaDeSimbolos, listas);
+                                    }
                                     if (o instanceof Operacion.tipoDato) {
                                         listas.errores.add(new NodoError(getLinea(), getColumna(), NodoError.tipoError.Semantico,
                                                 "Parametro no valido para la funcion Tolowercase, el tipo pude ser lo invalido se espera CADENA"));
@@ -252,6 +276,9 @@ public class Identificador extends Entorno implements Expresion {
                                 if (expre instanceof EDerechaParentesis) {
                                     ToUpperCasee fc = new ToUpperCasee(expre);
                                     Object o = fc.getValue(tablaDeSimbolos, listas);
+                                    if (o instanceof Retorno2) {
+                                        o = ((Retorno2) o).getValue(tablaDeSimbolos, listas);
+                                    }
                                     if (o instanceof Operacion.tipoDato) {
                                         listas.errores.add(new NodoError(getLinea(), getColumna(), NodoError.tipoError.Semantico,
                                                 "Parametro no valido para la funcion ToUpperCase, el tipo pude ser lo invalido se espera CADENA"));
@@ -276,6 +303,9 @@ public class Identificador extends Entorno implements Expresion {
                                 if (expre instanceof EDerechaParentesis) {
                                     Trunkk fc = new Trunkk(expre);
                                     Object o = fc.getValue(tablaDeSimbolos, listas);
+                                    if (o instanceof Retorno2) {
+                                        o = ((Retorno2) o).getValue(tablaDeSimbolos, listas);
+                                    }
                                     if (o instanceof Operacion.tipoDato) {
                                         listas.errores.add(new NodoError(getLinea(), getColumna(), NodoError.tipoError.Semantico,
                                                 "Parametro no valido para la funcion Trunk, el tipo pude ser lo invalido se espera DECIMAL"));
@@ -300,6 +330,9 @@ public class Identificador extends Entorno implements Expresion {
                                 if (expre instanceof EDerechaParentesis) {
                                     Roundd fc = new Roundd(expre);
                                     Object o = fc.getValue(tablaDeSimbolos, listas);
+                                    if (o instanceof Retorno2) {
+                                        o = ((Retorno2) o).getValue(tablaDeSimbolos, listas);
+                                    }
                                     if (o instanceof Operacion.tipoDato) {
                                         listas.errores.add(new NodoError(getLinea(), getColumna(), NodoError.tipoError.Semantico,
                                                 "Parametro no valido para la funcion Round, el tipo pude ser lo invalido se espera DECIMAL"));
@@ -328,6 +361,9 @@ public class Identificador extends Entorno implements Expresion {
                                         //trae el TRIM
                                         MeanTrim fc = new MeanTrim(expre, getLinea(), getColumna(), (Comas) par.getValor());
                                         Object o = fc.getValue(tablaDeSimbolos, listas);
+                                        if (o instanceof Retorno2) {
+                                            o = ((Retorno2) o).getValue(tablaDeSimbolos, listas);
+                                        }
                                         if (o instanceof Operacion.tipoDato) {
                                             listas.errores.add(new NodoError(getLinea(), getColumna(), NodoError.tipoError.Semantico,
                                                     "Parametro no valido para la funcion Mean(), el tipo pude ser lo invalido se espera DECIMAL"));
@@ -338,6 +374,9 @@ public class Identificador extends Entorno implements Expresion {
                                     } else {
                                         Meann fc = new Meann(expre, getLinea(), getColumna());
                                         Object o = fc.getValue(tablaDeSimbolos, listas);
+                                        if (o instanceof Retorno2) {
+                                            o = ((Retorno2) o).getValue(tablaDeSimbolos, listas);
+                                        }
                                         if (o instanceof Operacion.tipoDato) {
                                             listas.errores.add(new NodoError(getLinea(), getColumna(), NodoError.tipoError.Semantico,
                                                     "Parametro no valido para la funcion Mean(), el tipo pude ser lo invalido se espera DECIMAL"));
@@ -366,6 +405,9 @@ public class Identificador extends Entorno implements Expresion {
                                         //trae el TRIM
                                         MedianaTrim fc = new MedianaTrim(expre, getLinea(), getColumna(), (Comas) par.getValor());
                                         Object o = fc.getValue(tablaDeSimbolos, listas);
+                                        if (o instanceof Retorno2) {
+                                            o = ((Retorno2) o).getValue(tablaDeSimbolos, listas);
+                                        }
                                         if (o instanceof Operacion.tipoDato) {
                                             listas.errores.add(new NodoError(getLinea(), getColumna(), NodoError.tipoError.Semantico,
                                                     "Parametro no valido para la funcion Mean(), el tipo pude ser lo invalido se espera DECIMAL"));
@@ -375,6 +417,9 @@ public class Identificador extends Entorno implements Expresion {
                                     } else {
                                         Mediana fc = new Mediana(expre, getLinea(), getColumna());
                                         Object o = fc.getValue(tablaDeSimbolos, listas);
+                                        if (o instanceof Retorno2) {
+                                            o = ((Retorno2) o).getValue(tablaDeSimbolos, listas);
+                                        }
                                         if (o instanceof Operacion.tipoDato) {
                                             listas.errores.add(new NodoError(getLinea(), getColumna(), NodoError.tipoError.Semantico,
                                                     "Parametro no valido para la funcion Median(), el tipo pude ser lo invalido se espera DECIMAL"));
@@ -403,6 +448,9 @@ public class Identificador extends Entorno implements Expresion {
                                         //trae el TRIM
                                         ModaTrim fc = new ModaTrim(expre, getLinea(), getColumna(), (Comas) par.getValor());
                                         Object o = fc.getValue(tablaDeSimbolos, listas);
+                                        if (o instanceof Retorno2) {
+                                            o = ((Retorno2) o).getValue(tablaDeSimbolos, listas);
+                                        }
                                         if (o instanceof Operacion.tipoDato) {
                                             listas.errores.add(new NodoError(getLinea(), getColumna(), NodoError.tipoError.Semantico,
                                                     "Parametro no valido para la funcion Mode(), el tipo pude ser lo invalido se espera DECIMAL"));
@@ -412,6 +460,9 @@ public class Identificador extends Entorno implements Expresion {
                                     } else {
                                         Moda fc = new Moda(expre, getLinea(), getColumna());
                                         Object o = fc.getValue(tablaDeSimbolos, listas);
+                                        if (o instanceof Retorno2) {
+                                            o = ((Retorno2) o).getValue(tablaDeSimbolos, listas);
+                                        }
                                         if (o instanceof Operacion.tipoDato) {
                                             listas.errores.add(new NodoError(getLinea(), getColumna(), NodoError.tipoError.Semantico,
                                                     "Parametro no valido para la funcion Mode(), el tipo pude ser lo invalido se espera DECIMAL"));
@@ -429,12 +480,17 @@ public class Identificador extends Entorno implements Expresion {
                                         "La funcion Mode() no es valida"));
                                 return Operacion.tipoDato.ERRORSEMANTICO;
                             }
-                            //break;
+                        //break;
 
                         default:
                             //funcion creada por mi, verificar si existe
-
-                            break;
+                            EDerechaParentesis parametros = (EDerechaParentesis) EDerecha.get(0);
+                            LlamadaFunciones llamadas = new LlamadaFunciones(getId(), parametros.getValor(), getLinea(), getColumna());
+                            Object o = llamadas.getValue(tablaDeSimbolos, listas);
+                            /*if (o instanceof Retorno2) {
+                                o = ((Retorno2) o).getValue(tablaDeSimbolos, listas);
+                            }*/
+                            return o;
 
                     }
                 } else {
@@ -559,7 +615,7 @@ public class Identificador extends Entorno implements Expresion {
             }
             return Operacion.tipoDato.ERRORSEMANTICO;
         } catch (Exception e) {
-            System.out.println("Error en la clase Identificador getValue()");
+            System.out.println("Error en la clase Identificador getValue()"+ e);
         }
         return Operacion.tipoDato.ERRORSEMANTICO;
     }
@@ -576,7 +632,19 @@ public class Identificador extends Entorno implements Expresion {
                     if (ss instanceof EDerechaParentesis) {
                         Simbolo encontrado = this.get(getId(), tablaDeSimbolos, Simbolo.Rol.FUNCION);
                         if (encontrado != null) {
-                            tipoDvolvergetTYpe = encontrado.getTipo();
+                            if (encontrado.getRol().equals(Simbolo.Rol.FUNCION)) {
+                                EDerechaParentesis parametros = (EDerechaParentesis) EDerecha.get(0);
+                                LlamadaFunciones llamadas = new LlamadaFunciones(getId(), parametros.getValor(), getLinea(), getColumna());
+                                /*Object o = llamadas.getValue(tablaDeSimbolos, listas);
+                                if (o instanceof Retorno2) {
+                                    o = ((Retorno2) o).getValue(tablaDeSimbolos, listas);
+                                    tipoDvolvergetTYpe = ((Retorno2) o).getType(tablaDeSimbolos, listas);
+                                } else {*/
+                                    tipoDvolvergetTYpe = Operacion.tipoDato.VACIO;
+                                //}
+                            } else {
+                                tipoDvolvergetTYpe = encontrado.getTipo();
+                            }
                         } else if (encontrado == null) {
                             listas.errores.add(new NodoError(getLinea(), getColumna(), NodoError.tipoError.Semantico, "El id " + getId()
                                     + " No existe como Funcion para Ejecutar"));
@@ -642,9 +710,16 @@ public class Identificador extends Entorno implements Expresion {
 
     public Object accesosVector(Entorno tablaDeSimbolos, ErrorImpresion listas, ArrayList vector, Expresion indice) {
 
-        Operacion.tipoDato tipoIndice = indice.getType(tablaDeSimbolos, listas);
+        Object dvuleo2 = indice.getValue(tablaDeSimbolos, listas);
+        Operacion.tipoDato tipoIndice = Operacion.tipoDato.VACIO;
+        if (dvuleo2 instanceof Retorno2) {
+            dvuleo2 = ((Retorno2) dvuleo2).getValue(tablaDeSimbolos, listas);
+            tipoIndice = ((Retorno2) dvuleo2).getType(tablaDeSimbolos, listas);
+        } else {
+            tipoIndice = indice.getType(tablaDeSimbolos, listas);
+        }
         if (tipoIndice.equals(Operacion.tipoDato.ENTERO)) {
-            int inde = (int) ((ArrayList) indice.getValue(tablaDeSimbolos, listas)).get(0);
+            int inde = (int) dvuleo2;//((ArrayList)indice.getValue(tablaDeSimbolos, listas)).get(0);
             if (inde >= 1 && inde <= vector.size()) {
                 if (inde == 1 && vector.size() == 1) {
                     return vector;
@@ -672,9 +747,16 @@ public class Identificador extends Entorno implements Expresion {
     }
 
     public Object accesosLista(Entorno tablaDeSimbolos, ErrorImpresion listas, ArrayList vector, Expresion indice) {
-        Operacion.tipoDato tipoIndice = indice.getType(tablaDeSimbolos, listas); //de este seria [[num]]
+        Object dvuleo2 = indice.getValue(tablaDeSimbolos, listas);
+        Operacion.tipoDato tipoIndice = Operacion.tipoDato.VACIO;
+        if (dvuleo2 instanceof Retorno2) {
+            dvuleo2 = ((Retorno2) dvuleo2).getValue(tablaDeSimbolos, listas);
+            tipoIndice = ((Retorno2) dvuleo2).getType(tablaDeSimbolos, listas);
+        } else {
+            tipoIndice = indice.getType(tablaDeSimbolos, listas); //de este seria [[num]]
+        }
         if (tipoIndice.equals(Operacion.tipoDato.ENTERO)) {
-            int inde = (int) ((ArrayList) indice.getValue(tablaDeSimbolos, listas)).get(0);
+            int inde = (int) dvuleo2;
             if (inde >= 1 && inde <= vector.size()) {
                 if (inde == 1 && vector.size() == 1) {
                     //return vector;

@@ -309,11 +309,11 @@ FUNCIONESMETODOSDECLARACIONES::= functionn:e aparentesis cparentesis BLOQUESENTE
                    |functionn:e aparentesis E:para cparentesis BLOQUESENTENCIAS:bloque{:
                         RESULT = new FuncionNormal(para, bloque, eleft +1, eright +1);
                     :}
-                   |aparentesis cparentesis flecha BLOQUESENTENCIAS{:
-                
+                   |aparentesis:e cparentesis flecha BLOQUESENTENCIAS:bloque{:
+                        RESULT = new FuncionFlecha(null, bloque, eleft +1, eright +1);
                     :}
-                   |aparentesis E cparentesis flecha BLOQUESENTENCIAS{:
-            
+                   |aparentesis:e E:ee cparentesis flecha BLOQUESENTENCIAS:bloque{:
+                        RESULT = new FuncionFlecha(ee, bloque, eleft +1, eright +1);
                     :}
 
 

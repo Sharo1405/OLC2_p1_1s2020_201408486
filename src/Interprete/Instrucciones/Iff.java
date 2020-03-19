@@ -10,6 +10,7 @@ import Interprete.Entorno.Entorno;
 import Interprete.ErrorImpresion;
 import Interprete.Expresiones.Expresion;
 import Interprete.Expresiones.Operacion;
+import Interprete.Expresiones.Retorno2;
 import Interprete.NodoError;
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -37,14 +38,21 @@ public class Iff implements Instruccion {
     @Override
     public Object ejecutar(Entorno tablaDeSimbolos, ErrorImpresion listas) {
         try {
-            
+
             Entorno actual = new Entorno(tablaDeSimbolos);
-            
+
             entro = false;
             for (IffLista ifLista : ejecutarIFS) {
                 Object ob = ifLista.condicion.getValue(actual, listas);
+                Operacion.tipoDato tipo = Operacion.tipoDato.VACIO;
+                if (ob instanceof Retorno2) {
+                    Retorno2 r = (Retorno2) ob;
+                    ob = r.getValue(actual, listas);
+                    tipo = r.getType(actual, listas);
+                } else {
+                    tipo = ifLista.condicion.getType(actual, listas);
+                }
 
-                Operacion.tipoDato tipo = ifLista.condicion.getType(actual, listas);
                 if (tipo == Operacion.tipoDato.BOOLEAN) {
 
                     ArrayList<Object> valDelValor = (ArrayList<Object>) ob;
@@ -77,20 +85,29 @@ public class Iff implements Instruccion {
                                 } else if (ins instanceof Continuee) {
                                     return ins;
                                 } else if (ins instanceof Retorno) {//este nunca va a llegar
+                                    return ((Retorno) ins).getValue(actual, listas);
+                                } else if (ins instanceof Retorno2) {
                                     return ins;
                                 } else {
                                     Object aal = ins.ejecutar(actual, listas);
+                                    
+                                    if (aal instanceof Retorno2) {
+                                        return aal;
+                                    }
                                 }
                             } else {//funciones 
                                 Expresion exp = (Expresion) nodo;
                                 if (exp instanceof Retorno) {
-                                    return exp;
+                                    return exp.getValue(actual, listas);
                                 } else {
                                     Object aal = exp.getValue(actual, listas);
 
-                                    if (aal instanceof ArrayList) {
+                                    if (aal instanceof Retorno2) {
                                         return aal;
                                     }
+                                    /*if (aal instanceof ArrayList) {
+                                        return aal;
+                                    }*/
                                 }
                             }
                         }
@@ -112,7 +129,7 @@ public class Iff implements Instruccion {
                     return reto;
                 } else if (reto instanceof Continuee) {
                     return reto;
-                } else if (reto instanceof Retorno) {
+                } else if (reto instanceof Retorno2) {
                     return reto;
                 } else if (reto instanceof ArrayList) {
                     return reto;

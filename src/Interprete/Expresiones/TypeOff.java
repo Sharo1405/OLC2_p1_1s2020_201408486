@@ -7,6 +7,7 @@ package Interprete.Expresiones;
 
 import Interprete.Entorno.Entorno;
 import Interprete.ErrorImpresion;
+import Interprete.Expresiones.Retorno2;
 
 /**
  *
@@ -23,11 +24,21 @@ public class TypeOff implements Expresion{
     
     @Override
     public Object getValue(Entorno tablaDeSimbolos, ErrorImpresion listas) {
+        Object ob = Exp.getValue(tablaDeSimbolos, listas);
+        if(ob instanceof Retorno2){
+            Retorno2 r = (Retorno2) ob;
+            return r.getValue(tablaDeSimbolos, listas);
+        }
         return String.valueOf(Exp.getType(tablaDeSimbolos, listas));
     }
 
     @Override
-    public Operacion.tipoDato getType(Entorno tablaDeSimbolos, ErrorImpresion listas) {
+    public Operacion.tipoDato getType(Entorno tablaDeSimbolos, ErrorImpresion listas) {     
+        Object ob = Exp.getValue(tablaDeSimbolos, listas);
+        if(ob instanceof Retorno2){
+            Retorno2 r = (Retorno2) ob;
+            return r.getType(tablaDeSimbolos, listas);
+        }
         return getExp().getType(tablaDeSimbolos, listas);
     }    
 

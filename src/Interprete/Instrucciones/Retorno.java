@@ -9,6 +9,7 @@ import Interprete.Entorno.Entorno;
 import Interprete.ErrorImpresion;
 import Interprete.Expresiones.Expresion;
 import Interprete.Expresiones.Operacion;
+import Interprete.Expresiones.Retorno2;
 import Interprete.NodoError;
 
 /**
@@ -38,10 +39,19 @@ public class Retorno implements Expresion {
     @Override
     public Object getValue(Entorno tablaDeSimbolos, ErrorImpresion listas) {
         try {
-            if (retorno != null) {
-                return retorno.getValue(tablaDeSimbolos, listas);
+            if (getRetorno() != null) {
+                Object ob = getRetorno().getValue(tablaDeSimbolos, listas);
+                Operacion.tipoDato tipo = Operacion.tipoDato.VACIO;
+                if (ob instanceof Retorno2) {
+                    Retorno2 r = (Retorno2) ob;
+                    ob = r.getValue(tablaDeSimbolos, listas);
+                    tipo = r.getType(tablaDeSimbolos, listas);
+                } else {
+                    tipo = getRetorno().getType(tablaDeSimbolos, listas);
+                }
+                return new Retorno2(ob, tipo);
             } else {
-                return this;
+                return new Retorno2("", Operacion.tipoDato.VACIO);
             }
         } catch (Exception e) {
             System.out.println("Error en la clase Retorno getValue()");
@@ -52,7 +62,14 @@ public class Retorno implements Expresion {
     @Override
     public Operacion.tipoDato getType(Entorno tablaDeSimbolos, ErrorImpresion listas) {
         try {
+
             if (getRetorno() != null) {
+
+                Object ob = getRetorno().getValue(tablaDeSimbolos, listas);
+                if (ob instanceof Retorno2) {
+
+                    return ((Retorno2) ob).getType(tablaDeSimbolos, listas);
+                }
                 return getRetorno().getType(tablaDeSimbolos, listas);
             } else {
                 listas.errores.add(new NodoError(this.getLinea(), this.getCol(), NodoError.tipoError.Semantico,

@@ -8,6 +8,7 @@ package Interprete.Expresiones;
 import Interprete.Entorno.Entorno;
 import Interprete.Entorno.Simbolo;
 import Interprete.ErrorImpresion;
+import Interprete.Expresiones.Retorno2;
 import Interprete.NodoError;
 import java.util.ArrayList;
 
@@ -122,8 +123,25 @@ public class MedianaTrim extends Operacion implements Expresion {
             Boolean solo2 = tieneSolo2(coma.getExpresion1(), coma.getExpresion2());
             if (solo2 == true) {
 
-                Operacion.tipoDato tipoE1 = coma.getExpresion1().getType(tablaDeSimbolos, listas);
-                Operacion.tipoDato tipoE2 = coma.getExpresion2().getType(tablaDeSimbolos, listas);
+                Operacion.tipoDato tipoE1 = Operacion.tipoDato.VACIO;
+                Operacion.tipoDato tipoE2 = Operacion.tipoDato.VACIO;
+                Object izquierdo = coma.getExpresion1().getValue(tablaDeSimbolos, listas);
+                if(izquierdo instanceof Retorno2){
+                    Retorno2 r = (Retorno2) izquierdo;
+                    izquierdo = r.getValue(tablaDeSimbolos, listas);
+                    tipoE1 = r.getType(tablaDeSimbolos, listas);
+                }else{
+                    tipoE1 = coma.getExpresion1().getType(tablaDeSimbolos, listas);
+                }
+                
+                Object derecho = coma.getExpresion2().getValue(tablaDeSimbolos, listas);
+                if(derecho instanceof Retorno2){
+                    Retorno2 r = (Retorno2) derecho;
+                    derecho = r.getValue(tablaDeSimbolos, listas);
+                    tipoE2 = r.getType(tablaDeSimbolos, listas);
+                }else{
+                    tipoE2 = coma.getExpresion2().getType(tablaDeSimbolos, listas);
+                }
 
                 if ((tipoE1.equals(Operacion.tipoDato.ENTERO) || tipoE1.equals(Operacion.tipoDato.DECIMAL)
                         || tipoE1.equals(Operacion.tipoDato.VECTOR))
@@ -131,9 +149,6 @@ public class MedianaTrim extends Operacion implements Expresion {
                         || tipoE2.equals(Operacion.tipoDato.VECTOR))) {
 
                     //izquierdo el vector y derecho el Trim
-                    Object izquierdo = coma.getExpresion1().getValue(tablaDeSimbolos, listas);
-                    Object derecho = coma.getExpresion2().getValue(tablaDeSimbolos, listas);
-
                     if (izquierdo instanceof ArrayList && derecho instanceof ArrayList) {
                         ArrayList<Object> array1 = (ArrayList<Object>) izquierdo;
                         ArrayList<Object> array2 = (ArrayList<Object>) derecho;
@@ -161,8 +176,7 @@ public class MedianaTrim extends Operacion implements Expresion {
                                         + "Median() no es valido, Ya que el TRIM no es tipo Numerico"));
                                 return Operacion.tipoDato.ERRORSEMANTICO;
                             }
-                        }                       
-                        
+                        }
 
                         if (array1.size() >= 1 && array2.size() == 1) {
                             Object media = sacarMediana(tablaDeSimbolos, listas, array1, array2);
@@ -205,8 +219,7 @@ public class MedianaTrim extends Operacion implements Expresion {
                                 return Operacion.tipoDato.ERRORSEMANTICO;
                             }
                         }
-                        
-                        
+
                         if (array1.size() >= 1 && array2.size() == 1) {
                             Object media = sacarMediana(tablaDeSimbolos, listas, array1, array2);
                             ArrayList<Object> me = new ArrayList<>();
@@ -225,7 +238,6 @@ public class MedianaTrim extends Operacion implements Expresion {
                         ArrayList<Object> array1 = (ArrayList<Object>) izquierdo;
                         ArrayList<Object> array2 = (ArrayList<Object>) sim.getValor();
 
-                        
                         if (tipoE2.equals(Operacion.tipoDato.VECTOR)) {
                             Object ob = derecho;
                             ArrayList<Object> valDelValor = (ArrayList<Object>) ob;
@@ -250,8 +262,7 @@ public class MedianaTrim extends Operacion implements Expresion {
                                 return Operacion.tipoDato.ERRORSEMANTICO;
                             }
                         }
-                        
-                        
+
                         if (array1.size() >= 1 && array2.size() == 1) {
                             Object media = sacarMediana(tablaDeSimbolos, listas, array1, array2);
                             ArrayList<Object> me = new ArrayList<>();
@@ -271,7 +282,6 @@ public class MedianaTrim extends Operacion implements Expresion {
                         ArrayList<Object> array1 = (ArrayList<Object>) sim2.getValor();
                         ArrayList<Object> array2 = (ArrayList<Object>) sim.getValor();
 
-                        
                         if (tipoE2.equals(Operacion.tipoDato.VECTOR)) {
                             Object ob = derecho;
                             ArrayList<Object> valDelValor = (ArrayList<Object>) ob;
@@ -296,8 +306,7 @@ public class MedianaTrim extends Operacion implements Expresion {
                                 return Operacion.tipoDato.ERRORSEMANTICO;
                             }
                         }
-                        
-                        
+
                         if (array1.size() >= 1 && array2.size() == 1) {
                             Object media = sacarMediana(tablaDeSimbolos, listas, array1, array2);
                             ArrayList<Object> me = new ArrayList<>();

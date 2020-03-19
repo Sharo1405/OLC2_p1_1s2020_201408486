@@ -8,6 +8,7 @@ package Interprete.Expresiones;
 import Interprete.Entorno.Entorno;
 import Interprete.Entorno.Simbolo;
 import Interprete.ErrorImpresion;
+import Interprete.Instrucciones.Retorno;
 import java.util.ArrayList;
 
 /**
@@ -33,10 +34,18 @@ public class Listas implements Expresion {
     public Object getValue(Entorno tablaDeSimbolos, ErrorImpresion listas) {
         try {
             Object listaRetorno = new Object();
-            Operacion.tipoDato ti = getExp().getType(tablaDeSimbolos, listas);
+            Object o = getExp().getValue(tablaDeSimbolos, listas);
+            Operacion.tipoDato ti = Operacion.tipoDato.VACIO;
+            if (o instanceof Retorno) {
+                Retorno r = (Retorno) o;
+                o = r.getValue(tablaDeSimbolos, listas);
+                ti = r.getType(tablaDeSimbolos, listas);
+            } else {
+                ti = getExp().getType(tablaDeSimbolos, listas);
+            }
             if (!ti.equals(Operacion.tipoDato.ARRAY) && !ti.equals(Operacion.tipoDato.MATRIZ)) {
-                listaRetorno = getExp().getValue(tablaDeSimbolos, listas);
-                Simbolo simbolito = new Simbolo("", listaRetorno, getLinea(), getColumna(), Operacion.tipoDato.LISTA, 
+                listaRetorno = o;
+                Simbolo simbolito = new Simbolo("", listaRetorno, getLinea(), getColumna(), Operacion.tipoDato.LISTA,
                         ti, Simbolo.Rol.VARIABLE);
                 return simbolito;
             }

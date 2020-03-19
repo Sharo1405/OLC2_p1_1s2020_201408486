@@ -8,6 +8,7 @@ package Interprete.Expresiones;
 import Interprete.Entorno.Entorno;
 import Interprete.Entorno.Simbolo;
 import Interprete.ErrorImpresion;
+import Interprete.Expresiones.Retorno2;
 import Interprete.NodoError;
 import java.util.ArrayList;
 
@@ -30,9 +31,19 @@ public class StringLength extends Operacion implements Expresion {
     public Object getValue(Entorno tablaDeSimbolos, ErrorImpresion listas) {
 
         try {
-            Operacion.tipoDato ti = getExp().getType(tablaDeSimbolos, listas);
+            Object obj = getExp().getValue(tablaDeSimbolos, listas);            
+            Operacion.tipoDato ti = Operacion.tipoDato.VACIO;            
+            if (obj instanceof Retorno2) {
+                Retorno2 r = (Retorno2) obj;
+                obj = r.getValue(tablaDeSimbolos, listas);
+                ti = r.getType(tablaDeSimbolos, listas);
+            } else {
+                ti = getExp().getType(tablaDeSimbolos, listas);
+            }
+            
+            
             if (ti.equals(Operacion.tipoDato.STRING)) {
-                Object obj = getExp().getValue(tablaDeSimbolos, listas);
+                
                 if (obj instanceof Simbolo) {
                     Simbolo sim = (Simbolo) obj;
                     ArrayList<Object> zzz = (ArrayList<Object>) sim.getValor();
@@ -47,13 +58,13 @@ public class StringLength extends Operacion implements Expresion {
                 }
             }else if (ti.equals(Operacion.tipoDato.VECTOR)) {
 
-                Object ob = getExp().getValue(tablaDeSimbolos, listas);
-                ArrayList<Object> valDelValor = (ArrayList<Object>) ob;
+                //Object ob = getExp().getValue(tablaDeSimbolos, listas);
+                ArrayList<Object> valDelValor = (ArrayList<Object>) obj;
                 if (valDelValor.size() == 1) {
                     if (valDelValor.get(0) instanceof ArrayList) {
                         ArrayList<Object> veeeee = (ArrayList<Object>) valDelValor.get(0);
                         if (veeeee.size() == 1) {
-                            ob = veeeee;
+                            obj = veeeee;
                         } else {
                             return Operacion.tipoDato.ERRORSEMANTICO;
                         }
@@ -61,7 +72,7 @@ public class StringLength extends Operacion implements Expresion {
                 }
 
                 ArrayList<Object> exp1 = new ArrayList<>();
-                exp1 = (ArrayList<Object>) ob;
+                exp1 = (ArrayList<Object>) obj;
                 Operacion.tipoDato tipo1 = this.adivinaTipoValorVECTORTIPOTIPOTIPO(exp1);
 
                 if (tipo1.equals(Operacion.tipoDato.STRING)) {

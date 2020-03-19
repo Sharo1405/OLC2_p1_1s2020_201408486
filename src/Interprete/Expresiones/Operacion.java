@@ -7,6 +7,7 @@ package Interprete.Expresiones;
 
 import Interprete.Entorno.*;
 import Interprete.ErrorImpresion;
+import Interprete.Expresiones.Retorno2;
 import Interprete.NodoError;
 import java.util.ArrayList;
 
@@ -281,20 +282,19 @@ public class Operacion {
 
         return Operacion.tipoDato.ERRORSEMANTICO;
     }
-    
-    
-    public Object obtenerValorSimbolo(Object esSimbolo){
-        
-        if(esSimbolo instanceof  Simbolo){
+
+    public Object obtenerValorSimbolo(Object esSimbolo, Entorno tablaDeSimbolos, ErrorImpresion listas) {
+
+        if (esSimbolo instanceof Retorno2) {
+            return ((Retorno2) esSimbolo).getValue(tablaDeSimbolos, listas);
+        } else if (esSimbolo instanceof Simbolo) {
             Simbolo si = (Simbolo) esSimbolo;
             return si.getValor();
-        }else{
+        } else {
             return esSimbolo;
         }
-        
+
     }
-    
-    
 
     public Object casteoItemsVector(Operacion.tipoDato tipo, Object item) {
 

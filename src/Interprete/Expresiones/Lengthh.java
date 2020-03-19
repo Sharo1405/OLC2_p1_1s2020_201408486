@@ -8,6 +8,7 @@ package Interprete.Expresiones;
 import Interprete.Entorno.Entorno;
 import Interprete.Entorno.Simbolo;
 import Interprete.ErrorImpresion;
+import Interprete.Expresiones.Retorno2;
 import java.util.ArrayList;
 
 /**
@@ -26,13 +27,16 @@ public class Lengthh implements Expresion {
     public Object getValue(Entorno tablaDeSimbolos, ErrorImpresion listas) {
 
         Object obDevuelto = exp.getValue(tablaDeSimbolos, listas);
+        if (obDevuelto instanceof Retorno2) {
+            obDevuelto = ((Retorno2) obDevuelto).getValue(tablaDeSimbolos, listas);
+        }
         if (obDevuelto instanceof Simbolo) {
             Simbolo existente = (Simbolo) obDevuelto;
             if (existente.getTipo().equals(Operacion.tipoDato.LISTA)) {
 
                 ArrayList<Object> nev = new ArrayList<>();
                 return nev.add(((ArrayList) existente.getValor()).size());
-                
+
             } else if (existente.getTipo().equals(Operacion.tipoDato.ARRAY)) {
 
             } else {
