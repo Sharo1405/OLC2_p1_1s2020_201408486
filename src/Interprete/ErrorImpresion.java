@@ -15,6 +15,7 @@ public class ErrorImpresion {
 
     public LinkedList<String> impresiones = new LinkedList<String>();
     public LinkedList<NodoError> errores = new LinkedList<NodoError>();
+    public LinkedList<String> nombresGraficas = new LinkedList<>();
 
     public ErrorImpresion() {
 

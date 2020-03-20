@@ -18,6 +18,8 @@ import Interprete.Instrucciones.ExpresionValor;
 import Interprete.Instrucciones.Factorizando_id_igual;
 import Interprete.Instrucciones.Instruccion;
 import Interprete.Expresiones.Retorno2;
+import Interprete.Instrucciones.GraficasArit.Barras;
+import Interprete.Instrucciones.GraficasArit.Pie;
 import Interprete.Instrucciones.Retorno;
 import Interprete.NodoError;
 import java.util.ArrayList;
@@ -128,7 +130,7 @@ public class LlamadaFunciones implements Expresion {
         if (expre1 instanceof Comas) {
             Comas coma = (Comas) expre1;
             obtenerLista(coma.getExpresion1(), coma.getExpresion2(), tablaDeSimbolos, listas, listaParas);
-            listaParas.add(coma.getExpresion2());
+            listaParas.add(expre2);
         } else {
             listaParas.add(expre1);
             listaParas.add(expre2);
@@ -231,7 +233,18 @@ public class LlamadaFunciones implements Expresion {
                     }
 
                 }
-            } else {
+            } else if (idFuncion.toLowerCase().equals("pie")) {
+                Pie piesito = new Pie(Parametros, getLinea(), getColumna());
+                piesito.ejecutar(tablaDeSimbolos, listas);
+                
+            } else if (idFuncion.toLowerCase().equals("barplot")) {
+                Barras piesito = new Barras(Parametros, getLinea(), getColumna());
+                piesito.ejecutar(tablaDeSimbolos, listas);
+            }else if (idFuncion.toLowerCase().equals("plot")) {
+                
+            }else if (idFuncion.toLowerCase().equals("hist")) {                
+                
+            }else {
                 //FUNCIONES CREADAS POR UNO MISMO
 
                 Simbolo si = tablaDeSimbolos.get(getIdFuncion(), tablaDeSimbolos, Simbolo.Rol.FUNCION);

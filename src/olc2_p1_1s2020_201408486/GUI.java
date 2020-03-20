@@ -449,6 +449,9 @@ public class GUI extends javax.swing.JFrame {
             EscribirDotTS ReporteTS = new EscribirDotTS();
             ReporteTS.EscribirGrafica(actual);
             entro = 1;
+            
+            abrirGraficas(erorImpresion.nombresGraficas);
+            
         } catch (Exception ex) {
             //ex.printStackTrace();
             // Logger.getLogger(GUI.class.getName()).log(Level.SEVERE, null, ex);
@@ -457,6 +460,15 @@ public class GUI extends javax.swing.JFrame {
         System.out.println("Finaliza la evalucion de la cadena....");
     }//GEN-LAST:event_jMenuItem5ActionPerformed
 
+    
+    public void abrirGraficas(LinkedList<String> listanombres) throws IOException {
+        for (String listanombre : listanombres) {
+            File archivo = new File(listanombre);
+            if (archivo.exists()) {
+                Desktop.getDesktop().open(archivo);
+            }
+        }
+    }
 
     private void jMenuItem7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem7ActionPerformed
         //NUEVA PESTAÑA
@@ -658,6 +670,9 @@ public class GUI extends javax.swing.JFrame {
             System.out.println("NO SE PUEDE ABRIR EL REPORTE DE TS ALGO SALIO MAL TS.PNG ...!!!");
         }
     }//GEN-LAST:event_jMenuItem13ActionPerformed
+
+    
+    
 
     /**
      * @param args the command line arguments

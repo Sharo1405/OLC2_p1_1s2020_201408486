@@ -9,6 +9,7 @@ import Interprete.Entorno.Entorno;
 import Interprete.Entorno.Simbolo;
 import Interprete.ErrorImpresion;
 import Interprete.Expresiones.Retorno2;
+import Interprete.Instrucciones.GraficasArit.Pie;
 import Interprete.NodoError;
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -112,16 +113,24 @@ public class Identificador extends Entorno implements Expresion {
 
                         //-----------------------------------------------------------------------------------------------------------------------
                         case "pie":
-                            break;
+                            listas.errores.add(new NodoError(getLinea(), getColumna(), NodoError.tipoError.Semantico,
+                                    "La funcion Pie no es valida, No tiene retorno"));
+                            return Operacion.tipoDato.ERRORSEMANTICO;
 
                         case "barplot":
-                            break;
+                            listas.errores.add(new NodoError(getLinea(), getColumna(), NodoError.tipoError.Semantico,
+                                    "La funcion Barplot no es valida, No tiene retorno"));
+                            return Operacion.tipoDato.ERRORSEMANTICO;
 
                         case "plot":
-                            break;
+                            listas.errores.add(new NodoError(getLinea(), getColumna(), NodoError.tipoError.Semantico,
+                                    "La funcion Plot no es valida, No tiene retorno"));
+                            return Operacion.tipoDato.ERRORSEMANTICO;
 
                         case "hist":
-                            break;
+                            listas.errores.add(new NodoError(getLinea(), getColumna(), NodoError.tipoError.Semantico,
+                                    "La funcion Hist no es valida, No tiene retorno"));
+                            return Operacion.tipoDato.ERRORSEMANTICO;
 
                         //-----------------------------------------------------------------------------------------------------------------------
                         case "print":
@@ -615,7 +624,7 @@ public class Identificador extends Entorno implements Expresion {
             }
             return Operacion.tipoDato.ERRORSEMANTICO;
         } catch (Exception e) {
-            System.out.println("Error en la clase Identificador getValue()"+ e);
+            System.out.println("Error en la clase Identificador getValue()" + e);
         }
         return Operacion.tipoDato.ERRORSEMANTICO;
     }
@@ -640,10 +649,10 @@ public class Identificador extends Entorno implements Expresion {
                                     o = ((Retorno2) o).getValue(tablaDeSimbolos, listas);
                                     tipoDvolvergetTYpe = ((Retorno2) o).getType(tablaDeSimbolos, listas);
                                 } else {*/
-                                    //tipoDvolvergetTYpe = Operacion.tipoDato.VACIO;
-                                //}
+                            //tipoDvolvergetTYpe = Operacion.tipoDato.VACIO;
+                            //}
                             //} else {
-                                tipoDvolvergetTYpe = encontrado.getTipo();
+                            tipoDvolvergetTYpe = encontrado.getTipo();
                             //}
                         } else if (encontrado == null) {
                             listas.errores.add(new NodoError(getLinea(), getColumna(), NodoError.tipoError.Semantico, "El id " + getId()
