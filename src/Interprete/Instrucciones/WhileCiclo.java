@@ -57,7 +57,7 @@ public class WhileCiclo implements Instruccion {
                             ob = veeeee;
                         } else {
                             listas.errores.add(new NodoError(getLinea(), getColumna(), NodoError.tipoError.Semantico,
-                                    "El tipo de la Expreion 1 no es valida para realizar la MAYOR QUE"));
+                                    "El tipo de la Expreion 1 no es valida para realizar el While"));
                             return Operacion.tipoDato.ERRORSEMANTICO;
                         }
                     }

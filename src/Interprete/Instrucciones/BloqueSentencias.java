@@ -10,6 +10,7 @@ import Interprete.Entorno.Entorno;
 import Interprete.ErrorImpresion;
 import Interprete.Expresiones.Expresion;
 import Interprete.Expresiones.Operacion;
+import Interprete.Expresiones.Retorno2;
 import java.util.LinkedList;
 
 /**
@@ -38,7 +39,7 @@ public class BloqueSentencias implements Instruccion {
         try {
 
             Entorno actual = new Entorno(tablaDeSimbolos);
-            
+
             for (AST sentencia : listaSentencias) {
 
                 if (sentencia instanceof Instruccion) {
@@ -47,17 +48,24 @@ public class BloqueSentencias implements Instruccion {
                         return ins;
                     } else if (ins instanceof Continuee) {
                         return ins;
-                    } else if (ins instanceof Retorno) {
+                    } else if (ins instanceof Retorno2) {
                         return ins;
                     } else {
                         Object ss = ins.ejecutar(actual, listas);
+                        if (ss instanceof Retorno2) {
+                            return ins;
+                        }
                     }
                 } else {//funciones 
                     Expresion exp = (Expresion) sentencia;
                     if (exp instanceof Retorno) {
                         return exp.getValue(actual, listas);
                     } else {
-                        Object sss = exp.getValue(actual, listas);
+                        Object ins = exp.getValue(actual, listas);
+
+                        if (ins instanceof Retorno2) {
+                            return ins;
+                        }
                     }
                 }
             }

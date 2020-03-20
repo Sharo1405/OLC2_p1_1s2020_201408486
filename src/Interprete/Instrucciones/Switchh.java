@@ -7,6 +7,7 @@ package Interprete.Instrucciones;
 
 import Interprete.AST;
 import Interprete.Entorno.Entorno;
+import Interprete.Entorno.Simbolo;
 import Interprete.ErrorImpresion;
 import Interprete.Expresiones.Expresion;
 import Interprete.Expresiones.Operacion;
@@ -36,6 +37,20 @@ public class Switchh implements Instruccion {
         this.listaCaseDefault = listaCaseDefault;
     }
 
+    
+    public Object obtenerValorSimbolo(Object esSimbolo, Entorno tablaDeSimbolos, ErrorImpresion listas) {
+
+        if (esSimbolo instanceof Retorno2) {
+            return ((Retorno2) esSimbolo).getValue(tablaDeSimbolos, listas);
+        } else if (esSimbolo instanceof Simbolo) {
+            Simbolo si = (Simbolo) esSimbolo;
+            return si.getValor();
+        } else {
+            return esSimbolo;
+        }
+
+    }
+    
     @Override
     public Object ejecutar(Entorno tablaDeSimbolos, ErrorImpresion listas) {
         try {
@@ -46,6 +61,7 @@ public class Switchh implements Instruccion {
                 ob = r.getValue(tablaDeSimbolos, listas);
             }
             
+            ob = obtenerValorSimbolo(ob, tablaDeSimbolos, listas);
             
             ArrayList<Object> valDelValor = (ArrayList<Object>) ob;
             if (valDelValor.size() == 1) {
@@ -58,7 +74,7 @@ public class Switchh implements Instruccion {
                     }
                 }
             }
-            Object prueba = false;
+            /*Object prueba = false;
 
             if (((ArrayList<Object>) ob).size() > 1) {
                 ArrayList<Object> ar = (ArrayList<Object>) ob;
@@ -66,7 +82,7 @@ public class Switchh implements Instruccion {
                 prueba = (Boolean) arr2.get(0);
             } else {
                 prueba = ((ArrayList<Object>) ob).get(0);
-            }
+            }*/
 
             if (ob instanceof Operacion.tipoDato) {
 

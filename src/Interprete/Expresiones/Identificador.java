@@ -632,7 +632,7 @@ public class Identificador extends Entorno implements Expresion {
                     if (ss instanceof EDerechaParentesis) {
                         Simbolo encontrado = this.get(getId(), tablaDeSimbolos, Simbolo.Rol.FUNCION);
                         if (encontrado != null) {
-                            if (encontrado.getRol().equals(Simbolo.Rol.FUNCION)) {
+                            /*if (encontrado.getRol().equals(Simbolo.Rol.FUNCION)) {
                                 EDerechaParentesis parametros = (EDerechaParentesis) EDerecha.get(0);
                                 LlamadaFunciones llamadas = new LlamadaFunciones(getId(), parametros.getValor(), getLinea(), getColumna());
                                 /*Object o = llamadas.getValue(tablaDeSimbolos, listas);
@@ -640,11 +640,11 @@ public class Identificador extends Entorno implements Expresion {
                                     o = ((Retorno2) o).getValue(tablaDeSimbolos, listas);
                                     tipoDvolvergetTYpe = ((Retorno2) o).getType(tablaDeSimbolos, listas);
                                 } else {*/
-                                    tipoDvolvergetTYpe = Operacion.tipoDato.VACIO;
+                                    //tipoDvolvergetTYpe = Operacion.tipoDato.VACIO;
                                 //}
-                            } else {
+                            //} else {
                                 tipoDvolvergetTYpe = encontrado.getTipo();
-                            }
+                            //}
                         } else if (encontrado == null) {
                             listas.errores.add(new NodoError(getLinea(), getColumna(), NodoError.tipoError.Semantico, "El id " + getId()
                                     + " No existe como Funcion para Ejecutar"));

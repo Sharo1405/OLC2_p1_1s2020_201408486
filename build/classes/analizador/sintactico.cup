@@ -87,7 +87,8 @@ nonterminal AST SWITCHCASEDEFAULT;
 nonterminal WhileCiclo WHILEE;
 nonterminal DoWhile DOWHILE;
 nonterminal AST SENTENCIATRANSFERENCIA;
-nonterminal FORR, INICIALIZACION;
+nonterminal Forr FORR;
+nonterminal Inicializacion INICIALIZACION;
 nonterminal Expresion E;
 nonterminal ArrayList<Expresion> EIZQUIERDA;
 nonterminal ArrayList<Expresion> EDERECHA;
@@ -148,7 +149,9 @@ SENTENCIA::= FACTORIZANDO:v{:
        | DOWHILE:v{:
             RESULT = v;
         :}
-       | FORR{::}
+       | FORR:v{:
+            RESULT = v;
+       :}
 
        | SENTENCIATRANSFERENCIA:v puntoycoma{:
             RESULT = v;
@@ -162,9 +165,13 @@ SENTENCIA::= FACTORIZANDO:v{:
 
 
 
-FORR::= forr aparentesis INICIALIZACION cparentesis BLOQUESENTENCIAS{::};
+FORR::= forr:id aparentesis INICIALIZACION:ini cparentesis BLOQUESENTENCIAS:bloque{:
+    RESULT = new Forr( ini, bloque, idleft +1, idright +1);
+:};
 
-INICIALIZACION::= id inn E {::};
+INICIALIZACION::= id:id inn E:e {:
+    RESULT = new Inicializacion(id, e, idleft +1, idright +1);
+:};
                  
 
 

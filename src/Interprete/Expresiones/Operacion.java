@@ -231,7 +231,7 @@ public class Operacion {
                     return tipoDato.ERRORSEMANTICO;
                 }
             } else {
-                return tipoDato.ERRORSEMANTICO;
+                return adivinaTipoValorVECTOR(object);
             }
         }
 
