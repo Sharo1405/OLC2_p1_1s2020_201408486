@@ -19,6 +19,7 @@ import Interprete.Instrucciones.Factorizando_id_igual;
 import Interprete.Instrucciones.Instruccion;
 import Interprete.Expresiones.Retorno2;
 import Interprete.Instrucciones.GraficasArit.Barras;
+import Interprete.Instrucciones.GraficasArit.Histograma;
 import Interprete.Instrucciones.GraficasArit.Pie;
 import Interprete.Instrucciones.Retorno;
 import Interprete.NodoError;
@@ -243,6 +244,9 @@ public class LlamadaFunciones implements Expresion {
             }else if (idFuncion.toLowerCase().equals("plot")) {
                 
             }else if (idFuncion.toLowerCase().equals("hist")) {                
+                
+                Histograma h = new Histograma(Parametros, getLinea(), getColumna());
+                h.ejecutar(tablaDeSimbolos, listas);
                 
             }else {
                 //FUNCIONES CREADAS POR UNO MISMO

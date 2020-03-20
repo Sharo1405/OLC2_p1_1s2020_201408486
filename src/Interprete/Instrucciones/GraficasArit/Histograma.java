@@ -13,36 +13,31 @@ import Interprete.Expresiones.FuncionC;
 import Interprete.Expresiones.Operacion;
 import Interprete.Instrucciones.Instruccion;
 import Interprete.NodoError;
-import java.awt.Color;
 import java.io.File;
 import java.io.IOException;
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartUtilities;
 import org.jfree.chart.JFreeChart;
-import org.jfree.chart.labels.PieSectionLabelGenerator;
-import org.jfree.chart.labels.StandardPieSectionLabelGenerator;
-import org.jfree.chart.plot.PiePlot;
 import org.jfree.chart.plot.PlotOrientation;
-import org.jfree.data.category.DefaultCategoryDataset;
-import org.jfree.data.general.DefaultPieDataset;
+import org.jfree.data.statistics.HistogramDataset;
+import org.jfree.data.statistics.HistogramType;
 
 /**
  *
  * @author sharolin
  */
-public class Barras extends Operacion implements Instruccion {
+public class Histograma extends Operacion implements Instruccion {
 
     private Expresion parametro;
     private int linea;
     private int columna;
 
-    public Barras() {
+    public Histograma() {
     }
 
-    public Barras(Expresion parametro, int linea, int columna) {
+    public Histograma(Expresion parametro, int linea, int columna) {
         this.parametro = parametro;
         this.linea = linea;
         this.columna = columna;
@@ -63,15 +58,14 @@ public class Barras extends Operacion implements Instruccion {
 
     @Override
     public Object ejecutar(Entorno tablaDeSimbolos, ErrorImpresion listas) {
-        try { //barplot( H, xlab, ylab, main, names.arg)
+        try {
             if (parametro instanceof Comas) {
-
                 LinkedList<Expresion> listaParametros = new LinkedList<>();
                 Comas co = (Comas) parametro;
                 obtenerLista(co.getExpresion1(), co.getExpresion2(), tablaDeSimbolos, listas, listaParametros);
-                if (listaParametros.size() != 5) {
+                if (listaParametros.size() != 3) {
                     listas.errores.add(new NodoError(getLinea(), getColumna(), NodoError.tipoError.Semantico,
-                            "Parametro/os no validos para la grafica de Barras"));
+                            "Parametro/os no validos para el HISTOGRAMA"));
                     return Operacion.tipoDato.ERRORSEMANTICO;
                 }
 
@@ -79,18 +73,16 @@ public class Barras extends Operacion implements Instruccion {
                 Operacion.tipoDato tipoH = Operacion.tipoDato.VACIO;
                 Object xLab = new Object(); // Es la etiqueta para el eje X.
                 Operacion.tipoDato tipoxLab = Operacion.tipoDato.VACIO;
-                Object yLab = new Object(); //Es la etiqueta para el eje Y.
-                Operacion.tipoDato tipoyLab = Operacion.tipoDato.VACIO;
                 Object main = new Object(); //Es el título de la gráfica. 
                 Operacion.tipoDato tipoMain = Operacion.tipoDato.VACIO;
-                Object names = new Object(); //Es un vector que contiene los nombres para cada una de las barras de la gráfica.
-                Operacion.tipoDato tipoNames = Operacion.tipoDato.VACIO;
+                Object xLim = new Object(); //Recibe un vector de dos elementos numéricos que especifica el mínimo y el máximo permitido en el eje X
+                Operacion.tipoDato tipoXlim = Operacion.tipoDato.VACIO;
+                Object yLim = new Object(); //Recibe un vector de dos elementos numéricos que especifica el mínimo y el máximo permitido en el eje Y
+                Operacion.tipoDato tipoYlim = Operacion.tipoDato.VACIO;
 
                 ArrayList<Object> HH = new ArrayList<>();
                 ArrayList<Object> xLabbb = new ArrayList<>();
-                ArrayList<Object> yLabbb = new ArrayList<>();
                 ArrayList<Object> Mainn = new ArrayList<>();
-                ArrayList<Object> Namesss = new ArrayList<>();
 
                 //--------------------------------------------------------------------------------------------------------------
                 H = listaParametros.get(0).getValue(tablaDeSimbolos, listas);
@@ -99,7 +91,7 @@ public class Barras extends Operacion implements Instruccion {
                 if (!tipoH.equals(Operacion.tipoDato.VECTOR) && !tipoH.equals(Operacion.tipoDato.ENTERO)
                         && !tipoH.equals(Operacion.tipoDato.DECIMAL)) {
                     listas.errores.add(new NodoError(getLinea(), getColumna(), NodoError.tipoError.Semantico,
-                            "Parametro H no valido para la grafica de BARRAS, debe ser Numerico, y es: " + String.valueOf(tipoH)));
+                            "Parametro v no valido para la grafica HISTOGRAMA, debe ser Numerico, y es: " + String.valueOf(tipoH)));
                     return Operacion.tipoDato.ERRORSEMANTICO;
                 } else {
                     if (tipoH.equals(Operacion.tipoDato.VECTOR)) {
@@ -107,7 +99,7 @@ public class Barras extends Operacion implements Instruccion {
                         Operacion.tipoDato tipoV1 = this.todoLosTipos(array1);
                         if (tipoV1.equals(Operacion.tipoDato.ERRORSEMANTICO)) {
                             listas.errores.add(new NodoError(getLinea(), getColumna(), NodoError.tipoError.Semantico,
-                                    "El tipo del parametro H no es valido para realizar la Grafica de BARRAS"));
+                                    "El tipo del parametro v no es valido para realizar la Grafica HISTOGRAMA"));
                             return Operacion.tipoDato.ERRORSEMANTICO;
                         }
                         ArrayList<Object> valDelValor = (ArrayList<Object>) H;
@@ -118,7 +110,7 @@ public class Barras extends Operacion implements Instruccion {
                                     HH = veeeee;
                                 } else {
                                     listas.errores.add(new NodoError(getLinea(), getColumna(), NodoError.tipoError.Semantico,
-                                            "El tipo del parametro H no es valido para realizar la Grafica de BARRAS"));
+                                            "El tipo del parametro V no es valido para realizar la Grafica HISTOGRAMA"));
                                     return Operacion.tipoDato.ERRORSEMANTICO;
                                 }
                             }
@@ -131,7 +123,7 @@ public class Barras extends Operacion implements Instruccion {
                         tipoH = this.adivinaTipoValorVECTORTIPOTIPOTIPO(HH);
                         if (!tipoH.equals(Operacion.tipoDato.ENTERO) && !tipoH.equals(Operacion.tipoDato.DECIMAL)) {
                             listas.errores.add(new NodoError(getLinea(), getColumna(), NodoError.tipoError.Semantico,
-                                    "El tipo del parametro H no es valida para realizar la Grafica de BARRAS es de tipo: " + tipoH));
+                                    "El tipo del parametro V no es valida para realizar la Grafica HISTOGRAMA es de tipo: " + tipoH));
                             return Operacion.tipoDato.ERRORSEMANTICO;
                         }
                     } else {
@@ -139,12 +131,12 @@ public class Barras extends Operacion implements Instruccion {
                     }
                 }
                 //--------------------------------------------------------------------------------------------------------------
-                xLab = listaParametros.get(1).getValue(tablaDeSimbolos, listas);
-                tipoxLab = listaParametros.get(1).getType(tablaDeSimbolos, listas);
+                xLab = listaParametros.get(2).getValue(tablaDeSimbolos, listas);
+                tipoxLab = listaParametros.get(2).getType(tablaDeSimbolos, listas);
                 xLab = obtenerValorSimbolo(xLab, tablaDeSimbolos, listas);
                 if (!tipoxLab.equals(Operacion.tipoDato.VECTOR) && !tipoxLab.equals(Operacion.tipoDato.STRING)) {
                     listas.errores.add(new NodoError(getLinea(), getColumna(), NodoError.tipoError.Semantico,
-                            "Parametro xLab no valido para la grafica de BARRAS, debe ser String, y es: " + String.valueOf(tipoxLab)));
+                            "Parametro xLab no valido para la grafica HISTOGRAMA, debe ser String, y es: " + String.valueOf(tipoxLab)));
                     return Operacion.tipoDato.ERRORSEMANTICO;
                 } else {
                     if (tipoxLab.equals(Operacion.tipoDato.VECTOR)) {
@@ -152,7 +144,7 @@ public class Barras extends Operacion implements Instruccion {
                         Operacion.tipoDato tipoV1 = this.todoLosTipos(array1);
                         if (tipoV1.equals(Operacion.tipoDato.ERRORSEMANTICO)) {
                             listas.errores.add(new NodoError(getLinea(), getColumna(), NodoError.tipoError.Semantico,
-                                    "El tipo del parametro xLab no es valida para realizar la Grafica de BARRAS"));
+                                    "El tipo del parametro xLab no es valida para realizar la Grafica HISTOGRAMA"));
                             return Operacion.tipoDato.ERRORSEMANTICO;
                         }
                         ArrayList<Object> valDelValor = (ArrayList<Object>) xLab;
@@ -163,7 +155,7 @@ public class Barras extends Operacion implements Instruccion {
                                     xLabbb = veeeee;
                                 } else {
                                     listas.errores.add(new NodoError(getLinea(), getColumna(), NodoError.tipoError.Semantico,
-                                            "El tipo del parametro xLab no es valida para realizar la Grafica de BARRAS"));
+                                            "El tipo del parametro xLab no es valida para realizar la Grafica HISTOGRAMA"));
                                     return Operacion.tipoDato.ERRORSEMANTICO;
                                 }
                             }
@@ -176,61 +168,16 @@ public class Barras extends Operacion implements Instruccion {
                         tipoxLab = this.adivinaTipoValorVECTORTIPOTIPOTIPO(xLabbb);
                         if (!tipoxLab.equals(Operacion.tipoDato.STRING)) {
                             listas.errores.add(new NodoError(getLinea(), getColumna(), NodoError.tipoError.Semantico,
-                                    "El tipo del parametro xLab no es valida para realizar la Grafica de BARRAS es de tipo: " + tipoxLab));
+                                    "El tipo del parametro xLab no es valida para realizar la Grafica HISTOGRAMA es de tipo: " + tipoxLab));
                             return Operacion.tipoDato.ERRORSEMANTICO;
                         }
                     } else {
                         xLabbb = (ArrayList<Object>) xLab;
                     }
                 }
-                //--------------------------------------------------------------------------------------------------------------
-                yLab = listaParametros.get(2).getValue(tablaDeSimbolos, listas);
-                tipoyLab = listaParametros.get(2).getType(tablaDeSimbolos, listas);
-                yLab = obtenerValorSimbolo(yLab, tablaDeSimbolos, listas);
-                if (!tipoyLab.equals(Operacion.tipoDato.VECTOR) && !tipoyLab.equals(Operacion.tipoDato.STRING)) {
-                    listas.errores.add(new NodoError(getLinea(), getColumna(), NodoError.tipoError.Semantico,
-                            "Parametro yLab no valido para la grafica de BARRAS, debe ser Numerico, y es: " + String.valueOf(tipoyLab)));
-                    return Operacion.tipoDato.ERRORSEMANTICO;
-                } else {
-                    if (tipoyLab.equals(Operacion.tipoDato.VECTOR)) {
-                        ArrayList<Object> array1 = (ArrayList<Object>) yLab;
-                        Operacion.tipoDato tipoV1 = this.todoLosTipos(array1);
-                        if (tipoV1.equals(Operacion.tipoDato.ERRORSEMANTICO)) {
-                            listas.errores.add(new NodoError(getLinea(), getColumna(), NodoError.tipoError.Semantico,
-                                    "El tipo del parametro yLab no es valido para realizar la Grafica de BARRAS"));
-                            return Operacion.tipoDato.ERRORSEMANTICO;
-                        }
-                        ArrayList<Object> valDelValor = (ArrayList<Object>) yLab;
-                        if (valDelValor.size() == 1) {
-                            if (valDelValor.get(0) instanceof ArrayList) {
-                                ArrayList<Object> veeeee = (ArrayList<Object>) valDelValor.get(0);
-                                if (veeeee.size() == 1) {
-                                    yLabbb = veeeee;
-                                } else {
-                                    listas.errores.add(new NodoError(getLinea(), getColumna(), NodoError.tipoError.Semantico,
-                                            "El tipo del parametro yLab no es valido para realizar la Grafica de BARRAS"));
-                                    return Operacion.tipoDato.ERRORSEMANTICO;
-                                }
-                            }
-                        }
-                        FuncionC fc = new FuncionC();
-                        Object obj = fc.casteoVector(yLab, Operacion.tipoDato.STRING, listas);
-                        if (obj instanceof ArrayList) {
-                            yLabbb = (ArrayList<Object>) obj;
-                        }
-                        tipoyLab = this.adivinaTipoValorVECTORTIPOTIPOTIPO(yLabbb);
-                        if (!tipoyLab.equals(Operacion.tipoDato.ENTERO) && !tipoyLab.equals(Operacion.tipoDato.DECIMAL)) {
-                            listas.errores.add(new NodoError(getLinea(), getColumna(), NodoError.tipoError.Semantico,
-                                    "El tipo del parametro yLab no es valida para realizar la Grafica de BARRAS es de tipo: " + tipoyLab));
-                            return Operacion.tipoDato.ERRORSEMANTICO;
-                        }
-                    } else {
-                        yLabbb = (ArrayList<Object>) yLab;
-                    }
-                }
-                //--------------------------------------------------------------------------------------------------------------
-                main = listaParametros.get(3).getValue(tablaDeSimbolos, listas);
-                tipoMain = listaParametros.get(3).getType(tablaDeSimbolos, listas);
+                //---------------------------------------------------------------------------------------------------------------
+                main = listaParametros.get(1).getValue(tablaDeSimbolos, listas);
+                tipoMain = listaParametros.get(1).getType(tablaDeSimbolos, listas);
                 main = obtenerValorSimbolo(main, tablaDeSimbolos, listas);
                 if (!tipoMain.equals(Operacion.tipoDato.VECTOR) && !tipoMain.equals(Operacion.tipoDato.STRING)) {
                     listas.errores.add(new NodoError(getLinea(), getColumna(), NodoError.tipoError.Semantico,
@@ -274,70 +221,22 @@ public class Barras extends Operacion implements Instruccion {
                     }
                 }
                 //---------------------------------------------------------------------------------------------------------------
-                names = listaParametros.get(4).getValue(tablaDeSimbolos, listas);
-                tipoNames = listaParametros.get(4).getType(tablaDeSimbolos, listas);
-                names = obtenerValorSimbolo(names, tablaDeSimbolos, listas);
-                if (!tipoNames.equals(Operacion.tipoDato.VECTOR) && !tipoNames.equals(Operacion.tipoDato.STRING)) {
-                    listas.errores.add(new NodoError(getLinea(), getColumna(), NodoError.tipoError.Semantico,
-                            "Parametro names no valido para la grafica de BARRAS, debe ser String, y es: " + String.valueOf(tipoNames)));
-                    return Operacion.tipoDato.ERRORSEMANTICO;
-                } else {
-                    if (tipoNames.equals(Operacion.tipoDato.VECTOR)) {
-                        ArrayList<Object> array1 = (ArrayList<Object>) names;
-                        Operacion.tipoDato tipoV1 = this.todoLosTipos(array1);
-                        if (tipoV1.equals(Operacion.tipoDato.ERRORSEMANTICO)) {
-                            listas.errores.add(new NodoError(getLinea(), getColumna(), NodoError.tipoError.Semantico,
-                                    "El tipo del parametro names no es valido para realizar la Grafica de BARRAS"));
-                            return Operacion.tipoDato.ERRORSEMANTICO;
-                        }
-                        ArrayList<Object> valDelValor = (ArrayList<Object>) names;
-                        if (valDelValor.size() == 1) {
-                            if (valDelValor.get(0) instanceof ArrayList) {
-                                ArrayList<Object> veeeee = (ArrayList<Object>) valDelValor.get(0);
-                                if (veeeee.size() == 1) {
-                                    Namesss = veeeee;
-                                } else {
-                                    listas.errores.add(new NodoError(getLinea(), getColumna(), NodoError.tipoError.Semantico,
-                                            "El tipo del parametro names no es valido para realizar la Grafica de BARRAS"));
-                                    return Operacion.tipoDato.ERRORSEMANTICO;
-                                }
-                            }
-                        }
-                        FuncionC fc = new FuncionC();
-                        Object obj = fc.casteoVector(names, tipoV1, listas);
-                        if (obj instanceof ArrayList) {
-                            Namesss = (ArrayList<Object>) obj;
-                        }
-                        tipoNames = this.adivinaTipoValorVECTORTIPOTIPOTIPO(Namesss);
-                        if (!tipoNames.equals(Operacion.tipoDato.STRING)) {
-                            listas.errores.add(new NodoError(getLinea(), getColumna(), NodoError.tipoError.Semantico,
-                                    "El tipo del parametro names no es valida para realizar la Grafica de BARRAS es de tipo: " + tipoNames));
-                            return Operacion.tipoDato.ERRORSEMANTICO;
-                        }
-                    } else {
-                        Namesss = (ArrayList<Object>) names;
-                    }
-                }
-                //---------------------------------------------------------------------------------------------------------------
+                listas.nombresGraficas.add(CrearGrafica(HH, Mainn, xLabbb));
 
-                listas.nombresGraficas.add(CrearGrafica(HH, xLabbb, yLabbb, Mainn, Namesss));
             } else {
                 listas.errores.add(new NodoError(getLinea(), getColumna(), NodoError.tipoError.Semantico,
-                        "Parametros no validos para realizar la grafica de BARRAS"));
+                        "Parametros no validos para realizar el HISTOGRAMA"));
                 return Operacion.tipoDato.ERRORSEMANTICO;
             }
         } catch (Exception e) {
-            System.out.println("Error en la clase Barras Ejecutar()");
+            System.out.println("Error en la clase Histograma Ejecutar()");
             return Operacion.tipoDato.ERRORSEMANTICO;
         }
-        return Operacion.tipoDato.ERRORSEMANTICO;
-
+        return Operacion.tipoDato.VACIO;
     }
 
-    public String CrearGrafica(ArrayList<Object> H, ArrayList<Object> xLab,
-            ArrayList<Object> yLab, ArrayList<Object> main, ArrayList<Object> names) throws IOException {
-
-        DefaultCategoryDataset info = new DefaultCategoryDataset();
+    public String CrearGrafica(ArrayList<Object> H, ArrayList<Object> main,
+            ArrayList<Object> xLab) throws IOException {
 
         String mainMain = "";
         if (main.size() == 1) {
@@ -359,32 +258,26 @@ public class Barras extends Operacion implements Instruccion {
             xLabb = String.valueOf(mm);
         }
 
-        String yLabb = "";
-        if (yLab.size() == 1) {
-            Object sd = yLab.get(0);
-            yLabb = String.valueOf(sd);
-        } else {
-            ArrayList<Object> m = (ArrayList<Object>) yLab.get(0);
-            Object mm = m.get(0);
-            yLabb = String.valueOf(mm);
-        }
+        HistogramDataset info = new HistogramDataset();
 
+        info.setType(HistogramType.RELATIVE_FREQUENCY);
+        double[] valores = new double[H.size()];
         if (H.size() == 1) {
-            Object equis2 = H.get(0);
-            Object etiqueta2 = names.get(0);
-            info.setValue(new Double(String.valueOf(equis2)), String.valueOf(etiqueta2), String.valueOf(etiqueta2));
+            Object dcimal = H.get(0);
+            valores[0] = Double.parseDouble(String.valueOf(dcimal));
+            System.out.println(Double.parseDouble(String.valueOf(dcimal)));
+            info.addSeries(mainMain, valores, 6);
         } else {
             for (int i = 0; i < H.size(); i++) {
-                ArrayList<Object> equis = (ArrayList<Object>) H.get(i);
-                ArrayList<Object> etiqueta = (ArrayList<Object>) names.get(i);
-                Object equis2 = equis.get(0);
-                Object etiqueta2 = etiqueta.get(0);
-                info.setValue(new Double(String.valueOf(equis2)), String.valueOf(etiqueta2), String.valueOf(etiqueta2));
+                ArrayList<Object> array = (ArrayList<Object>) H.get(i);
+                Object mult = array.get(0);
+                valores[i] = Double.parseDouble(String.valueOf(mult));
             }
+            info.addSeries(mainMain, valores, 6);
         }
-
-        JFreeChart barrita = ChartFactory.createBarChart(mainMain, xLabb, yLabb, info, PlotOrientation.VERTICAL,
-                true, true, false);
+        
+        JFreeChart barrita = ChartFactory.createHistogram(mainMain, xLabb, "",
+                info, PlotOrientation.VERTICAL, false, false, false);
 
         int ancho = 720;
         int alto = 550;
@@ -392,6 +285,7 @@ public class Barras extends Operacion implements Instruccion {
         ChartUtilities.saveChartAsJPEG(archivo, barrita, ancho, alto);
 
         return "C:\\Users\\sharolin\\Desktop\\ReporteArbol\\" + mainMain + ".jpeg";
+
     }
 
     /**
@@ -435,5 +329,4 @@ public class Barras extends Operacion implements Instruccion {
     public void setColumna(int columna) {
         this.columna = columna;
     }
-
 }
