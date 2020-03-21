@@ -24,6 +24,7 @@ import java.awt.Color;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.Random;
 import org.jfree.chart.labels.PieSectionLabelGenerator;
 import org.jfree.chart.labels.StandardPieSectionLabelGenerator;
 import org.jfree.chart.plot.PiePlot;
@@ -282,10 +283,12 @@ public class Pie extends Operacion implements Instruccion {
 
         int ancho = 720;
         int alto = 550;
-        File archivo = new File("C:\\Users\\sharolin\\Desktop\\ReporteArbol\\" + mainMain + ".jpeg");
+        Random rand = new Random();
+        int randomNum = rand.nextInt((100000 - 10) + 1) + 10;
+        File archivo = new File("C:\\Users\\sharolin\\Desktop\\ReporteArbol\\" + mainMain + String.valueOf(randomNum) + ".jpeg");
         ChartUtilities.saveChartAsJPEG(archivo, piesito, ancho, alto);
-        
-        return "C:\\Users\\sharolin\\Desktop\\ReporteArbol\\" + mainMain + ".jpeg";
+
+        return "C:\\Users\\sharolin\\Desktop\\ReporteArbol\\" + mainMain + String.valueOf(randomNum) + ".jpeg";
     }
 
     /**

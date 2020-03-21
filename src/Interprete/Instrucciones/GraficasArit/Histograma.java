@@ -17,6 +17,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.Random;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartUtilities;
 import org.jfree.chart.JFreeChart;
@@ -275,16 +276,18 @@ public class Histograma extends Operacion implements Instruccion {
             }
             info.addSeries(mainMain, valores, 6);
         }
-        
+
         JFreeChart barrita = ChartFactory.createHistogram(mainMain, xLabb, "",
                 info, PlotOrientation.VERTICAL, false, false, false);
 
         int ancho = 720;
         int alto = 550;
-        File archivo = new File("C:\\Users\\sharolin\\Desktop\\ReporteArbol\\" + mainMain + ".jpeg");
+        Random rand = new Random();
+        int randomNum = rand.nextInt((100000 - 10) + 1) + 10;
+        File archivo = new File("C:\\Users\\sharolin\\Desktop\\ReporteArbol\\" + mainMain + String.valueOf(randomNum) + ".jpeg");
         ChartUtilities.saveChartAsJPEG(archivo, barrita, ancho, alto);
 
-        return "C:\\Users\\sharolin\\Desktop\\ReporteArbol\\" + mainMain + ".jpeg";
+        return "C:\\Users\\sharolin\\Desktop\\ReporteArbol\\" + mainMain + String.valueOf(randomNum) + ".jpeg";
 
     }
 

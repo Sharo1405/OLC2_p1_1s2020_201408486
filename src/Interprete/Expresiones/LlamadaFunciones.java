@@ -21,6 +21,7 @@ import Interprete.Expresiones.Retorno2;
 import Interprete.Instrucciones.GraficasArit.Barras;
 import Interprete.Instrucciones.GraficasArit.Histograma;
 import Interprete.Instrucciones.GraficasArit.Pie;
+import Interprete.Instrucciones.GraficasArit.PlotGeneral;
 import Interprete.Instrucciones.Retorno;
 import Interprete.NodoError;
 import java.util.ArrayList;
@@ -237,18 +238,17 @@ public class LlamadaFunciones implements Expresion {
             } else if (idFuncion.toLowerCase().equals("pie")) {
                 Pie piesito = new Pie(Parametros, getLinea(), getColumna());
                 piesito.ejecutar(tablaDeSimbolos, listas);
-                
+
             } else if (idFuncion.toLowerCase().equals("barplot")) {
                 Barras piesito = new Barras(Parametros, getLinea(), getColumna());
                 piesito.ejecutar(tablaDeSimbolos, listas);
-            }else if (idFuncion.toLowerCase().equals("plot")) {
-                
-            }else if (idFuncion.toLowerCase().equals("hist")) {                
-                
+            } else if (idFuncion.toLowerCase().equals("plot")) {
+                PlotGeneral plot = new PlotGeneral(Parametros, getLinea(), getColumna());
+                plot.ejecutar(tablaDeSimbolos, listas);
+            } else if (idFuncion.toLowerCase().equals("hist")) {
                 Histograma h = new Histograma(Parametros, getLinea(), getColumna());
                 h.ejecutar(tablaDeSimbolos, listas);
-                
-            }else {
+            } else {
                 //FUNCIONES CREADAS POR UNO MISMO
 
                 Simbolo si = tablaDeSimbolos.get(getIdFuncion(), tablaDeSimbolos, Simbolo.Rol.FUNCION);
