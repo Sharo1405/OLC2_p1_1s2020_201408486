@@ -347,7 +347,14 @@ public class PlotGeneral extends Operacion implements Instruccion {
                         && tipoXlabYlab.equals(Operacion.tipoDato.STRING)
                         && tipoYlabMain.equals(Operacion.tipoDato.STRING)
                         && (tipoMainYlim.equals(Operacion.tipoDato.ENTERO) || tipoMainYlim.equals(Operacion.tipoDato.DECIMAL))) {
-                    //listas.nombresGraficas.add(CrearGraficaDispersion(VV, typeXlabbbb, xLabYlabbbb, yLabMainnnn, mainYlimmmm));
+                    //validando Ylim
+                    if (mainYlimmmm.size() != 2) {
+                        listas.errores.add(new NodoError(getLinea(), getColumna(), NodoError.tipoError.Semantico,
+                                "Parametro yLim no valido para realizar el PLOT debe de ser de tamaño 2 y no lo es"));
+                        return Operacion.tipoDato.ERRORSEMANTICO;
+                    }
+                    //validando Ylim  
+                    listas.nombresGraficas.add(CrearGraficaDispersion(VV, typeXlabbbb, xLabYlabbbb, yLabMainnnn, mainYlimmmm));
                 } else {
                     listas.errores.add(new NodoError(getLinea(), getColumna(), NodoError.tipoError.Semantico,
                             "Parametros no validos para realizar el PLOT"));
@@ -513,20 +520,109 @@ public class PlotGeneral extends Operacion implements Instruccion {
         r.setSeriesPaint(0, new Color(255, 60, 80));
     }
 
-    /*public String CrearGraficaDispersion(ArrayList<Object> mat, ArrayList<Object> xlab,
-            ArrayList<Object> ylab, ArrayList<Object> main, ArrayList<Object> ylim) {
+    public String CrearGraficaDispersion(ArrayList<Object> mat, ArrayList<Object> xlab,
+            ArrayList<Object> ylab, ArrayList<Object> main, ArrayList<Object> ylim) throws IOException {
 
         String mainMain = "";
+        if (main.size() == 1) {
+            Object sd = main.get(0);
+            mainMain = String.valueOf(sd);
+        } else {
+            ArrayList<Object> m = (ArrayList<Object>) main.get(0);
+            Object mm = m.get(0);
+            mainMain = String.valueOf(mm);
+        }
+
+        String xlabs = "";
+        if (xlab.size() == 1) {
+            Object sd = xlab.get(0);
+            xlabs = String.valueOf(sd);
+        } else {
+            ArrayList<Object> m = (ArrayList<Object>) xlab.get(0);
+            Object mm = m.get(0);
+            xlabs = String.valueOf(mm);
+        }
+
+        String ylabs = "";
+        if (ylab.size() == 1) {
+            Object sd = ylab.get(0);
+            ylabs = String.valueOf(sd);
+        } else {
+            ArrayList<Object> m = (ArrayList<Object>) ylab.get(0);
+            Object mm = m.get(0);
+            ylabs = String.valueOf(mm);
+        }
+
+        XYSeriesCollection info = new XYSeriesCollection();
+        XYSeries serie1 = new XYSeries("Linea");
+        double inferior = 1.0;
+        double superior = 5.0;
+
+        double yLimiteInferior = 0.0;
+        double yLimiteSuperior = 0.0;
+
+        ArrayList<Object> primero = (ArrayList<Object>) ylim.get(0);
+        Object p = primero.get(0);
+        yLimiteInferior = Double.parseDouble(String.valueOf(p));
+
+        ArrayList<Object> segundo = (ArrayList<Object>) ylim.get(1);
+        Object sp = segundo.get(0);
+        yLimiteSuperior = Double.parseDouble(String.valueOf(sp));
+
+        if (mat.size() == 1) {
+            Object dcimal = mat.get(0);
+            double dcimal2 = Double.parseDouble(String.valueOf(dcimal));
+            serie1.add(1, dcimal2);
+        } else {
+            double sup = 0;
+            double inf = 0;
+            for (int i = 0; i < mat.size(); i++) {
+                ArrayList<Object> array = (ArrayList<Object>) mat.get(i);
+                Object mult = array.get(0);
+                double dc = Double.parseDouble(String.valueOf(mult));
+                if (yLimiteInferior <= dc && yLimiteSuperior >= dc) {
+                    if (dc > sup) {
+                        sup = dc;
+                    }
+
+                    if (dc < inf) {
+                        inf = dc;
+                    }
+
+                    serie1.add(i + 1, dc);
+                }
+            }
+            //paraEjeX = paraEjeX / V.size();
+            inferior = inf;
+            superior = sup;
+        }
+        info.addSeries(serie1);
+
+        JFreeChart lineas = ChartFactory.createXYLineChart(mainMain, xlabs, ylabs, info, PlotOrientation.VERTICAL, true, false, false);
+
+        lineas.setBackgroundPaint(Color.white);
+        XYPlot setPuntos = (XYPlot) lineas.getPlot();
+        cuadricula(setPuntos);
+
+        NumberAxis ejex = (NumberAxis) setPuntos.getDomainAxis();
+        pintarNumeroEjeX(ejex, 1.0);
+
+        NumberAxis ejey = (NumberAxis) setPuntos.getRangeAxis();
+        pintarNumeroEjeY(ejey, inferior, superior);
+
+        XYLineAndShapeRenderer r = (XYLineAndShapeRenderer) setPuntos.getRenderer();
+        pintarPuntos(r);
 
         int ancho = 720;
         int alto = 550;
         Random rand = new Random();
         int randomNum = rand.nextInt((100000 - 10) + 1) + 10;
         File archivo = new File("C:\\Users\\sharolin\\Desktop\\ReporteArbol\\" + mainMain + String.valueOf(randomNum) + ".jpeg");
-        ChartUtilities.saveChartAsJPEG(archivo, barrita, ancho, alto);
+        ChartUtilities.saveChartAsJPEG(archivo, lineas, ancho, alto);
 
         return "C:\\Users\\sharolin\\Desktop\\ReporteArbol\\" + mainMain + String.valueOf(randomNum) + ".jpeg";
-    }*/
+    }
+
     /**
      * @return the parametro
      */
