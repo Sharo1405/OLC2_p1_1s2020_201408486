@@ -8,6 +8,7 @@ package Interprete.Expresiones;
 import Interprete.Entorno.Entorno;
 import Interprete.ErrorImpresion;
 import Interprete.Expresiones.Retorno2;
+import java.util.ArrayList;
 import java.util.LinkedList;
 
 /**
@@ -31,23 +32,29 @@ public class EDerechaParentesis implements Expresion {
 
     @Override
     public Object getValue(Entorno tablaDeSimbolos, ErrorImpresion listas) {
-        Object dvuleo2 = valor.getValue(tablaDeSimbolos, listas);
-        if (dvuleo2 instanceof Retorno2) {
-            Retorno2 r = (Retorno2) dvuleo2;
-            dvuleo2 = r.getValue(tablaDeSimbolos, listas);
+        if (valor != null) {
+            Object dvuleo2 = valor.getValue(tablaDeSimbolos, listas);
+            if (dvuleo2 instanceof Retorno2) {
+                Retorno2 r = (Retorno2) dvuleo2;
+                dvuleo2 = r.getValue(tablaDeSimbolos, listas);
+                return dvuleo2;
+            }
             return dvuleo2;
         }
-        return dvuleo2;
+        return new ArrayList<Object>();
     }
 
     @Override
     public Operacion.tipoDato getType(Entorno tablaDeSimbolos, ErrorImpresion listas) {
-        Object dvuleo2 = valor.getValue(tablaDeSimbolos, listas);
-        if (dvuleo2 instanceof Retorno2) {
-            Retorno2 r = (Retorno2) dvuleo2;
-            return r.getType(tablaDeSimbolos, listas);
+        if (valor != null) {
+            Object dvuleo2 = valor.getValue(tablaDeSimbolos, listas);
+            if (dvuleo2 instanceof Retorno2) {
+                Retorno2 r = (Retorno2) dvuleo2;
+                return r.getType(tablaDeSimbolos, listas);
+            }
+            return valor.getType(tablaDeSimbolos, listas);
         }
-        return valor.getType(tablaDeSimbolos, listas);
+        return Operacion.tipoDato.ERRORSEMANTICO;
     }
 
     /**

@@ -559,6 +559,8 @@ public class Identificador extends Entorno implements Expresion {
                                                     sdsa = accesosVector(tablaDeSimbolos, listas, arree, expreDERECHA);
                                                     if (sdsa instanceof ArrayList) {
                                                         arree = (ArrayList<Object>) sdsa;
+                                                    } else if (sdsa instanceof Simbolo) {
+                                                        return sdsa;
                                                     } else if (sdsa instanceof Operacion.tipoDato) {
                                                         return Operacion.tipoDato.ERRORSEMANTICO;
                                                     }
@@ -569,9 +571,12 @@ public class Identificador extends Entorno implements Expresion {
                                             if (sdsa != null) {
                                                 if (sdsa instanceof Simbolo) {
                                                     arree = (ArrayList<Object>) ((Simbolo) sdsa).getValor();
+
                                                     sdsa = accesosVector(tablaDeSimbolos, listas, arree, expreDERECHA);
                                                     if (sdsa instanceof ArrayList) {
                                                         arree = (ArrayList<Object>) sdsa;
+                                                    } else if (sdsa instanceof Simbolo) {
+                                                        return sdsa;
                                                     } else if (sdsa instanceof Operacion.tipoDato) {
                                                         return Operacion.tipoDato.ERRORSEMANTICO;
                                                     }
@@ -580,6 +585,8 @@ public class Identificador extends Entorno implements Expresion {
                                                     sdsa = accesosVector(tablaDeSimbolos, listas, arree, expreDERECHA);
                                                     if (sdsa instanceof ArrayList) {
                                                         arree = (ArrayList<Object>) sdsa;
+                                                    } else if (sdsa instanceof Simbolo) {
+                                                        return sdsa;
                                                     } else if (sdsa instanceof Operacion.tipoDato) {
                                                         return Operacion.tipoDato.ERRORSEMANTICO;
                                                     }
@@ -728,7 +735,13 @@ public class Identificador extends Entorno implements Expresion {
             tipoIndice = indice.getType(tablaDeSimbolos, listas);
         }
         if (tipoIndice.equals(Operacion.tipoDato.ENTERO)) {
-            int inde = (int) dvuleo2;//((ArrayList)indice.getValue(tablaDeSimbolos, listas)).get(0);
+            int inde = -1;
+            if (dvuleo2 instanceof ArrayList) {
+                Object i = ((ArrayList<Object>) dvuleo2).get(0);
+                inde = (int) i;
+            } else {
+                inde = (int) dvuleo2;//((ArrayList)indice.getValue(tablaDeSimbolos, listas)).get(0);
+            }
             if (inde >= 1 && inde <= vector.size()) {
                 if (inde == 1 && vector.size() == 1) {
                     return vector;

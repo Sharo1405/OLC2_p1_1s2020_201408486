@@ -90,7 +90,7 @@ public class Iff implements Instruccion {
                                     return ins;
                                 } else {
                                     Object aal = ins.ejecutar(actual, listas);
-                                    
+
                                     if (aal instanceof Retorno2) {
                                         return aal;
                                     }
@@ -123,7 +123,7 @@ public class Iff implements Instruccion {
 
             if (entro == false && ejecutarELSE != null) {
 
-                Object reto = ejecutarELSE.ejecutar(actual, listas);
+                /*Object reto = ejecutarELSE.ejecutar(actual, listas);
 
                 if (reto instanceof Breakk) {
                     return reto;
@@ -133,7 +133,47 @@ public class Iff implements Instruccion {
                     return reto;
                 } else if (reto instanceof ArrayList) {
                     return reto;
+                }*/
+                if (!(ejecutarELSE instanceof BloqueSentencias)) {
+                    return Operacion.tipoDato.ERRORSEMANTICO;
                 }
+
+                BloqueSentencias bloqueElse = (BloqueSentencias) ejecutarELSE;
+                for (AST nodo : ((LinkedList<AST>) bloqueElse.getListaSentencias())) {
+                    if (nodo instanceof Instruccion) {
+                        Instruccion ins = (Instruccion) nodo;
+                        if (ins instanceof Breakk) {
+                            return ins;
+                        } else if (ins instanceof Continuee) {
+                            return ins;
+                        } else if (ins instanceof Retorno) {//este nunca va a llegar
+                            return ((Retorno) ins).getValue(actual, listas);
+                        } else if (ins instanceof Retorno2) {
+                            return ins;
+                        } else {
+                            Object aal = ins.ejecutar(actual, listas);
+
+                            if (aal instanceof Retorno2) {
+                                return aal;
+                            }
+                        }
+                    } else {//funciones 
+                        Expresion exp = (Expresion) nodo;
+                        if (exp instanceof Retorno) {
+                            return exp.getValue(actual, listas);
+                        } else {
+                            Object aal = exp.getValue(actual, listas);
+
+                            if (aal instanceof Retorno2) {
+                                return aal;
+                            }
+                            /*if (aal instanceof ArrayList) {
+                                        return aal;
+                                    }*/
+                        }
+                    }
+                }
+
             }
             return Operacion.tipoDato.VACIO;
         } catch (Exception e) {

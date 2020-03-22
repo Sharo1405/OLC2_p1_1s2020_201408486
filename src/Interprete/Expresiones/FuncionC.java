@@ -42,8 +42,9 @@ public class FuncionC implements Expresion {
                 Retorno2 r = (Retorno2) dvuleo2;
                 dvuleo2 = r.getValue(tablaDeSimbolos, listas);
                 tipoo = r.getType(tablaDeSimbolos, listas);
+            } else {
+                tipoo = actual.getType(tablaDeSimbolos, listas);
             }
-            tipoo = actual.getType(tablaDeSimbolos, listas);
             switch (tipoo) {
                 case LISTA:
                     return Operacion.tipoDato.LISTA;
@@ -81,9 +82,10 @@ public class FuncionC implements Expresion {
                             ArrayList<Object> areglo = new ArrayList<>();
                             ArrayList<Object> areglo2 = new ArrayList<>();
                             areglo = (ArrayList<Object>) sim.getValor();
+
                             for (Object object1 : areglo) {
                                 if (object1 instanceof Simbolo) {
-
+                                    arreDevolver.add(object1);
                                 } else if (object1 instanceof ArrayList) {
                                     ArrayList<Object> posicion1 = (ArrayList<Object>) object1;
                                     if (posicion1.size() == 1) {
@@ -95,9 +97,12 @@ public class FuncionC implements Expresion {
                                     } else {
                                         for (Object object11 : posicion1) {
                                             arreDevolver.add(object11);
-
                                         }
                                     }
+                                } else {
+                                    ArrayList<Object> nue = new ArrayList<>();
+                                    nue.add(casteoItemsVector(tipoElementosArray, object1));
+                                    arreDevolver.add(nue);
                                 }
                             }
                             //arreDevolver.add(areglo2);
@@ -108,7 +113,8 @@ public class FuncionC implements Expresion {
                         ArrayList<Object> vec = (ArrayList<Object>) sim.getValor();
                         for (Object object1 : vec) {
                             if (object1 instanceof Simbolo) {
-
+                                Simbolo si = (Simbolo) object1;
+                                arreDevolver.add(si.getValor());
                             } else if (object1 instanceof ArrayList) {
                                 ArrayList<Object> posicion1 = (ArrayList<Object>) object1;
                                 if (posicion1.size() == 1) {
@@ -123,13 +129,18 @@ public class FuncionC implements Expresion {
 
                                     }
                                 }
+                            } else {
+                                ArrayList<Object> nue = new ArrayList<>();
+                                nue.add(casteoItemsVector(tipoElementosArray, object1));
+                                arreDevolver.add(nue);
                             }
                         }
                     } else {
                         ArrayList<Object> vec = (ArrayList<Object>) sim.getValor();
                         for (Object object1 : vec) {
                             if (object1 instanceof Simbolo) {
-
+                                Simbolo si = (Simbolo) object1;
+                                arreDevolver.add(si.getValor());
                             } else if (object1 instanceof ArrayList) {
                                 ArrayList<Object> posicion1 = (ArrayList<Object>) object1;
                                 if (posicion1.size() == 1) {
@@ -165,28 +176,33 @@ public class FuncionC implements Expresion {
             }
 
             return arreDevolver;
+        } else if (arrayDevuelto instanceof Simbolo) {
+            return arrayDevuelto;
         }
 
         return Operacion.tipoDato.ERRORSEMANTICO;
     }
 
     public Operacion.tipoDato tipoItemLista(Object array) {
-
-        ArrayList<Object> asdf = (ArrayList<Object>) array;
         ArrayList<Operacion.tipoDato> tipostipos = new ArrayList<>();
-        //recorrer todo el vector
-        for (Object object : asdf) {
-            if (object instanceof Simbolo) {
-                Simbolo s = (Simbolo) object;
-                tipostipos.add(s.getTipoItems());
-            } else {
-                ArrayList<Object> holi = (ArrayList<Object>) object;
-                for (Object object1 : holi) {
-                    tipostipos.add(tipodelItemVector(object1));
+        if (array instanceof Simbolo) {
+            return ((Simbolo) array).getTipoItems();
+        } else {
+            ArrayList<Object> asdf = (ArrayList<Object>) array;
+            
+            //recorrer todo el vector
+            for (Object object : asdf) {
+                if (object instanceof Simbolo) {
+                    Simbolo s = (Simbolo) object;
+                    tipostipos.add(s.getTipoItems());
+                } else {
+                    ArrayList<Object> holi = (ArrayList<Object>) object;
+                    for (Object object1 : holi) {
+                        tipostipos.add(tipodelItemVector(object1));
+                    }
                 }
             }
         }
-
         return tipoResultanteLISTA(tipostipos);
     }
 
@@ -221,10 +237,17 @@ public class FuncionC implements Expresion {
                             Operacion.tipoDato tipoItemsLista = tipoItemLista(v1);
                             //luego retornar un simbolo con toda la info para ser almacenada
                             //v1 = casteoLista(v1, tipoItemsLista, listas);
-                            Simbolo nuevo1 = new Simbolo("", v1, getLinea(), getColumna(), Operacion.tipoDato.LISTA,
-                                    tipoItemsLista, Simbolo.Rol.VARIABLE);
-                            return nuevo1;
-                        //break;
+                            if (v1 instanceof Simbolo) {
+                                Simbolo si = (Simbolo) v1;
+                                Simbolo nuevo1 = new Simbolo("", si, getLinea(), getColumna(), Operacion.tipoDato.LISTA,
+                                        si.getTipoItems(), Simbolo.Rol.VARIABLE);
+                                return nuevo1;
+                            } else {
+                                Simbolo nuevo1 = new Simbolo("", v1, getLinea(), getColumna(), Operacion.tipoDato.LISTA,
+                                        tipoItemsLista, Simbolo.Rol.VARIABLE);
+                                return nuevo1;
+                            }
+                        //return Operacion.tipoDato.ERRORSEMANTICO;
 
                         case VECTOR:
                             //HACER EL VECTOR solo deberia de traer un parentesisi con una lista de expresiones dentro
@@ -345,7 +368,6 @@ public class FuncionC implements Expresion {
                     return Operacion.tipoDato.ERRORSEMANTICO;
                 }
             }
-
             if (arregloNuevo.size() == 1) {
                 for (Object object1 : arregloNuevo) {
                     arreDevolver.add(casteoItemsVector(tipoElementosArray, object1));
@@ -355,9 +377,17 @@ public class FuncionC implements Expresion {
                     ArrayList<Object> posicion = (ArrayList<Object>) object;
                     if (posicion.size() == 1) {
                         for (Object object1 : posicion) {
-                            ArrayList<Object> nue = new ArrayList<>();
-                            nue.add(casteoItemsVector(tipoElementosArray, object1));
-                            arreDevolver.add(nue);
+                            if (object1 instanceof ArrayList) {
+                                ArrayList<Object> v = (ArrayList<Object>) object1;
+                                Object vv = v.get(0);
+                                ArrayList<Object> nue = new ArrayList<>();
+                                nue.add(casteoItemsVector(tipoElementosArray, vv));
+                                arreDevolver.add(nue);
+                            } else {
+                                ArrayList<Object> nue = new ArrayList<>();
+                                nue.add(casteoItemsVector(tipoElementosArray, object1));
+                                arreDevolver.add(nue);
+                            }
                         }
                     } else {
                         for (Object object1 : posicion) {

@@ -244,7 +244,7 @@ SENTENCIATRANSFERENCIA::= continuee:e{:
                         | returnn:e{:
                             RESULT = new Retorno(eleft +1, eright +1);
                         :}
-                        | returnn:ee aparentesis E:e cparentesis{:
+                        | returnn:ee E:e{://aparentesis E:e cparentesis{:
                             RESULT = new Retorno(e, eeleft +1, eeright +1);
                         :};
 
@@ -372,6 +372,12 @@ EDERECHA::= EDERECHA:lista acorchete E:e ccorchete {:
                 RESULT = lista;
                 RESULT.add(cor);
           :}
+          |EDERECHA:lista aparentesis:e cparentesis {: 
+                EDerechaParentesis cor = new EDerechaParentesis(null, eleft +1, eright +1); 
+                RESULT = lista;
+                RESULT.add(cor);
+          :}
+          
 
 
 

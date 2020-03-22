@@ -47,25 +47,25 @@ public class AsignacionCorcheteDoble extends Entorno implements Instruccion {
             Simbolo sim = (Simbolo) valorasignar;
             if (sim.getValor() instanceof ArrayList) { // porque solo se puede meter otro vector
                 ArrayList<Object> ssih = (ArrayList<Object>) sim.getValor();
-                if (ssih.size() != 1) {
+                /*if (ssih.size() != 1) {
                     return Operacion.tipoDato.ERRORSEMANTICO;
-                }
+                }*/
 
-                if (sim.getTipoItems().equals(Operacion.tipoDato.VECTOR)) {
+ /*if (sim.getTipoItems().equals(Operacion.tipoDato.VECTOR)) {
                     if (indice > ((ArrayList) elObjeto).size()) {
                         ArrayList<Object> relleno = rellenarConValores(nuevo, Operacion.tipoDato.LISTA, indice);
                         relleno.add(sim.getValor());
                     } else {
                         nuevo.set(indice - 1, sim.getValor());
                     }
+                } else {*/
+                if (indice > ((ArrayList) elObjeto).size()) {
+                    ArrayList<Object> relleno = rellenarConValores(nuevo, Operacion.tipoDato.LISTA, indice);
+                    relleno.add(sim.getValor());
                 } else {
-                    if (indice > ((ArrayList) elObjeto).size()) {
-                        ArrayList<Object> relleno = rellenarConValores(nuevo, Operacion.tipoDato.LISTA, indice);
-                        relleno.add(sim.getValor());
-                    } else {
-                        nuevo.set(indice - 1, sim.getValor());
-                    }
+                    nuevo.set(indice - 1, sim);
                 }
+                //}
                 return nuevo;
             }
 
@@ -91,10 +91,9 @@ public class AsignacionCorcheteDoble extends Entorno implements Instruccion {
                 ArrayList<Object> nuevo = (ArrayList<Object>) elObjeto;
                 ArrayList<Object> nuevo2 = (ArrayList<Object>) valorasignar;
 
-                if (nuevo2.size() != 1) {
+                /*if (nuevo2.size() != 1) {
                     return Operacion.tipoDato.ERRORSEMANTICO;
-                }
-
+                }*/
                 if (indice > ((ArrayList) elObjeto).size()) {
                     ArrayList<Object> relleno = rellenarConValores(nuevo, Operacion.tipoDato.LISTA, indice);
                     relleno.add(valorasignar);
@@ -291,16 +290,16 @@ public class AsignacionCorcheteDoble extends Entorno implements Instruccion {
 
                 if (sim.getTipo().equals(Operacion.tipoDato.VECTOR)) {
                     ArrayList<Object> vect = (ArrayList<Object>) sim.getValor();
-                    if (vect.size() > 1) {
+                    /*if (vect.size() > 1) {
                         return Operacion.tipoDato.ERRORSEMANTICO;
+                    } else {*/
+                    if (indice > ((ArrayList) elObjeto).size()) {
+                        ArrayList<Object> relleno = rellenarConValores(nuevo, tipo, indice);
+                        relleno.add(sim.getValor());
                     } else {
-                        if (indice > ((ArrayList) elObjeto).size()) {
-                            ArrayList<Object> relleno = rellenarConValores(nuevo, tipo, indice);
-                            relleno.add(sim.getValor());
-                        } else {
-                            nuevo.set(indice - 1, sim.getValor());
-                        }
+                        nuevo.set(indice - 1, sim.getValor());
                     }
+                    //}
                 } else {
                     if (indice > ((ArrayList) elObjeto).size()) {
                         ArrayList<Object> relleno = rellenarConValores(nuevo, tipo, indice);
@@ -309,15 +308,24 @@ public class AsignacionCorcheteDoble extends Entorno implements Instruccion {
                         nuevo.set(indice - 1, sim.getValor());
                     }
                 }
+            } else if (tipo.equals(Operacion.tipoDato.LISTA)) {
+
+                if (indice > ((ArrayList) elObjeto).size()) {
+                    ArrayList<Object> relleno = rellenarConValores(nuevo, tipo, indice);
+                    relleno.add(sim);
+                } else {
+                    nuevo.set(indice - 1, sim);
+                }
+
             } else {
                 return Operacion.tipoDato.ERRORSEMANTICO;
             }
 
         } else if (elObjeto instanceof ArrayList) {
             ArrayList<Object> val = new ArrayList<>();
-            if (val.size() > 1) {
+            /*if (val.size() > 1) {
                 return Operacion.tipoDato.ERRORSEMANTICO;
-            }
+            }*/
 
             ArrayList<Object> nuevo = (ArrayList<Object>) elObjeto;
             if (indice > ((ArrayList) elObjeto).size()) {
@@ -402,6 +410,7 @@ public class AsignacionCorcheteDoble extends Entorno implements Instruccion {
                     } else {
                         //si trae mas accesos
                         //primero sacar el primero 
+                        tipoSaberSimboloArray = tipoDelId;
                         if (elObtenido instanceof Simbolo) {
                             Simbolo simbolito = (Simbolo) elObtenido;
                             if (simbolito.getValor() instanceof Simbolo) {
@@ -555,6 +564,64 @@ public class AsignacionCorcheteDoble extends Entorno implements Instruccion {
 
                                         elObtenido = saberSimboloArray(elObtenido, indiceFor, 2, false, valorAsi, tipoSaberSimboloArray);
                                     }
+                                }
+
+                                if (elObtenido instanceof Operacion.tipoDato) {
+                                    listas.errores.add(new NodoError(getLinea(), getColumna(), NodoError.tipoError.Semantico,
+                                            "No se pudeo hacer la modificacion a la variable: " + getIdVariable()));
+
+                                    return Operacion.tipoDato.ERRORSEMANTICO;
+                                }
+                                contadorFor++;
+                            }
+
+                        } else if (tipoSaberSimboloArray.equals(Operacion.tipoDato.VECTOR)) {
+
+                            ArrayList<Object> vector = (ArrayList<Object>) elObtenido;
+                            for (Expresion izq : EIzquierda) {
+
+                                if (EIzquierda.size() - 1 == contadorFor) {
+
+                                    if (izq instanceof EIzquierdaCorcheteSimple) {
+                                        EIzquierdaCorcheteSimple cs = (EIzquierdaCorcheteSimple) izq;
+                                        Object asigIndice = cs.getValue(tablaDeSimbolos, listas);
+                                        if (asigIndice instanceof Retorno2) {
+                                            Retorno2 r = (Retorno2) asigIndice;
+                                            asigIndice = r.getValue(tablaDeSimbolos, listas);
+                                            tipoIdiceFor = r.getType(tablaDeSimbolos, listas);
+                                        } else {
+                                            tipoIdiceFor = cs.getType(tablaDeSimbolos, listas);
+                                        }
+
+                                        if (!tipoIdiceFor.equals(Operacion.tipoDato.ENTERO)) {
+                                            listas.errores.add(new NodoError(getLinea(), getColumna(), NodoError.tipoError.Semantico,
+                                                    "El acceso a la variable de id: " + idVariable
+                                                    + " No es posible ya que el tipo del indice no es Entero, sino: "
+                                                    + String.valueOf(tipoIdiceFor)));
+                                            return Operacion.tipoDato.ERRORSEMANTICO;
+                                        }
+
+                                        ArrayList<Object> ss = (ArrayList<Object>) asigIndice;
+                                        Object idn = ss.get(0);
+                                        indiceFor = Integer.parseInt(String.valueOf(idn));
+
+                                        elObtenido = saberSimboloArray(elObtenido, indiceFor, 1, true, valorAsi, tipoSaberSimboloArray);
+
+                                    } else if (izq instanceof EIzquierdaCorcheteDoble) {
+                                        listas.errores.add(new NodoError(getLinea(), getColumna(), NodoError.tipoError.Semantico, "No puede haber un acceso 2 o doble para un vector"));
+                                        return Operacion.tipoDato.ERRORSEMANTICO;
+                                    }
+
+                                    if (elObtenido instanceof Operacion.tipoDato) {
+                                        listas.errores.add(new NodoError(getLinea(), getColumna(), NodoError.tipoError.Semantico,
+                                                "No se pudeo hacer la modificacion a la variable: " + getIdVariable()));
+
+                                        return Operacion.tipoDato.ERRORSEMANTICO;
+                                    }
+
+                                    break;
+                                } else {
+                                    //aqui hiria el [1][1][1][1] devolviendo la misma posicion;
                                 }
 
                                 if (elObtenido instanceof Operacion.tipoDato) {
