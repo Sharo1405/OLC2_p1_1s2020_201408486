@@ -252,7 +252,7 @@ public class ModaTrim extends Operacion implements Expresion {
                         ArrayList<Object> array2 = (ArrayList<Object>) sim.getValor();
 
                         if (tipoE2.equals(Operacion.tipoDato.VECTOR)) {
-                            Object ob = derecho;
+                            Object ob = array2;
                             ArrayList<Object> valDelValor = (ArrayList<Object>) ob;
                             if (valDelValor.size() == 1) {
                                 if (valDelValor.get(0) instanceof ArrayList) {
@@ -262,6 +262,8 @@ public class ModaTrim extends Operacion implements Expresion {
                                     } else {
                                         return Operacion.tipoDato.ERRORSEMANTICO;
                                     }
+                                }else{
+                                    derecho = ob;
                                 }
                             }
 
@@ -296,7 +298,7 @@ public class ModaTrim extends Operacion implements Expresion {
                         ArrayList<Object> array2 = (ArrayList<Object>) sim.getValor();
 
                         if (tipoE2.equals(Operacion.tipoDato.VECTOR)) {
-                            Object ob = derecho;
+                            Object ob = array2;
                             ArrayList<Object> valDelValor = (ArrayList<Object>) ob;
                             if (valDelValor.size() == 1) {
                                 if (valDelValor.get(0) instanceof ArrayList) {
@@ -306,6 +308,8 @@ public class ModaTrim extends Operacion implements Expresion {
                                     } else {
                                         return Operacion.tipoDato.ERRORSEMANTICO;
                                     }
+                                }else{
+                                    derecho = ob;
                                 }
                             }
 

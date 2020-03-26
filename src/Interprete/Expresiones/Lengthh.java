@@ -35,13 +35,19 @@ public class Lengthh implements Expresion {
             if (existente.getTipo().equals(Operacion.tipoDato.LISTA)) {
 
                 ArrayList<Object> nev = new ArrayList<>();
-                return nev.add(((ArrayList) existente.getValor()).size());
+                ArrayList<Object> nev2 = (ArrayList) existente.getValor();
+                Object o = nev2.size();
+                nev.add(o);
+                return nev;                
 
             } else if (existente.getTipo().equals(Operacion.tipoDato.ARRAY)) {
 
             } else {
                 ArrayList<Object> nev = new ArrayList<>();
-                return nev.add(((ArrayList) existente.getValor()).size());
+                ArrayList<Object> nev2 = (ArrayList) existente.getValor();
+                Object o = nev2.size();
+                nev.add(o);
+                return nev;
             }
 
         } else if (obDevuelto instanceof ArrayList) {

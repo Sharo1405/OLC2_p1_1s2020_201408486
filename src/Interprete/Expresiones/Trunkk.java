@@ -30,22 +30,26 @@ public class Trunkk extends Operacion implements Expresion {
     public Object getValue(Entorno tablaDeSimbolos, ErrorImpresion listas) {
         try {
             Object ob = getExp().getValue(tablaDeSimbolos, listas);
-            Operacion.tipoDato tt = Operacion.tipoDato.VACIO;            
+            Operacion.tipoDato tt = Operacion.tipoDato.VACIO;
             if (ob instanceof Retorno2) {
                 ob = ((Retorno2) ob).getValue(tablaDeSimbolos, listas);
-                tt = ((Retorno2) ob).getType(tablaDeSimbolos, listas);                
-            }else{
+                tt = ((Retorno2) ob).getType(tablaDeSimbolos, listas);
+            } else {
                 tt = getExp().getType(tablaDeSimbolos, listas);
             }
-            
+
             if (tt.equals(Operacion.tipoDato.DECIMAL) || tt.equals(Operacion.tipoDato.ENTERO)) {
-                
+
+                ob = obtenerValorSimbolo(ob, tablaDeSimbolos, listas);
                 if (ob instanceof ArrayList) {
 
                     ArrayList<Object> arre = (ArrayList<Object>) ob;
                     Object dd = arre.get(0);
                     Double dou = Double.parseDouble(String.valueOf(dd));
-                    return (int) Math.floor(dou);
+
+                    ArrayList<Object> vect = new ArrayList<>();
+                    vect.add((int) Math.floor(dou));
+                    return vect;
 
                 } else if (ob instanceof Simbolo) {
 
@@ -53,12 +57,17 @@ public class Trunkk extends Operacion implements Expresion {
                     ArrayList<Object> arre = (ArrayList<Object>) sim.getValor();
                     Object dd = arre.get(0);
                     Double dou = Double.parseDouble(String.valueOf(dd));
-                    return (int) Math.floor(dou);
+
+                    ArrayList<Object> vect = new ArrayList<>();
+                    vect.add((int) Math.floor(dou));
+                    return vect;
                 }
 
             } else if (tt.equals(Operacion.tipoDato.VECTOR)) {
 
                 //Object ob = getExp().getValue(tablaDeSimbolos, listas);
+                ob = obtenerValorSimbolo(ob, tablaDeSimbolos, listas);
+                
                 ArrayList<Object> valDelValor = (ArrayList<Object>) ob;
                 if (valDelValor.size() == 1) {
                     if (valDelValor.get(0) instanceof ArrayList) {
@@ -81,10 +90,21 @@ public class Trunkk extends Operacion implements Expresion {
                         ArrayList<Object> arre = (ArrayList<Object>) exp1;
                         Object dd = arre.get(0);
                         Double dou = Double.parseDouble(String.valueOf(dd));
-                        return (int) Math.floor(dou);
+
+                        ArrayList<Object> vect = new ArrayList<>();
+                        vect.add((int) Math.floor(dou));
+                        return vect;
 
                     } else {
-                        return Operacion.tipoDato.ERRORSEMANTICO;
+                        ArrayList<Object> arre = (ArrayList<Object>) exp1;
+                        Object dd = arre.get(0);
+                        ArrayList<Object> v = (ArrayList<Object>) dd;
+                        Object orteo = v.get(0);
+                        Double dou = Double.parseDouble(String.valueOf(orteo));
+
+                        ArrayList<Object> vect = new ArrayList<>();
+                        vect.add((int) Math.floor(dou));
+                        return vect;
                     }
                 }
             }

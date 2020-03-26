@@ -36,8 +36,8 @@ public class Listas implements Expresion {
             Object listaRetorno = new Object();
             Object o = getExp().getValue(tablaDeSimbolos, listas);
             Operacion.tipoDato ti = Operacion.tipoDato.VACIO;
-            if (o instanceof Retorno) {
-                Retorno r = (Retorno) o;
+            if (o instanceof Retorno2) {
+                Retorno2 r = (Retorno2) o;
                 o = r.getValue(tablaDeSimbolos, listas);
                 ti = r.getType(tablaDeSimbolos, listas);
             } else {

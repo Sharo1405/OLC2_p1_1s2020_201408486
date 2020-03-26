@@ -16,7 +16,7 @@ import java.util.LinkedList;
  *
  * @author sharolin
  */
-public class Booleano implements Expresion{
+public class Booleano implements Expresion{    
     private ArrayList<Object> valor = new ArrayList<>();
     private Operacion.tipoDato tipo;
     private int linea;

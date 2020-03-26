@@ -419,7 +419,7 @@ public class GUI extends javax.swing.JFrame {
 
 
     private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem5ActionPerformed
-        //ANALIZAR EL FS
+        //ANALIZAR 
         int entro = 0;
         System.out.println("Inicia la evaluacion de cadena...");
         JPanel pan = (JPanel) jTabbedPane1.getSelectedComponent();

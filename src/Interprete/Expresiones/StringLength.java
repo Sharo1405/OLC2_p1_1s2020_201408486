@@ -31,8 +31,8 @@ public class StringLength extends Operacion implements Expresion {
     public Object getValue(Entorno tablaDeSimbolos, ErrorImpresion listas) {
 
         try {
-            Object obj = getExp().getValue(tablaDeSimbolos, listas);            
-            Operacion.tipoDato ti = Operacion.tipoDato.VACIO;            
+            Object obj = getExp().getValue(tablaDeSimbolos, listas);
+            Operacion.tipoDato ti = Operacion.tipoDato.VACIO;
             if (obj instanceof Retorno2) {
                 Retorno2 r = (Retorno2) obj;
                 obj = r.getValue(tablaDeSimbolos, listas);
@@ -40,25 +40,42 @@ public class StringLength extends Operacion implements Expresion {
             } else {
                 ti = getExp().getType(tablaDeSimbolos, listas);
             }
-            
-            
+
             if (ti.equals(Operacion.tipoDato.STRING)) {
-                
+
                 if (obj instanceof Simbolo) {
                     Simbolo sim = (Simbolo) obj;
                     ArrayList<Object> zzz = (ArrayList<Object>) sim.getValor();
                     String cad = String.valueOf(zzz.get(0));
-                    return cad.length();
+
+                    ArrayList<Object> vect = new ArrayList<>();
+                    vect.add(cad.length());
+                    return vect;
 
                 } else if (obj instanceof ArrayList) {
                     ArrayList<Object> zzz = (ArrayList<Object>) obj;
-                    String cad = String.valueOf(zzz.get(0));
-                    return cad.length();
+                    String cad ="";
+                    if(zzz.size() > 1){
+                        Object oc = zzz.get(0);
+                        ArrayList<Object> ss = (ArrayList<Object>) oc;
+                        cad = String.valueOf(ss.get(0));
+                    }else{
+                        cad = String.valueOf(zzz.get(0));
+                    }
+                    
+
+                    ArrayList<Object> vect = new ArrayList<>();
+                    vect.add(cad.length());
+                    return vect;
 
                 }
-            }else if (ti.equals(Operacion.tipoDato.VECTOR)) {
+            } else if (ti.equals(Operacion.tipoDato.VECTOR)) {
 
                 //Object ob = getExp().getValue(tablaDeSimbolos, listas);
+                
+                obj = obtenerValorSimbolo(obj, tablaDeSimbolos, listas);
+                
+                
                 ArrayList<Object> valDelValor = (ArrayList<Object>) obj;
                 if (valDelValor.size() == 1) {
                     if (valDelValor.get(0) instanceof ArrayList) {
@@ -80,7 +97,11 @@ public class StringLength extends Operacion implements Expresion {
 
                         for (Object object : exp1) {
                             String sd = String.valueOf(object);
-                            return sd.length();
+                            //return sd.length();
+
+                            ArrayList<Object> vect = new ArrayList<>();
+                            vect.add(sd.length());
+                            return vect;
                         }
 
                     } else {
@@ -93,7 +114,10 @@ public class StringLength extends Operacion implements Expresion {
 
                             }
                         }
-                        return sd.length();
+
+                        ArrayList<Object> vect = new ArrayList<>();
+                        vect.add(sd.length());
+                        return vect;
                     }
                 }
             }

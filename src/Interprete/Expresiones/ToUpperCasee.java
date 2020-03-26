@@ -46,7 +46,9 @@ public class ToUpperCasee extends Operacion implements Expresion {
                     Object dev = ar.get(0);
                     String sd = String.valueOf(dev);
 
-                    return sd.toUpperCase();
+                    ArrayList<Object> vect = new ArrayList<>();
+                    vect.add(sd.toUpperCase());
+                    return vect;
 
                 } else if (objt instanceof Simbolo) {
                     Simbolo si = (Simbolo) objt;
@@ -54,11 +56,15 @@ public class ToUpperCasee extends Operacion implements Expresion {
                     Object dev = ar.get(0);
                     String sd = String.valueOf(dev);
 
-                    return sd.toUpperCase();
+                    ArrayList<Object> vect = new ArrayList<>();
+                    vect.add(sd.toUpperCase());
+                    return vect;
                 }
 
             } else if (tt.equals(Operacion.tipoDato.VECTOR)) {
 
+                objt = obtenerValorSimbolo(objt, tablaDeSimbolos, listas);
+                
                 //Object ob = getExp().getValue(tablaDeSimbolos, listas);
                 ArrayList<Object> valDelValor = (ArrayList<Object>) objt;
                 if (valDelValor.size() == 1) {
@@ -81,7 +87,10 @@ public class ToUpperCasee extends Operacion implements Expresion {
 
                         for (Object object : exp1) {
                             String sd = String.valueOf(object);
-                            return sd.toUpperCase();
+
+                            ArrayList<Object> vect = new ArrayList<>();
+                            vect.add(sd.toUpperCase());
+                            return vect;
                         }
 
                     } else {
@@ -94,7 +103,10 @@ public class ToUpperCasee extends Operacion implements Expresion {
 
                             }
                         }
-                        return sd.toUpperCase();
+                        
+                        ArrayList<Object> vect = new ArrayList<>();
+                        vect.add(sd.toUpperCase());
+                        return vect;
                     }
                 }
             }

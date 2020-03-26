@@ -41,12 +41,15 @@ public class Roundd extends Operacion implements Expresion {
 
             if (tt.equals(Operacion.tipoDato.DECIMAL) || tt.equals(Operacion.tipoDato.ENTERO)) {
 
+                 ob = obtenerValorSimbolo(ob, tablaDeSimbolos, listas);
                 if (ob instanceof ArrayList) {
 
                     ArrayList<Object> arre = (ArrayList<Object>) ob;
                     Object dd = arre.get(0);
                     Double dou = Double.parseDouble(String.valueOf(dd));
-                    return (int) Math.round(dou);
+                    ArrayList<Object> vect = new ArrayList<>();
+                    vect.add((int) Math.round(dou));
+                    return vect;
 
                 } else if (ob instanceof Simbolo) {
 
@@ -54,11 +57,15 @@ public class Roundd extends Operacion implements Expresion {
                     ArrayList<Object> arre = (ArrayList<Object>) sim.getValor();
                     Object dd = arre.get(0);
                     Double dou = Double.parseDouble(String.valueOf(dd));
-                    return (int) Math.round(dou);
+
+                    ArrayList<Object> vect = new ArrayList<>();
+                    vect.add((int) Math.round(dou));
+                    return vect;
                 }
 
             } else if (tt.equals(Operacion.tipoDato.VECTOR)) {
 
+                 ob = obtenerValorSimbolo(ob, tablaDeSimbolos, listas);
                 //Object ob = getExp().getValue(tablaDeSimbolos, listas);
                 ArrayList<Object> valDelValor = (ArrayList<Object>) ob;
                 if (valDelValor.size() == 1) {
@@ -81,11 +88,22 @@ public class Roundd extends Operacion implements Expresion {
 
                         ArrayList<Object> arre = (ArrayList<Object>) exp1;
                         Object dd = arre.get(0);
-                        Double dou = Double.parseDouble(String.valueOf(dd));
-                        return (int) Math.round(dou);
+                        Double dou = Double.parseDouble(String.valueOf(dd));                        
+
+                        ArrayList<Object> vect = new ArrayList<>();
+                        vect.add((int) Math.round(dou));
+                        return vect;
 
                     } else {
-                        return Operacion.tipoDato.ERRORSEMANTICO;
+                        ArrayList<Object> arre = (ArrayList<Object>) exp1;
+                        Object dd = arre.get(0);
+                        ArrayList<Object> v = (ArrayList<Object>) dd;
+                        Object orteo = v.get(0);
+                        Double dou = Double.parseDouble(String.valueOf(orteo));
+
+                        ArrayList<Object> vect = new ArrayList<>();
+                        vect.add((int) Math.round(dou));
+                        return vect;
                     }
                 }
             }

@@ -15,7 +15,7 @@ import java.util.ArrayList;
  *
  * @author sharolin
  */
-public class ToLowerCasee extends Operacion implements Expresion{
+public class ToLowerCasee extends Operacion implements Expresion {
 
     private Expresion exp;
 
@@ -25,39 +25,45 @@ public class ToLowerCasee extends Operacion implements Expresion{
     public ToLowerCasee(Expresion exp) {
         this.exp = exp;
     }
-        
-    
+
     @Override
     public Object getValue(Entorno tablaDeSimbolos, ErrorImpresion listas) {
         try {
             Object objt = getExp().getValue(tablaDeSimbolos, listas);
-            Operacion.tipoDato tt = Operacion.tipoDato.VACIO;            
+            Operacion.tipoDato tt = Operacion.tipoDato.VACIO;
             if (objt instanceof Retorno2) {
                 objt = ((Retorno2) objt).getValue(tablaDeSimbolos, listas);
-                tt = ((Retorno2) objt).getType(tablaDeSimbolos, listas);                
-            }else{
+                tt = ((Retorno2) objt).getType(tablaDeSimbolos, listas);
+            } else {
                 tt = getExp().getType(tablaDeSimbolos, listas);
             }
-            
-            
-            if(tt.equals(Operacion.tipoDato.STRING)){
-                
-                if(objt instanceof ArrayList){
+
+            if (tt.equals(Operacion.tipoDato.STRING)) {
+
+                if (objt instanceof ArrayList) {
                     ArrayList<Object> ar = (ArrayList<Object>) objt;
                     Object dev = ar.get(0);
                     String sd = String.valueOf(dev);
-                    
-                    return sd.toLowerCase();                                       
-                }else if(objt instanceof Simbolo){
+
+                    ArrayList<Object> vect = new ArrayList<>();
+                    vect.add(sd.toLowerCase());
+                    return vect;
+
+                } else if (objt instanceof Simbolo) {
                     Simbolo si = (Simbolo) objt;
                     ArrayList<Object> ar = (ArrayList<Object>) si.getValor();
                     Object dev = ar.get(0);
                     String sd = String.valueOf(dev);
-                    return sd.toLowerCase();  
-                }
-                
-            }else if (tt.equals(Operacion.tipoDato.VECTOR)) {
 
+                    ArrayList<Object> vect = new ArrayList<>();
+                    vect.add(sd.toLowerCase());
+                    return vect;
+                }
+
+            } else if (tt.equals(Operacion.tipoDato.VECTOR)) {
+
+                objt = obtenerValorSimbolo(objt, tablaDeSimbolos, listas);
+                
                 ArrayList<Object> valDelValor = (ArrayList<Object>) objt;
                 if (valDelValor.size() == 1) {
                     if (valDelValor.get(0) instanceof ArrayList) {
@@ -79,7 +85,10 @@ public class ToLowerCasee extends Operacion implements Expresion{
 
                         for (Object object : exp1) {
                             String sd = String.valueOf(object);
-                            return sd.toLowerCase();
+
+                            ArrayList<Object> vect = new ArrayList<>();
+                            vect.add(sd.toLowerCase());
+                            return vect;
                         }
 
                     } else {
@@ -92,11 +101,14 @@ public class ToLowerCasee extends Operacion implements Expresion{
 
                             }
                         }
-                        return sd.toLowerCase();
+
+                        ArrayList<Object> vect = new ArrayList<>();
+                        vect.add(sd.toLowerCase());
+                        return vect;
                     }
                 }
             }
-            
+
         } catch (Exception e) {
             System.out.println("Error en la clase ToLowerCasee getValue()");
         }
