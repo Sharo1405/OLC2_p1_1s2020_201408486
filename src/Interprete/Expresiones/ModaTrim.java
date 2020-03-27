@@ -359,7 +359,7 @@ public class ModaTrim extends Operacion implements Expresion {
 
     @Override
     public Operacion.tipoDato getType(Entorno tablaDeSimbolos, ErrorImpresion listas) {
-        return Operacion.tipoDato.ERRORSEMANTICO;
+        return Operacion.tipoDato.DECIMAL;
     }
 
     /**
