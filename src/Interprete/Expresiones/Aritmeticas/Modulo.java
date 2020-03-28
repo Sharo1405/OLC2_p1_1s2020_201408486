@@ -156,7 +156,7 @@ public class Modulo extends Operacion implements Expresion {
                     ArrayList<Object> vectorParaDevolver = new ArrayList<>();
                     switch (tipoResultante) {
                         case DECIMAL:
-                            if (Integer.parseInt(String.valueOf(ob2)) == 0) {
+                            if (Double.parseDouble(String.valueOf(ob2)) == 0) {
                                 listas.errores.add(new NodoError(getLinea(), getColumna(), NodoError.tipoError.Semantico,
                                         "No se puede divirdir entre 0 una expresion"));
                                 return Operacion.tipoDato.ERRORSEMANTICO;
@@ -189,7 +189,7 @@ public class Modulo extends Operacion implements Expresion {
                             for (int i = 0; i < normal.size(); i++) {
                                 Object ob = normal.get(i);
                                 ArrayList<Object> item = new ArrayList<>();
-                                if (Integer.parseInt(String.valueOf(ob2)) == 0) {
+                                if (Double.parseDouble(String.valueOf(ob2)) == 0) {
                                     listas.errores.add(new NodoError(getLinea(), getColumna(), NodoError.tipoError.Semantico,
                                             "No se puede divirdir entre 0 una expresion"));
                                     return Operacion.tipoDato.ERRORSEMANTICO;
@@ -229,7 +229,7 @@ public class Modulo extends Operacion implements Expresion {
                             for (int i = 0; i < normal2.size(); i++) {
                                 Object ob2 = normal2.get(i);
                                 ArrayList<Object> item = new ArrayList<>();
-                                if (Integer.parseInt(String.valueOf(ob2)) == 0) {
+                                if (Double.parseDouble(String.valueOf(ob2)) == 0) {
                                     listas.errores.add(new NodoError(getLinea(), getColumna(), NodoError.tipoError.Semantico,
                                             "No se puede divirdir entre 0 una expresion"));
                                     return Operacion.tipoDato.ERRORSEMANTICO;
@@ -271,7 +271,7 @@ public class Modulo extends Operacion implements Expresion {
                                 Object ob = normal.get(i);
                                 Object ob2 = normal2.get(i);
                                 ArrayList<Object> item = new ArrayList<>();
-                                if (Integer.parseInt(String.valueOf(ob2)) == 0) {
+                                if (Double.parseDouble(String.valueOf(ob2)) == 0) {
                                     listas.errores.add(new NodoError(getLinea(), getColumna(), NodoError.tipoError.Semantico,
                                             "No se puede divirdir entre 0 una expresion"));
                                     return Operacion.tipoDato.ERRORSEMANTICO;
