@@ -1221,8 +1221,8 @@ public class Identificador extends Operacion implements Expresion {
 
                 //aqui solo buscar el valor dentro de la matris [fila,columna]
                 //sacando columna
-                ArrayList<Object> columna = (ArrayList<Object>) arree.get(col);
-                Object objetodelamatriz = columna.get(filas);
+                ArrayList<Object> columna = (ArrayList<Object>) arree.get(col - 1);
+                Object objetodelamatriz = columna.get(filas - 1);
 
                 return objetodelamatriz;
 

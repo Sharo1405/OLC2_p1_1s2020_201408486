@@ -142,7 +142,7 @@ public class ACorcheteComaE extends Operacion implements Instruccion {
                     valorvalor = ((Retorno2) valorvalor).getValue(tablaDeSimbolos, listas);
                     tipovalovalor = ((Retorno2) valorvalor).getType(tablaDeSimbolos, listas);
                 } else {
-                    tipovalovalor = tuex.getType(tablaDeSimbolos, listas);
+                    tipovalovalor = valorAsignar.getType(tablaDeSimbolos, listas);
                 }
 
                 if (tipovalovalor.equals(Operacion.tipoDato.MATRIZ)
