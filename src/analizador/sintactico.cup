@@ -276,10 +276,18 @@ FACTORIZANDO::= id:id igual FUNCIONESMETODOSDECLARACIONES:v {:
                     RESULT = new Factorizando_id_igual(id.toLowerCase(), v, idleft +1, idright +1);
                 :}
 
-               |id acorchete E coma ccorchete igual E{::}
-               |id acorchete coma E ccorchete igual E{::} 
-               |id acorchete E coma ccorchete igual E puntoycoma{::}
-               |id acorchete coma E ccorchete igual E puntoycoma{::} 
+               |id:id acorchete E:e coma ccorchete igual E:ee{:
+                    RESULT = new ACorcheteEcoma(id, e, ee, idleft +1, idright +1);
+                :}
+               |id:id acorchete coma E:e ccorchete igual E:ee{:
+                    RESULT = new ACorcheteComaE(id, e, ee, idleft +1, idright +1);
+                :} 
+               |id:id acorchete E:e coma ccorchete igual E:ee puntoycoma{:
+                    RESULT = new ACorcheteEcoma(id, e, ee, idleft +1, idright +1);
+                :}
+               |id:id acorchete coma E:e ccorchete igual E:ee puntoycoma{:
+                    RESULT = new ACorcheteComaE(id, e, ee, idleft +1, idright +1);
+                :} 
 
                |id:id aparentesis E:e cparentesis{:
                     RESULT = new LlamadaFunciones(id.toLowerCase(), e, idleft +1, idright +1);
