@@ -13,9 +13,8 @@ import java.util.LinkedList;
  *
  * @author sharolin
  */
-public class EDerechaCorcheteEcoma implements Expresion{
+public class EDerechaCorcheteEcoma implements Expresion {
 
-    
     private Expresion valor;
     private int linea;
     private int columna;
@@ -28,16 +27,25 @@ public class EDerechaCorcheteEcoma implements Expresion{
         this.linea = linea;
         this.columna = columna;
     }
-    
-    
-    
+
     @Override
     public Object getValue(Entorno tablaDeSimbolos, ErrorImpresion listas) {
-        return valor.getValue(tablaDeSimbolos, listas);
+        Object dvuleo2 = valor.getValue(tablaDeSimbolos, listas);
+        if (dvuleo2 instanceof Retorno2) {
+            Retorno2 r = (Retorno2) dvuleo2;
+            dvuleo2 = r.getValue(tablaDeSimbolos, listas);
+            return dvuleo2;
+        }
+        return dvuleo2;
     }
 
     @Override
     public Operacion.tipoDato getType(Entorno tablaDeSimbolos, ErrorImpresion listas) {
+        Object dvuleo2 = valor.getValue(tablaDeSimbolos, listas);
+        if (dvuleo2 instanceof Retorno2) {
+            Retorno2 r = (Retorno2) dvuleo2;
+            return r.getType(tablaDeSimbolos, listas);
+        }
         return valor.getType(tablaDeSimbolos, listas);
     }
 
@@ -82,5 +90,5 @@ public class EDerechaCorcheteEcoma implements Expresion{
     public void setColumna(int columna) {
         this.columna = columna;
     }
-    
+
 }

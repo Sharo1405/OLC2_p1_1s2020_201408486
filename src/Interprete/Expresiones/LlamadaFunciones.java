@@ -212,6 +212,10 @@ public class LlamadaFunciones implements Expresion {
                             break;
 
                         case MATRIZ:
+                            String concatenaMatriz = "";
+                            ConcatenaMatriz ma = new ConcatenaMatriz(imp2);
+                            concatenaMatriz = String.valueOf(ma.ejecutar(tablaDeSimbolos, listas));
+                            listas.impresiones.add(concatenaMatriz);
                             break;
 
                         case ARRAY:

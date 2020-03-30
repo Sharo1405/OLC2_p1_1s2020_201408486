@@ -18,7 +18,7 @@ import java.util.LinkedList;
  *
  * @author sharolin
  */
-public class Identificador extends Entorno implements Expresion {
+public class Identificador extends Operacion implements Expresion {
 
     private String id;
     private ArrayList<Expresion> EDerecha = new ArrayList<>();
@@ -106,7 +106,32 @@ public class Identificador extends Entorno implements Expresion {
                         //break;
 
                         case "matrix":
-                            break;
+                            if (EDerecha.size() == 1) {
+                                Expresion expre = EDerecha.get(0);
+                                if (expre instanceof EDerechaParentesis) {
+                                    Matriz fc = new Matriz(expre, getLinea(), getColumna());
+                                    Object o = fc.getValue(tablaDeSimbolos, listas);
+                                    if (o instanceof Retorno2) {
+                                        o = ((Retorno2) o).getValue(tablaDeSimbolos, listas);
+                                    }
+                                    if (o instanceof Operacion.tipoDato) {
+                                        listas.errores.add(new NodoError(getLinea(), getColumna(), NodoError.tipoError.Semantico,
+                                                "Parametro no valido para la funcion Matrix(), el tipo pude ser lo invalido"));
+                                        return Operacion.tipoDato.ERRORSEMANTICO;
+                                    }
+                                    return o;
+
+                                } else {
+                                    listas.errores.add(new NodoError(getLinea(), getColumna(), NodoError.tipoError.Semantico,
+                                            "La funcion Matrix no es valida"));
+                                    return Operacion.tipoDato.ERRORSEMANTICO;
+                                }
+                            } else {
+                                listas.errores.add(new NodoError(getLinea(), getColumna(), NodoError.tipoError.Semantico,
+                                        "La funcion Matrix no es valida"));
+                                return Operacion.tipoDato.ERRORSEMANTICO;
+                            }
+                        //break;
 
                         case "array":
                             break;
@@ -507,7 +532,7 @@ public class Identificador extends Entorno implements Expresion {
                     //vector: [1,2,3,4,5] -> acceso: vector[1][2][1]
 
                     ArrayList<Object> arree = new ArrayList<>();
-                    Simbolo sim = this.get(getId(), tablaDeSimbolos, Simbolo.Rol.VARIABLE);
+                    Simbolo sim = tablaDeSimbolos.get(getId(), tablaDeSimbolos, Simbolo.Rol.VARIABLE);
 
                     if (sim != null) {
                         Object sdsa = sim.getValor();
@@ -601,6 +626,30 @@ public class Identificador extends Entorno implements Expresion {
                                         break;
 
                                     case MATRIZ:
+                                        if (expreDERECHA instanceof EDerechaCorcheteSimple) {
+                                            //este puede traer 2 numero o solo 1                                            
+                                            if (sdsa != null) {
+                                                if (sdsa instanceof Simbolo) {
+                                                    ArrayList<Object> nuevo = new ArrayList<>();
+                                                    nuevo.add(sdsa);
+                                                    arree = nuevo;
+                                                } else {
+                                                    arree = (ArrayList<Object>) sdsa;
+                                                    sdsa = accesoDobleSimpleMatriz(tablaDeSimbolos, listas, arree, expreDERECHA);
+                                                    if (sdsa instanceof ArrayList) {
+                                                        arree = (ArrayList<Object>) sdsa;
+                                                    } else if (sdsa instanceof Simbolo) {
+                                                        return sdsa;
+                                                    } else if (sdsa instanceof Operacion.tipoDato) {
+                                                        return Operacion.tipoDato.ERRORSEMANTICO;
+                                                    }
+                                                }
+                                            }
+                                        } else if (expreDERECHA instanceof EDerechaComaE) {
+
+                                        } else if (expreDERECHA instanceof EDerechaCorcheteEcoma) {
+
+                                        }
 
                                         break;
 
@@ -625,7 +674,7 @@ public class Identificador extends Entorno implements Expresion {
                 }
             } else {
                 //variable normal guardada en tabla de simbolos
-                Simbolo sim = this.get(getId(), tablaDeSimbolos, Simbolo.Rol.VARIABLE);
+                Simbolo sim = tablaDeSimbolos.get(getId(), tablaDeSimbolos, Simbolo.Rol.VARIABLE);
                 return sim.getValor();
 
             }
@@ -646,7 +695,7 @@ public class Identificador extends Entorno implements Expresion {
 
                     Expresion ss = sim;//EDerecha.get(0);
                     if (ss instanceof EDerechaParentesis) {
-                        Simbolo encontrado = this.get(getId(), tablaDeSimbolos, Simbolo.Rol.FUNCION);
+                        Simbolo encontrado = tablaDeSimbolos.get(getId(), tablaDeSimbolos, Simbolo.Rol.FUNCION);
                         if (encontrado != null) {
                             /*if (encontrado.getRol().equals(Simbolo.Rol.FUNCION)) {
                                 EDerechaParentesis parametros = (EDerechaParentesis) EDerecha.get(0);
@@ -668,7 +717,7 @@ public class Identificador extends Entorno implements Expresion {
                         }
                     } else if (ss instanceof EDerechaCorcheteSimple) {//[]
 
-                        Simbolo encontrado = this.get(getId(), tablaDeSimbolos, Simbolo.Rol.VARIABLE);
+                        Simbolo encontrado = tablaDeSimbolos.get(getId(), tablaDeSimbolos, Simbolo.Rol.VARIABLE);
                         if (encontrado != null) {
                             //tipoDvolvergetTYpe = encontrado.getTipo();
                             Operacion.tipoDato u = encontrado.getTipo();
@@ -676,6 +725,8 @@ public class Identificador extends Entorno implements Expresion {
                                 tipoDvolvergetTYpe = Operacion.tipoDato.VECTOR;
                             } else if (u.equals(Operacion.tipoDato.LISTA)) {
                                 tipoDvolvergetTYpe = Operacion.tipoDato.LISTA;
+                            } else if (u.equals(Operacion.tipoDato.MATRIZ)) {
+                                tipoDvolvergetTYpe = Operacion.tipoDato.VECTOR;
                             }
                         } else if (encontrado == null) {
                             listas.errores.add(new NodoError(getLinea(), getColumna(), NodoError.tipoError.Semantico, "El id " + getId()
@@ -684,7 +735,7 @@ public class Identificador extends Entorno implements Expresion {
                         }
 
                     } else if (ss instanceof EDerechaCorcheteDoble) {//[ [] ]
-                        Simbolo encontrado = this.get(getId(), tablaDeSimbolos, Simbolo.Rol.VARIABLE);
+                        Simbolo encontrado = tablaDeSimbolos.get(getId(), tablaDeSimbolos, Simbolo.Rol.VARIABLE);
                         if (encontrado != null) {
                             //tipoDvolvergetTYpe = encontrado.getTipo();
                             tipoDvolvergetTYpe = Operacion.tipoDato.VECTOR;
@@ -695,7 +746,7 @@ public class Identificador extends Entorno implements Expresion {
                             return Operacion.tipoDato.ERRORSEMANTICO;
                         }
                     } else {
-                        Simbolo encontrado = this.get(getId(), tablaDeSimbolos, Simbolo.Rol.VARIABLE);
+                        Simbolo encontrado = tablaDeSimbolos.get(getId(), tablaDeSimbolos, Simbolo.Rol.VARIABLE);
                         if (encontrado != null) {
                             tipoDvolvergetTYpe = encontrado.getTipoItems();
                         } else if (encontrado == null) {
@@ -708,7 +759,7 @@ public class Identificador extends Entorno implements Expresion {
                 return tipoDvolvergetTYpe;
             } else {
                 //solo variables
-                Simbolo encontrado = this.get(getId(), tablaDeSimbolos, Simbolo.Rol.VARIABLE);
+                Simbolo encontrado = tablaDeSimbolos.get(getId(), tablaDeSimbolos, Simbolo.Rol.VARIABLE);
                 if (encontrado != null) {
                     return encontrado.getTipo();
                 } else {
@@ -720,6 +771,303 @@ public class Identificador extends Entorno implements Expresion {
 
         } catch (Exception e) {
             System.out.println("Error en la clase Identificador");
+        }
+        return Operacion.tipoDato.ERRORSEMANTICO;
+    }
+
+    private void obtenerLista(Expresion expre1, Expresion expre2, Entorno tablaDeSimbolos, ErrorImpresion listas,
+            LinkedList<Expresion> listaParas) {
+
+        if (expre1 instanceof Comas) {
+            Comas coma = (Comas) expre1;
+            obtenerLista(coma.getExpresion1(), coma.getExpresion2(), tablaDeSimbolos, listas, listaParas);
+            listaParas.add(expre2);
+        } else {
+            listaParas.add(expre1);
+            listaParas.add(expre2);
+        }
+    }
+
+    public Object accesoDobleSimpleMatriz(Entorno tablaDeSimbolos, ErrorImpresion listas, ArrayList<Object> arree, Expresion expreDERECHA) {
+
+        EDerechaCorcheteSimple cor = (EDerechaCorcheteSimple) expreDERECHA;
+        Object co = cor.getValor();
+        LinkedList<Expresion> listaParas = new LinkedList<>();
+        if (co instanceof Comas) {
+            Comas c = (Comas) co;
+            obtenerLista(c.getExpresion1(), c.getExpresion2(), tablaDeSimbolos, listas, listaParas);
+        } else {
+            listaParas.add((Expresion) co);
+        }
+
+        if (listaParas.size() == 2) {
+            return accesoDobleMATRIX(tablaDeSimbolos, listas, listaParas, arree);
+        } else if (listaParas.size() == 1) {
+            return accesoSimpleMATRIX(tablaDeSimbolos, listas, listaParas, arree);
+        } else {
+            listas.errores.add(new NodoError(getLinea(), getColumna(),
+                    NodoError.tipoError.Semantico, "La cantidad de paremetros para el acceso de una Matriz no es valido"));
+        }
+
+        return null;
+    }
+
+    public Object accesoDobleMATRIX(Entorno tablaDeSimbolos, ErrorImpresion listas,
+            LinkedList<Expresion> listaParas, ArrayList<Object> arree) {
+
+        try {
+            Object lafila = listaParas.get(0).getValue(tablaDeSimbolos, listas);
+            Operacion.tipoDato tipoLaFila = Operacion.tipoDato.VACIO;
+            if (lafila instanceof Retorno2) {
+                lafila = ((Retorno2) lafila).getValue(tablaDeSimbolos, listas);
+                tipoLaFila = ((Retorno2) lafila).getType(tablaDeSimbolos, listas);
+            } else {
+                tipoLaFila = listaParas.get(0).getType(tablaDeSimbolos, listas);
+            }
+
+            Object lacolumna = listaParas.get(1).getValue(tablaDeSimbolos, listas);
+            Operacion.tipoDato tipoLaColumna = Operacion.tipoDato.VACIO;
+            if (lacolumna instanceof Retorno2) {
+                lacolumna = ((Retorno2) lacolumna).getValue(tablaDeSimbolos, listas);
+                tipoLaColumna = ((Retorno2) lacolumna).getType(tablaDeSimbolos, listas);
+            } else {
+                tipoLaColumna = listaParas.get(1).getType(tablaDeSimbolos, listas);
+            }
+
+            if ((tipoLaFila.equals(Operacion.tipoDato.ENTERO) || tipoLaFila.equals(Operacion.tipoDato.VECTOR))
+                    && (tipoLaColumna.equals(Operacion.tipoDato.ENTERO) || tipoLaColumna.equals(Operacion.tipoDato.VECTOR))) {
+
+                lafila = obtenerValorSimbolo(lafila, tablaDeSimbolos, listas);
+                lacolumna = obtenerValorSimbolo(lacolumna, tablaDeSimbolos, listas);
+
+                ArrayList<Object> valorNROW = new ArrayList<>();
+                ArrayList<Object> valorNCOL = new ArrayList<>();
+
+                if (tipoLaFila.equals(Operacion.tipoDato.VECTOR)) {
+                    ArrayList<Object> array1 = (ArrayList<Object>) lafila;
+                    Operacion.tipoDato tipoV1 = this.todoLosTipos(array1);
+                    if (tipoV1.equals(Operacion.tipoDato.ERRORSEMANTICO)) {
+                        listas.errores.add(new NodoError(getLinea(), getColumna(), NodoError.tipoError.Semantico,
+                                "El tipo de la Expreion para nrow no es valida para realizar la Matriz()"));
+                        return Operacion.tipoDato.ERRORSEMANTICO;
+                    }
+
+                    ArrayList<Object> valDelValor = (ArrayList<Object>) lafila;
+                    if (valDelValor.size() == 1) {
+                        if (valDelValor.get(0) instanceof ArrayList) {
+                            ArrayList<Object> veeeee = (ArrayList<Object>) valDelValor.get(0);
+                            if (veeeee.size() == 1) {
+                                lafila = veeeee;
+                            } else {
+                                listas.errores.add(new NodoError(getLinea(), getColumna(), NodoError.tipoError.Semantico,
+                                        "El tipo de la Expreion para nrow no es valida para realizar la Matriz()"));
+                                return Operacion.tipoDato.ERRORSEMANTICO;
+                            }
+                        }
+                    }
+
+                    FuncionC fc = new FuncionC();
+                    Object obj = fc.casteoVector(lafila, tipoV1, listas);
+                    if (obj instanceof ArrayList) {
+                        valorNROW = (ArrayList<Object>) obj;
+                    } else {
+                        listas.errores.add(new NodoError(getLinea(), getColumna(), NodoError.tipoError.Semantico,
+                                "El tipo de la Expreion para nrow no es valida para realizar la Matriz()"));
+                        return Operacion.tipoDato.ERRORSEMANTICO;
+                    }
+
+                    tipoLaFila = this.adivinaTipoValorVECTORTIPOTIPOTIPO(valorNROW);
+                } else {
+                    valorNROW = (ArrayList<Object>) lafila;
+                }
+
+                if (!tipoLaFila.equals(Operacion.tipoDato.ENTERO)) {
+                    listas.errores.add(new NodoError(getLinea(), getColumna(), NodoError.tipoError.Semantico,
+                            "El tipo de la Expreion para nrow no es valida para realizar la Matriz(), ya que debe ser tipo Entero"));
+                    return Operacion.tipoDato.ERRORSEMANTICO;
+                }
+
+                if (tipoLaColumna.equals(Operacion.tipoDato.VECTOR)) {
+                    ArrayList<Object> array1 = (ArrayList<Object>) lacolumna;
+                    Operacion.tipoDato tipoV1 = this.todoLosTipos(array1);
+                    if (tipoV1.equals(Operacion.tipoDato.ERRORSEMANTICO)) {
+                        listas.errores.add(new NodoError(getLinea(), getColumna(), NodoError.tipoError.Semantico,
+                                "El tipo de la Expreion 1 no es valida para realizar la SUMA"));
+                        return Operacion.tipoDato.ERRORSEMANTICO;
+                    }
+
+                    ArrayList<Object> valDelValor = (ArrayList<Object>) lacolumna;
+                    if (valDelValor.size() == 1) {
+                        if (valDelValor.get(0) instanceof ArrayList) {
+                            ArrayList<Object> veeeee = (ArrayList<Object>) valDelValor.get(0);
+                            if (veeeee.size() == 1) {
+                                lacolumna = veeeee;
+                            } else {
+                                listas.errores.add(new NodoError(getLinea(), getColumna(), NodoError.tipoError.Semantico,
+                                        "El tipo de la Expreion 1 no es valida para realizar la SUMA"));
+                                return Operacion.tipoDato.ERRORSEMANTICO;
+                            }
+                        }
+                    }
+
+                    FuncionC fc = new FuncionC();
+                    Object obj = fc.casteoVector(lacolumna, tipoV1, listas);
+                    if (obj instanceof ArrayList) {
+                        valorNCOL = (ArrayList<Object>) obj;
+                    } else {
+                        listas.errores.add(new NodoError(getLinea(), getColumna(), NodoError.tipoError.Semantico,
+                                "El tipo de la Expreion 1 no es valida para realizar la SUMA"));
+                        return Operacion.tipoDato.ERRORSEMANTICO;
+                    }
+
+                    tipoLaColumna = this.adivinaTipoValorVECTORTIPOTIPOTIPO(valorNCOL);
+                } else {
+                    valorNCOL = (ArrayList<Object>) lacolumna;
+                }
+
+                if (!tipoLaColumna.equals(Operacion.tipoDato.ENTERO)) {
+                    listas.errores.add(new NodoError(getLinea(), getColumna(), NodoError.tipoError.Semantico,
+                            "El tipo de la Expreion para nCol no es valida para realizar la Matriz(), ya que debe ser tipo Entero"));
+                    return Operacion.tipoDato.ERRORSEMANTICO;
+                }
+
+                //aqui sacar los indices
+                int filas = 0;
+                int col = 0;
+                if (valorNROW.size() > 1) {
+                    Object uno = valorNROW.get(0);
+                    ArrayList<Object> dos = (ArrayList<Object>) uno;
+                    Object tres = dos.get(0);
+                    filas = Integer.parseInt(String.valueOf(tres));
+                } else {
+                    Object uno = valorNROW.get(0);
+                    filas = Integer.parseInt(String.valueOf(uno));
+                }
+
+                if (valorNCOL.size() > 1) {
+                    Object uno = valorNCOL.get(0);
+                    ArrayList<Object> dos = (ArrayList<Object>) uno;
+                    Object tres = dos.get(0);
+                    col = Integer.parseInt(String.valueOf(tres));
+                } else {
+                    Object uno = valorNCOL.get(0);
+                    col = Integer.parseInt(String.valueOf(uno));
+                }
+
+                //aqui solo buscar el valor dentro de la matris [fila,columna]
+                //sacando columna
+                ArrayList<Object> columna = (ArrayList<Object>) arree.get(col);
+                Object objetodelamatriz = columna.get(filas);
+
+                return objetodelamatriz;
+
+            } else {
+                listas.errores.add(new NodoError(getLinea(), getColumna(), NodoError.tipoError.Semantico,
+                        "Parametros para el acceso a la matriz no son validos"));
+            }
+        } catch (Exception e) {
+            listas.errores.add(new NodoError(getLinea(), getColumna(),
+                    NodoError.tipoError.Semantico, "Parametros no validos para el acceso a la Matriz"));
+            return Operacion.tipoDato.ERRORSEMANTICO;
+        }
+        return Operacion.tipoDato.ERRORSEMANTICO;
+    }
+
+    public Object accesoSimpleMATRIX(Entorno tablaDeSimbolos, ErrorImpresion listas,
+            LinkedList<Expresion> listaParas, ArrayList<Object> arree) {
+        try {
+            Object lafila = listaParas.get(0).getValue(tablaDeSimbolos, listas);
+            Operacion.tipoDato tipoLaFila = Operacion.tipoDato.VACIO;
+            if (lafila instanceof Retorno2) {
+                lafila = ((Retorno2) lafila).getValue(tablaDeSimbolos, listas);
+                tipoLaFila = ((Retorno2) lafila).getType(tablaDeSimbolos, listas);
+            } else {
+                tipoLaFila = listaParas.get(0).getType(tablaDeSimbolos, listas);
+            }
+
+            if (tipoLaFila.equals(Operacion.tipoDato.ENTERO) || tipoLaFila.equals(Operacion.tipoDato.VECTOR)) {
+
+                lafila = obtenerValorSimbolo(lafila, tablaDeSimbolos, listas);
+
+                ArrayList<Object> valorNROW = new ArrayList<>();
+
+                if (tipoLaFila.equals(Operacion.tipoDato.VECTOR)) {
+                    ArrayList<Object> array1 = (ArrayList<Object>) lafila;
+                    Operacion.tipoDato tipoV1 = this.todoLosTipos(array1);
+                    if (tipoV1.equals(Operacion.tipoDato.ERRORSEMANTICO)) {
+                        listas.errores.add(new NodoError(getLinea(), getColumna(), NodoError.tipoError.Semantico,
+                                "El tipo de la Expreion para nrow no es valida para realizar la Matriz()"));
+                        return Operacion.tipoDato.ERRORSEMANTICO;
+                    }
+
+                    ArrayList<Object> valDelValor = (ArrayList<Object>) lafila;
+                    if (valDelValor.size() == 1) {
+                        if (valDelValor.get(0) instanceof ArrayList) {
+                            ArrayList<Object> veeeee = (ArrayList<Object>) valDelValor.get(0);
+                            if (veeeee.size() == 1) {
+                                lafila = veeeee;
+                            } else {
+                                listas.errores.add(new NodoError(getLinea(), getColumna(), NodoError.tipoError.Semantico,
+                                        "El tipo de la Expreion para nrow no es valida para realizar la Matriz()"));
+                                return Operacion.tipoDato.ERRORSEMANTICO;
+                            }
+                        }
+                    }
+
+                    FuncionC fc = new FuncionC();
+                    Object obj = fc.casteoVector(lafila, tipoV1, listas);
+                    if (obj instanceof ArrayList) {
+                        valorNROW = (ArrayList<Object>) obj;
+                    } else {
+                        listas.errores.add(new NodoError(getLinea(), getColumna(), NodoError.tipoError.Semantico,
+                                "El tipo de la Expreion para nrow no es valida para realizar la Matriz()"));
+                        return Operacion.tipoDato.ERRORSEMANTICO;
+                    }
+
+                    tipoLaFila = this.adivinaTipoValorVECTORTIPOTIPOTIPO(valorNROW);
+                } else {
+                    valorNROW = (ArrayList<Object>) lafila;
+                }
+
+                if (!tipoLaFila.equals(Operacion.tipoDato.ENTERO)) {
+                    listas.errores.add(new NodoError(getLinea(), getColumna(), NodoError.tipoError.Semantico,
+                            "El tipo de la Expreion para nrow no es valida para realizar la Matriz(), ya que debe ser tipo Entero"));
+                    return Operacion.tipoDato.ERRORSEMANTICO;
+                }
+
+                //aqui sacar los indices
+                int filas = 0;
+                if (valorNROW.size() > 1) {
+                    Object uno = valorNROW.get(0);
+                    ArrayList<Object> dos = (ArrayList<Object>) uno;
+                    Object tres = dos.get(0);
+                    filas = Integer.parseInt(String.valueOf(tres));
+                } else {
+                    Object uno = valorNROW.get(0);
+                    filas = Integer.parseInt(String.valueOf(uno));
+                }
+
+                int contador = 0;
+                Object objetodelamatriz = new Object();
+                for (int i = 0; i < arree.size(); i++) {
+                    ArrayList<Object> columna = (ArrayList<Object>) arree.get(i);
+                    for (int j = 0; j < columna.size(); j++) {
+                        if (contador == (filas - 1)) {
+                            objetodelamatriz = columna.get(j);
+                            return objetodelamatriz;
+                        }
+                        contador++;
+                    }
+                }
+
+            } else {
+                listas.errores.add(new NodoError(getLinea(), getColumna(), NodoError.tipoError.Semantico,
+                        "Parametros para el acceso a la matriz no son validos"));
+            }
+        } catch (Exception e) {
+            listas.errores.add(new NodoError(getLinea(), getColumna(),
+                    NodoError.tipoError.Semantico, "Parametros no validos para el acceso a la Matriz"));
+            return Operacion.tipoDato.ERRORSEMANTICO;
         }
         return Operacion.tipoDato.ERRORSEMANTICO;
     }

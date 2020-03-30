@@ -60,6 +60,11 @@ public class Ejecutar extends Entorno {
         Simbolo si14 = new Simbolo("median", null, 0, 0, Operacion.tipoDato.DECIMAL, Simbolo.Rol.FUNCION, ParaRetorno, ParaRetorno);
         Simbolo si15 = new Simbolo("mode", null, 0, 0, Operacion.tipoDato.DECIMAL, Simbolo.Rol.FUNCION, ParaRetorno, ParaRetorno);
         Simbolo s16 = new Simbolo("list", null, 0, 0, Operacion.tipoDato.LISTA, Simbolo.Rol.FUNCION, ParaRetorno, ParaRetorno);
+        LinkedList<Expresion> ParaRetorno2 = new LinkedList<>();
+        ParaRetorno2.add(new Cadena());
+        ParaRetorno2.add(new Cadena());
+        ParaRetorno2.add(new Cadena());
+        Simbolo s17 = new Simbolo("matrix", null, 0, 0, Operacion.tipoDato.MATRIZ, Simbolo.Rol.FUNCION, ParaRetorno, ParaRetorno);
 
         this.setSimbolo("print", si, tablaDeSimbolos);
         this.setSimbolo("c", si2, tablaDeSimbolos);
@@ -77,5 +82,6 @@ public class Ejecutar extends Entorno {
         this.setSimbolo("median", si14, tablaDeSimbolos);
         this.setSimbolo("mode", si15, tablaDeSimbolos);
         this.setSimbolo("list", s16, tablaDeSimbolos);
+        this.setSimbolo("matrix", s17, tablaDeSimbolos);
     }
 }
