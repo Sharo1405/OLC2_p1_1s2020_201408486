@@ -637,7 +637,7 @@ public class Identificador extends Operacion implements Expresion {
                                                     arree = (ArrayList<Object>) sdsa;
                                                     sdsa = accesoDobleSimpleMatriz(tablaDeSimbolos, listas, arree, expreDERECHA);
                                                     if (sdsa instanceof ArrayList) {
-                                                        arree = (ArrayList<Object>) sdsa;
+                                                        return (ArrayList<Object>) sdsa;
                                                     } else if (sdsa instanceof Simbolo) {
                                                         return sdsa;
                                                     } else if (sdsa instanceof Operacion.tipoDato) {
@@ -646,9 +646,41 @@ public class Identificador extends Operacion implements Expresion {
                                                 }
                                             }
                                         } else if (expreDERECHA instanceof EDerechaComaE) {
-
+                                            if (sdsa != null) {
+                                                if (sdsa instanceof Simbolo) {
+                                                    ArrayList<Object> nuevo = new ArrayList<>();
+                                                    nuevo.add(sdsa);
+                                                    arree = nuevo;
+                                                } else {
+                                                    arree = (ArrayList<Object>) sdsa;
+                                                    sdsa = accesoAcorcheteComaEMATRIZ(tablaDeSimbolos, listas, arree, expreDERECHA);
+                                                    if (sdsa instanceof ArrayList) {
+                                                        return (ArrayList<Object>) sdsa;
+                                                    } else if (sdsa instanceof Simbolo) {
+                                                        return sdsa;
+                                                    } else if (sdsa instanceof Operacion.tipoDato) {
+                                                        return Operacion.tipoDato.ERRORSEMANTICO;
+                                                    }
+                                                }
+                                            }
                                         } else if (expreDERECHA instanceof EDerechaCorcheteEcoma) {
-
+                                            if (sdsa != null) {
+                                                if (sdsa instanceof Simbolo) {
+                                                    ArrayList<Object> nuevo = new ArrayList<>();
+                                                    nuevo.add(sdsa);
+                                                    arree = nuevo;
+                                                } else {
+                                                    arree = (ArrayList<Object>) sdsa;
+                                                    sdsa = accesoAcorcheteEComaMATRIZ(tablaDeSimbolos, listas, arree, expreDERECHA);
+                                                    if (sdsa instanceof ArrayList) {
+                                                        return (ArrayList<Object>) sdsa;
+                                                    } else if (sdsa instanceof Simbolo) {
+                                                        return sdsa;
+                                                    } else if (sdsa instanceof Operacion.tipoDato) {
+                                                        return Operacion.tipoDato.ERRORSEMANTICO;
+                                                    }
+                                                }
+                                            }
                                         }
 
                                         break;
@@ -730,7 +762,7 @@ public class Identificador extends Operacion implements Expresion {
                             }
                         } else if (encontrado == null) {
                             listas.errores.add(new NodoError(getLinea(), getColumna(), NodoError.tipoError.Semantico, "El id " + getId()
-                                    + " No existe como Funcion para Ejecutar"));
+                                    + " No existe para Ejecutar"));
                             return Operacion.tipoDato.ERRORSEMANTICO;
                         }
 
@@ -742,7 +774,37 @@ public class Identificador extends Operacion implements Expresion {
 
                         } else if (encontrado == null) {
                             listas.errores.add(new NodoError(getLinea(), getColumna(), NodoError.tipoError.Semantico, "El id " + getId()
-                                    + " No existe como Funcion para Ejecutar"));
+                                    + " No existe para Ejecutar"));
+                            return Operacion.tipoDato.ERRORSEMANTICO;
+                        }
+                    } else if (ss instanceof EDerechaComaE) {
+                        Simbolo encontrado = tablaDeSimbolos.get(getId(), tablaDeSimbolos, Simbolo.Rol.VARIABLE);
+                        if (encontrado != null) {
+                            //tipoDvolvergetTYpe = encontrado.getTipo();
+                            Operacion.tipoDato u = encontrado.getTipo();
+                            if (u.equals(Operacion.tipoDato.MATRIZ)) {
+                                tipoDvolvergetTYpe = Operacion.tipoDato.VECTOR;
+                            } else {
+                                return Operacion.tipoDato.ERRORSEMANTICO;
+                            }
+                        } else if (encontrado == null) {
+                            listas.errores.add(new NodoError(getLinea(), getColumna(), NodoError.tipoError.Semantico, "El id " + getId()
+                                    + " No existe para Ejecutar"));
+                            return Operacion.tipoDato.ERRORSEMANTICO;
+                        }
+                    } else if (ss instanceof EDerechaCorcheteEcoma) {
+                        Simbolo encontrado = tablaDeSimbolos.get(getId(), tablaDeSimbolos, Simbolo.Rol.VARIABLE);
+                        if (encontrado != null) {
+                            //tipoDvolvergetTYpe = encontrado.getTipo();
+                            Operacion.tipoDato u = encontrado.getTipo();
+                            if (u.equals(Operacion.tipoDato.MATRIZ)) {
+                                tipoDvolvergetTYpe = Operacion.tipoDato.VECTOR;
+                            } else {
+                                return Operacion.tipoDato.ERRORSEMANTICO;
+                            }
+                        } else if (encontrado == null) {
+                            listas.errores.add(new NodoError(getLinea(), getColumna(), NodoError.tipoError.Semantico, "El id " + getId()
+                                    + " No existe para Ejecutar"));
                             return Operacion.tipoDato.ERRORSEMANTICO;
                         }
                     } else {
@@ -785,6 +847,209 @@ public class Identificador extends Operacion implements Expresion {
         } else {
             listaParas.add(expre1);
             listaParas.add(expre2);
+        }
+    }
+
+    public Object accesoAcorcheteEComaMATRIZ(Entorno tablaDeSimbolos, ErrorImpresion listas,
+            ArrayList<Object> arree, Expresion expreDERECHA) {
+        try {
+            EDerechaCorcheteEcoma acceso = (EDerechaCorcheteEcoma) expreDERECHA;
+            Expresion tuex = acceso.getValor();
+            if (tuex instanceof Comas) {
+                listas.errores.add(new NodoError(getLinea(), getColumna(), NodoError.tipoError.Semantico,
+                        "El parametro para acceder a las columnas de una matriz no es valido"));
+            }
+
+            Object lafila = tuex.getValue(tablaDeSimbolos, listas);
+            Operacion.tipoDato tipoLaFila = Operacion.tipoDato.VACIO;
+            if (lafila instanceof Retorno2) {
+                lafila = ((Retorno2) lafila).getValue(tablaDeSimbolos, listas);
+                tipoLaFila = ((Retorno2) lafila).getType(tablaDeSimbolos, listas);
+            } else {
+                tipoLaFila = tuex.getType(tablaDeSimbolos, listas);
+            }
+
+            if (tipoLaFila.equals(Operacion.tipoDato.ENTERO) || tipoLaFila.equals(Operacion.tipoDato.VECTOR)) {
+
+                lafila = obtenerValorSimbolo(lafila, tablaDeSimbolos, listas);
+
+                ArrayList<Object> valorNROW = new ArrayList<>();
+
+                if (tipoLaFila.equals(Operacion.tipoDato.VECTOR)) {
+                    ArrayList<Object> array1 = (ArrayList<Object>) lafila;
+                    Operacion.tipoDato tipoV1 = this.todoLosTipos(array1);
+                    if (tipoV1.equals(Operacion.tipoDato.ERRORSEMANTICO)) {
+                        listas.errores.add(new NodoError(getLinea(), getColumna(), NodoError.tipoError.Semantico,
+                                "El tipo de la Expreion para nrow no es valida para realizar la Matriz()"));
+                        return Operacion.tipoDato.ERRORSEMANTICO;
+                    }
+
+                    ArrayList<Object> valDelValor = (ArrayList<Object>) lafila;
+                    if (valDelValor.size() == 1) {
+                        if (valDelValor.get(0) instanceof ArrayList) {
+                            ArrayList<Object> veeeee = (ArrayList<Object>) valDelValor.get(0);
+                            if (veeeee.size() == 1) {
+                                lafila = veeeee;
+                            } else {
+                                listas.errores.add(new NodoError(getLinea(), getColumna(), NodoError.tipoError.Semantico,
+                                        "El tipo de la Expreion para nrow no es valida para realizar la Matriz()"));
+                                return Operacion.tipoDato.ERRORSEMANTICO;
+                            }
+                        }
+                    }
+
+                    FuncionC fc = new FuncionC();
+                    Object obj = fc.casteoVector(lafila, tipoV1, listas);
+                    if (obj instanceof ArrayList) {
+                        valorNROW = (ArrayList<Object>) obj;
+                    } else {
+                        listas.errores.add(new NodoError(getLinea(), getColumna(), NodoError.tipoError.Semantico,
+                                "El tipo de la Expreion para nrow no es valida para realizar la Matriz()"));
+                        return Operacion.tipoDato.ERRORSEMANTICO;
+                    }
+
+                    tipoLaFila = this.adivinaTipoValorVECTORTIPOTIPOTIPO(valorNROW);
+                } else {
+                    valorNROW = (ArrayList<Object>) lafila;
+                }
+
+                if (!tipoLaFila.equals(Operacion.tipoDato.ENTERO)) {
+                    listas.errores.add(new NodoError(getLinea(), getColumna(), NodoError.tipoError.Semantico,
+                            "El tipo de la Expreion para nrow no es valida para realizar la Matriz(), ya que debe ser tipo Entero"));
+                    return Operacion.tipoDato.ERRORSEMANTICO;
+                }
+
+                //aqui sacar los indices
+                int filas = 0;
+                if (valorNROW.size() > 1) {
+                    Object uno = valorNROW.get(0);
+                    ArrayList<Object> dos = (ArrayList<Object>) uno;
+                    Object tres = dos.get(0);
+                    filas = Integer.parseInt(String.valueOf(tres));
+                } else {
+                    Object uno = valorNROW.get(0);
+                    filas = Integer.parseInt(String.valueOf(uno));
+                }
+
+                //aqui solo buscar el valor dentro de la matris [fila,columna]
+                //sacando columna
+                ArrayList<Object> fila = new ArrayList<>();
+                for (Object object : arree) {
+                    ArrayList columna = (ArrayList<Object>) object;
+                    Object item = columna.get(filas - 1);
+                    fila.add(item);
+                }
+
+                return fila;
+
+            } else {
+                listas.errores.add(new NodoError(getLinea(), getColumna(), NodoError.tipoError.Semantico,
+                        "Parametro no es tipo Entero, por tanto no es valido para acceder a las columnas de una matriz"));
+                return Operacion.tipoDato.ERRORSEMANTICO;
+            }
+
+        } catch (Exception e) {
+            System.out.println("Error en la clase Identificador accesoAcorcheteEComaMatriz()");
+            return Operacion.tipoDato.ERRORSEMANTICO;
+        }
+    }
+
+    public Object accesoAcorcheteComaEMATRIZ(Entorno tablaDeSimbolos, ErrorImpresion listas,
+            ArrayList<Object> arree, Expresion expreDERECHA) {
+        try {
+            EDerechaComaE acceso = (EDerechaComaE) expreDERECHA;
+            Expresion tuex = acceso.getValor();
+            if (tuex instanceof Comas) {
+                listas.errores.add(new NodoError(getLinea(), getColumna(), NodoError.tipoError.Semantico,
+                        "El parametro para acceder a las columnas de una matriz no es valido"));
+            }
+
+            Object lafila = tuex.getValue(tablaDeSimbolos, listas);
+            Operacion.tipoDato tipoLaFila = Operacion.tipoDato.VACIO;
+            if (lafila instanceof Retorno2) {
+                lafila = ((Retorno2) lafila).getValue(tablaDeSimbolos, listas);
+                tipoLaFila = ((Retorno2) lafila).getType(tablaDeSimbolos, listas);
+            } else {
+                tipoLaFila = tuex.getType(tablaDeSimbolos, listas);
+            }
+
+            if (tipoLaFila.equals(Operacion.tipoDato.ENTERO) || tipoLaFila.equals(Operacion.tipoDato.VECTOR)) {
+
+                lafila = obtenerValorSimbolo(lafila, tablaDeSimbolos, listas);
+
+                ArrayList<Object> valorNROW = new ArrayList<>();
+
+                if (tipoLaFila.equals(Operacion.tipoDato.VECTOR)) {
+                    ArrayList<Object> array1 = (ArrayList<Object>) lafila;
+                    Operacion.tipoDato tipoV1 = this.todoLosTipos(array1);
+                    if (tipoV1.equals(Operacion.tipoDato.ERRORSEMANTICO)) {
+                        listas.errores.add(new NodoError(getLinea(), getColumna(), NodoError.tipoError.Semantico,
+                                "El tipo de la Expreion para nrow no es valida para realizar la Matriz()"));
+                        return Operacion.tipoDato.ERRORSEMANTICO;
+                    }
+
+                    ArrayList<Object> valDelValor = (ArrayList<Object>) lafila;
+                    if (valDelValor.size() == 1) {
+                        if (valDelValor.get(0) instanceof ArrayList) {
+                            ArrayList<Object> veeeee = (ArrayList<Object>) valDelValor.get(0);
+                            if (veeeee.size() == 1) {
+                                lafila = veeeee;
+                            } else {
+                                listas.errores.add(new NodoError(getLinea(), getColumna(), NodoError.tipoError.Semantico,
+                                        "El tipo de la Expreion para nrow no es valida para realizar la Matriz()"));
+                                return Operacion.tipoDato.ERRORSEMANTICO;
+                            }
+                        }
+                    }
+
+                    FuncionC fc = new FuncionC();
+                    Object obj = fc.casteoVector(lafila, tipoV1, listas);
+                    if (obj instanceof ArrayList) {
+                        valorNROW = (ArrayList<Object>) obj;
+                    } else {
+                        listas.errores.add(new NodoError(getLinea(), getColumna(), NodoError.tipoError.Semantico,
+                                "El tipo de la Expreion para nrow no es valida para realizar la Matriz()"));
+                        return Operacion.tipoDato.ERRORSEMANTICO;
+                    }
+
+                    tipoLaFila = this.adivinaTipoValorVECTORTIPOTIPOTIPO(valorNROW);
+                } else {
+                    valorNROW = (ArrayList<Object>) lafila;
+                }
+
+                if (!tipoLaFila.equals(Operacion.tipoDato.ENTERO)) {
+                    listas.errores.add(new NodoError(getLinea(), getColumna(), NodoError.tipoError.Semantico,
+                            "El tipo de la Expreion para nrow no es valida para realizar la Matriz(), ya que debe ser tipo Entero"));
+                    return Operacion.tipoDato.ERRORSEMANTICO;
+                }
+
+                //aqui sacar los indices
+                int filas = 0;
+                if (valorNROW.size() > 1) {
+                    Object uno = valorNROW.get(0);
+                    ArrayList<Object> dos = (ArrayList<Object>) uno;
+                    Object tres = dos.get(0);
+                    filas = Integer.parseInt(String.valueOf(tres));
+                } else {
+                    Object uno = valorNROW.get(0);
+                    filas = Integer.parseInt(String.valueOf(uno));
+                }
+
+                //aqui solo buscar el valor dentro de la matris [fila,columna]
+                //sacando columna
+                ArrayList<Object> columna = (ArrayList<Object>) arree.get(filas - 1);
+
+                return columna;
+
+            } else {
+                listas.errores.add(new NodoError(getLinea(), getColumna(), NodoError.tipoError.Semantico,
+                        "Parametro no es tipo Entero, por tanto no es valido para acceder a las columnas de una matriz"));
+                return Operacion.tipoDato.ERRORSEMANTICO;
+            }
+
+        } catch (Exception e) {
+            System.out.println("Error en la clase Identificador accesoAcorcheteComaEMatriz()");
+            return Operacion.tipoDato.ERRORSEMANTICO;
         }
     }
 
