@@ -1336,6 +1336,12 @@ public class Identificador extends Operacion implements Expresion {
         }
         return Operacion.tipoDato.ERRORSEMANTICO;
     }
+    
+    
+    
+    
+    
+    
 
     public Object accesosVector(Entorno tablaDeSimbolos, ErrorImpresion listas, ArrayList vector, Expresion indice) {
 
@@ -1347,6 +1353,11 @@ public class Identificador extends Operacion implements Expresion {
         } else {
             tipoIndice = indice.getType(tablaDeSimbolos, listas);
         }
+        
+        dvuleo2 = hacerLineal(dvuleo2, tablaDeSimbolos, listas, tipoIndice);
+        tipoIndice = hacerLinealTIPO(dvuleo2, tablaDeSimbolos, listas, tipoIndice);
+        
+        
         if (tipoIndice.equals(Operacion.tipoDato.ENTERO)) {
             int inde = -1;
             if (dvuleo2 instanceof ArrayList) {
@@ -1390,6 +1401,11 @@ public class Identificador extends Operacion implements Expresion {
         } else {
             tipoIndice = indice.getType(tablaDeSimbolos, listas); //de este seria [[num]]
         }
+        
+        dvuleo2 = hacerLineal(dvuleo2, tablaDeSimbolos, listas, tipoIndice);
+        tipoIndice = hacerLinealTIPO(dvuleo2, tablaDeSimbolos, listas, tipoIndice);
+        
+        
         if (tipoIndice.equals(Operacion.tipoDato.ENTERO)) {
             int inde = (int) dvuleo2;
             if (inde >= 1 && inde <= vector.size()) {

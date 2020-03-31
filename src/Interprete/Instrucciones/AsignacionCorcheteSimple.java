@@ -55,7 +55,7 @@ public class AsignacionCorcheteSimple extends Operacion implements Instruccion {
                     return Operacion.tipoDato.ERRORSEMANTICO;
                 }*/
 
- /*if (sim.getTipoItems().equals(Operacion.tipoDato.VECTOR)) {
+                /*if (sim.getTipoItems().equals(Operacion.tipoDato.VECTOR)) {
                     if (indice > ((ArrayList) elObjeto).size()) {
                         ArrayList<Object> relleno = rellenarConValores(nuevo, Operacion.tipoDato.LISTA, indice);
                         relleno.add(sim.getValor());
@@ -877,6 +877,9 @@ public class AsignacionCorcheteSimple extends Operacion implements Instruccion {
                     tiIndice1 = getIndice().getType(tablaDeSimbolos, listas);
                 }
 
+                valor = hacerLineal(valor, tablaDeSimbolos, listas, tiIndice1);
+                tiIndice1 = hacerLinealTIPO(valor, tablaDeSimbolos, listas, tiIndice1);
+
                 if (tiIndice1.equals(Operacion.tipoDato.ENTERO)) {
 
                     ArrayList<Object> val = (ArrayList<Object>) valor;
@@ -1002,6 +1005,9 @@ public class AsignacionCorcheteSimple extends Operacion implements Instruccion {
                                             tipoIdiceFor = cs.getType(tablaDeSimbolos, listas);
                                         }
 
+                                        asigIndice = hacerLineal(asigIndice, tablaDeSimbolos, listas, tipoIdiceFor);
+                                        tipoIdiceFor = hacerLinealTIPO(asigIndice, tablaDeSimbolos, listas, tipoIdiceFor);
+
                                         if (!tipoIdiceFor.equals(Operacion.tipoDato.ENTERO)) {
                                             listas.errores.add(new NodoError(getLinea(), getColumna(), NodoError.tipoError.Semantico,
                                                     "El acceso a la variable de id: " + idVariable
@@ -1026,6 +1032,9 @@ public class AsignacionCorcheteSimple extends Operacion implements Instruccion {
                                         } else {
                                             tipoIdiceFor = cs.getType(tablaDeSimbolos, listas);
                                         }
+
+                                        asigIndice = hacerLineal(asigIndice, tablaDeSimbolos, listas, tipoIdiceFor);
+                                        tipoIdiceFor = hacerLinealTIPO(asigIndice, tablaDeSimbolos, listas, tipoIdiceFor);
 
                                         if (!tipoIdiceFor.equals(Operacion.tipoDato.ENTERO)) {
                                             listas.errores.add(new NodoError(getLinea(), getColumna(), NodoError.tipoError.Semantico,
@@ -1063,6 +1072,9 @@ public class AsignacionCorcheteSimple extends Operacion implements Instruccion {
                                             tipoIdiceFor = cs.getType(tablaDeSimbolos, listas);
                                         }
 
+                                        asigIndice = hacerLineal(asigIndice, tablaDeSimbolos, listas, tipoIdiceFor);
+                                        tipoIdiceFor = hacerLinealTIPO(asigIndice, tablaDeSimbolos, listas, tipoIdiceFor);
+
                                         if (!tipoIdiceFor.equals(Operacion.tipoDato.ENTERO)) {
                                             listas.errores.add(new NodoError(getLinea(), getColumna(), NodoError.tipoError.Semantico,
                                                     "El acceso a la variable de id: " + idVariable
@@ -1087,6 +1099,9 @@ public class AsignacionCorcheteSimple extends Operacion implements Instruccion {
                                         } else {
                                             tipoIdiceFor = cs.getType(tablaDeSimbolos, listas);
                                         }
+
+                                        asigIndice = hacerLineal(asigIndice, tablaDeSimbolos, listas, tipoIdiceFor);
+                                        tipoIdiceFor = hacerLinealTIPO(asigIndice, tablaDeSimbolos, listas, tipoIdiceFor);
 
                                         if (!tipoIdiceFor.equals(Operacion.tipoDato.ENTERO)) {
                                             listas.errores.add(new NodoError(getLinea(), getColumna(), NodoError.tipoError.Semantico,
@@ -1127,6 +1142,9 @@ public class AsignacionCorcheteSimple extends Operacion implements Instruccion {
                                     } else {
                                         tipoIdiceFor = cs.getType(tablaDeSimbolos, listas);
                                     }
+
+                                    asigIndice = hacerLineal(asigIndice, tablaDeSimbolos, listas, tipoIdiceFor);
+                                    tipoIdiceFor = hacerLinealTIPO(asigIndice, tablaDeSimbolos, listas, tipoIdiceFor);
 
                                     if (!tipoIdiceFor.equals(Operacion.tipoDato.ENTERO)) {
                                         listas.errores.add(new NodoError(getLinea(), getColumna(), NodoError.tipoError.Semantico,

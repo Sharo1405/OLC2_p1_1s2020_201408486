@@ -59,6 +59,99 @@ public class Operacion {
 
     }
 
+    public Object hacerLineal(Object valor, Entorno tablaDeSimbolos, ErrorImpresion listas, Operacion.tipoDato tipo1) {
+        valor = this.obtenerValorSimbolo(valor, tablaDeSimbolos, listas);
+        ArrayList<Object> exp1 = new ArrayList<>();
+
+        if (tipo1.equals(Operacion.tipoDato.VECTOR)) {
+            ArrayList<Object> array1 = (ArrayList<Object>) valor;
+            Operacion.tipoDato tipoV1 = this.todoLosTipos(array1);
+            if (tipoV1.equals(Operacion.tipoDato.ERRORSEMANTICO)) {
+                listas.errores.add(new NodoError(getLinea(), getColumna(), NodoError.tipoError.Semantico,
+                        "El tipo de la Expreion 1 no es valida para realizar la SUMA"));
+                return Operacion.tipoDato.ERRORSEMANTICO;
+            }
+            ArrayList<Object> valDelValor = (ArrayList<Object>) valor;
+            if (valDelValor.size() == 1) {
+                if (valDelValor.get(0) instanceof ArrayList) {
+                    ArrayList<Object> veeeee = (ArrayList<Object>) valDelValor.get(0);
+                    if (veeeee.size() == 1) {
+                        valor = veeeee;
+                    } else {
+                        listas.errores.add(new NodoError(getLinea(), getColumna(), NodoError.tipoError.Semantico,
+                                "El tipo de la Expreion 1 no es valida para realizar la SUMA"));
+                        return Operacion.tipoDato.ERRORSEMANTICO;
+                    }
+                }
+            }
+            FuncionC fc = new FuncionC();
+            Object obj = fc.casteoVector(valor, tipoV1, listas);
+            if (obj instanceof ArrayList) {
+                exp1 = (ArrayList<Object>) obj;
+            } else {
+                listas.errores.add(new NodoError(getLinea(), getColumna(), NodoError.tipoError.Semantico,
+                        "El tipo de la Expreion 1 no es valida para realizar la SUMA"));
+                return Operacion.tipoDato.ERRORSEMANTICO;
+            }
+            tipo1 = this.adivinaTipoValorVECTORTIPOTIPOTIPO(exp1);
+        } else {
+            exp1 = (ArrayList<Object>) valor;
+        }
+
+        if (exp1 instanceof ArrayList) {
+            ArrayList<Object> vs = (ArrayList<Object>) exp1;
+            if (vs.size() > 1) {
+                ArrayList<Object> vsvs = (ArrayList<Object>) vs.get(0);
+                exp1 = vsvs;
+            }
+        }
+
+        return exp1;
+    }
+
+    public tipoDato hacerLinealTIPO(Object valor, Entorno tablaDeSimbolos, ErrorImpresion listas, Operacion.tipoDato tipo1) {
+        valor = this.obtenerValorSimbolo(valor, tablaDeSimbolos, listas);
+        ArrayList<Object> exp1 = new ArrayList<>();
+
+        if (tipo1.equals(Operacion.tipoDato.VECTOR)) {
+            ArrayList<Object> array1 = (ArrayList<Object>) valor;
+            Operacion.tipoDato tipoV1 = this.todoLosTipos(array1);
+            if (tipoV1.equals(Operacion.tipoDato.ERRORSEMANTICO)) {
+                listas.errores.add(new NodoError(getLinea(), getColumna(), NodoError.tipoError.Semantico,
+                        "El tipo de la Expreion 1 no es valida para realizar la SUMA"));
+                return Operacion.tipoDato.ERRORSEMANTICO;
+            }
+            ArrayList<Object> valDelValor = (ArrayList<Object>) valor;
+            if (valDelValor.size() == 1) {
+                if (valDelValor.get(0) instanceof ArrayList) {
+                    ArrayList<Object> veeeee = (ArrayList<Object>) valDelValor.get(0);
+                    if (veeeee.size() == 1) {
+                        valor = veeeee;
+                    } else {
+                        listas.errores.add(new NodoError(getLinea(), getColumna(), NodoError.tipoError.Semantico,
+                                "El tipo de la Expreion 1 no es valida para realizar la SUMA"));
+                        return Operacion.tipoDato.ERRORSEMANTICO;
+                    }
+                }
+            }
+            FuncionC fc = new FuncionC();
+            Object obj = fc.casteoVector(valor, tipoV1, listas);
+            if (obj instanceof ArrayList) {
+                exp1 = (ArrayList<Object>) obj;
+            } else {
+                listas.errores.add(new NodoError(getLinea(), getColumna(), NodoError.tipoError.Semantico,
+                        "El tipo de la Expreion 1 no es valida para realizar la SUMA"));
+                return Operacion.tipoDato.ERRORSEMANTICO;
+            }
+            tipo1 = this.adivinaTipoValorVECTORTIPOTIPOTIPO(exp1);
+            return tipo1;
+        } else {
+            exp1 = (ArrayList<Object>) valor;
+        }
+
+        return tipo1;
+    }
+
     public ArrayList<Object> sacarVectorNormal(ArrayList<Object> array) {
 
         ArrayList<Object> normal = new ArrayList<>();

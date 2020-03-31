@@ -64,7 +64,7 @@ public class Ejecutar extends Entorno {
         ParaRetorno2.add(new Cadena());
         ParaRetorno2.add(new Cadena());
         ParaRetorno2.add(new Cadena());
-        Simbolo s17 = new Simbolo("matrix", null, 0, 0, Operacion.tipoDato.MATRIZ, Simbolo.Rol.FUNCION, ParaRetorno, ParaRetorno);
+        Simbolo s17 = new Simbolo("matrix", null, 0, 0, Operacion.tipoDato.MATRIZ, Simbolo.Rol.FUNCION, ParaRetorno2, ParaRetorno);
 
         this.setSimbolo("print", si, tablaDeSimbolos);
         this.setSimbolo("c", si2, tablaDeSimbolos);
