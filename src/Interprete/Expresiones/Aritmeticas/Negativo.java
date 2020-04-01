@@ -100,7 +100,7 @@ public class Negativo extends Operacion implements Expresion {
                     ArrayList<Object> vectorParaDevolver = new ArrayList<>();
                     switch (tipo1) {
                         case DECIMAL:
-                            vectorParaDevolver.add(Double.parseDouble(String.valueOf(ob)) * -1);
+                            vectorParaDevolver.add(Double.parseDouble(String.valueOf(ob)) * -1.0);
                             return vectorParaDevolver;
 
                         case ENTERO:
@@ -119,7 +119,7 @@ public class Negativo extends Operacion implements Expresion {
                             for (int i = 0; i < normal.size(); i++) {
                                 Object ob = normal.get(i);
                                 ArrayList<Object> item = new ArrayList<>();
-                                item.add(Double.parseDouble(String.valueOf(ob)) * -1);
+                                item.add(Double.parseDouble(String.valueOf(ob)) * -1.0);
                                 vectorParaDevolver.add(item);
                             }
                             return vectorParaDevolver;

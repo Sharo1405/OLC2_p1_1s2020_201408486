@@ -40,7 +40,7 @@ public class FuncionFlecha implements Expresion{
         if (expre1 instanceof Comas) {
             Comas coma = (Comas) expre1;
             obtenerLista(coma.getExpresion1(), coma.getExpresion2(), tablaDeSimbolos, listas, listaParas);
-            listaParas.add(coma.getExpresion2());
+            listaParas.add(expre2);//coma.getExpresion2());
         } else {
             listaParas.add(expre1);
             listaParas.add(expre2);
