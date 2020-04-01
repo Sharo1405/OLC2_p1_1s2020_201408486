@@ -5,7 +5,9 @@
  */
 package Interprete.Entorno;
 
+import Interprete.ErrorImpresion;
 import Interprete.Expresiones.Operacion;
+import Interprete.NodoError;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
@@ -85,6 +87,33 @@ public class Entorno {
 
         } catch (Exception e) {
             System.out.println("Error en la clase Entorno setSimbolo()");
+        }
+    }
+
+    public void setSimboloFuncion(String id, Simbolo nuevoSimbolo, Entorno TablaSimbolos, ErrorImpresion listas,
+            int linea, int columna) {
+        try {
+            int entro = 0;
+            for (Entorno entorno = TablaSimbolos; entorno != null; entorno = entorno.padreANTERIOR) {
+                for (Simbolo simbolo : entorno.tablaS) {
+                    if (simbolo.getId().equals(id.toLowerCase())) {
+                        if (Simbolo.Rol.FUNCION == simbolo.getRol()) {
+                            listas.errores.add(new NodoError(linea, columna, NodoError.tipoError.Semantico,
+                                    "La funcion con el id" + id + " ya existe por lo tanto no se puede guardar"));
+                            entro = 1;
+                        } else {
+                            TablaSimbolos.tablaS.add(nuevoSimbolo);
+                            entro = 1;
+                        }
+                    }
+                }
+            }
+
+            if (entro == 0) {
+                TablaSimbolos.tablaS.add(nuevoSimbolo);
+            }
+        } catch (Exception e) {
+            System.out.println("Error en la clase Entorno setSimboloFuncion()");
         }
     }
 

@@ -10,8 +10,13 @@ import Interprete.Entorno.Entorno;
 import Interprete.Entorno.Simbolo;
 import Interprete.ErrorImpresion;
 import Interprete.Expresiones.Expresion;
+import Interprete.Expresiones.LlamadaFunciones;
 import Interprete.Expresiones.Operacion;
 import Interprete.Expresiones.TipoDato.Cadena;
+import Interprete.Instrucciones.ExpresionValor;
+import Interprete.Instrucciones.Factorizando_id_igual;
+import Interprete.Instrucciones.FuncionFlecha;
+import Interprete.Instrucciones.FuncionNormal;
 import Interprete.Instrucciones.Instruccion;
 import java.util.LinkedList;
 
@@ -28,12 +33,37 @@ public class Ejecutar extends Entorno {
         declaraFunciones(tablaDeSimbolos, errorImprmir);
 
         for (AST ast : arbol) {
-            if (ast instanceof Expresion) {
-                Expresion ex = (Expresion) ast;
-                ex.getValue(tablaDeSimbolos, errorImprmir);
+            if (ast instanceof Factorizando_id_igual) {
+                Factorizando_id_igual fact = (Factorizando_id_igual) ast;
+                if (fact.getFuncionesDeclaraciones() instanceof ExpresionValor) {
+                    Instruccion ins = (Instruccion) ast;
+                    ins.ejecutar(tablaDeSimbolos, errorImprmir);
+                } else if (fact.getFuncionesDeclaraciones() instanceof FuncionFlecha
+                        || fact.getFuncionesDeclaraciones() instanceof FuncionNormal) {
+                    //guardo las funciones por si vienen antes
+                    Instruccion ins = (Instruccion) ast;
+                    ins.ejecutar(tablaDeSimbolos, errorImprmir);
+                }
+            }
+        }
+
+        for (AST ast : arbol) {
+            if (ast instanceof Factorizando_id_igual) {
+                Factorizando_id_igual fact = (Factorizando_id_igual) ast;
+                if (fact.getFuncionesDeclaraciones() instanceof ExpresionValor) {
+                    
+                } else if (fact.getFuncionesDeclaraciones() instanceof FuncionFlecha
+                        || fact.getFuncionesDeclaraciones() instanceof FuncionNormal) {
+                                        
+                }
             } else {
-                Instruccion ins = (Instruccion) ast;
-                ins.ejecutar(tablaDeSimbolos, errorImprmir);
+                if (ast instanceof Expresion) {
+                    Expresion ex = (Expresion) ast;
+                    ex.getValue(tablaDeSimbolos, errorImprmir);
+                } else {
+                    Instruccion ins = (Instruccion) ast;
+                    ins.ejecutar(tablaDeSimbolos, errorImprmir);
+                }
             }
         }
 

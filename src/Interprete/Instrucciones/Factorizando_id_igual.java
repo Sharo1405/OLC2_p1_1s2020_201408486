@@ -247,7 +247,8 @@ public class Factorizando_id_igual extends Entorno implements Instruccion {
                     Simbolo si = (Simbolo) objetoo;
                     si.setId(getId());
                     si.setRol(Simbolo.Rol.FUNCION);
-                    this.setSimbolo(getId(), si, tablaDeSimbolos);
+                    //this.setSimbolo(getId(), si, tablaDeSimbolos);
+                    this.setSimboloFuncion(getId(), si, tablaDeSimbolos, listas, getLinea(), getColumna());
                 }
             }
         } catch (Exception e) {

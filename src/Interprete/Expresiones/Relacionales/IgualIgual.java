@@ -159,7 +159,7 @@ public class IgualIgual extends Operacion implements Expresion {
                             return vectorParaDevolver;
 
                         case STRING:
-                            vectorParaDevolver.add(String.valueOf(ob) == String.valueOf(ob2));
+                            vectorParaDevolver.add(String.valueOf(ob).equals(String.valueOf(ob2)));
                             return vectorParaDevolver;
 
                         case BOOLEAN:
@@ -198,7 +198,7 @@ public class IgualIgual extends Operacion implements Expresion {
                             for (int i = 0; i < normal.size(); i++) {
                                 Object ob = normal.get(i);
                                 ArrayList<Object> item = new ArrayList<>();
-                                item.add(String.valueOf(ob) == String.valueOf(ob2));
+                                item.add(String.valueOf(ob).equals(String.valueOf(ob2)));
                                 vectorParaDevolver.add(item);
                             }
                             return vectorParaDevolver;
@@ -235,7 +235,7 @@ public class IgualIgual extends Operacion implements Expresion {
                             for (int i = 0; i < normal2.size(); i++) {
                                 Object ob2 = normal2.get(i);
                                 ArrayList<Object> item = new ArrayList<>();
-                                item.add(String.valueOf(ob) == String.valueOf(ob2));
+                                item.add(String.valueOf(ob).equals(String.valueOf(ob2)));
                                 vectorParaDevolver.add(item);
                             }
                             return vectorParaDevolver;
@@ -276,7 +276,7 @@ public class IgualIgual extends Operacion implements Expresion {
                                 Object ob = normal.get(i);
                                 Object ob2 = normal2.get(i);
                                 ArrayList<Object> item = new ArrayList<>();
-                                item.add(String.valueOf(ob) == String.valueOf(ob2));
+                                item.add(String.valueOf(ob).equals(String.valueOf(ob2)));
                                 vectorParaDevolver.add(item);
                             }
                             return vectorParaDevolver;
