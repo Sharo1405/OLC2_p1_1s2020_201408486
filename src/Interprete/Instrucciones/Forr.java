@@ -180,6 +180,75 @@ public class Forr extends Operacion implements Instruccion {
                         }
                     }
                 }
+            } else if (tipo.equals(Operacion.tipoDato.MATRIZ)) {
+
+                ArrayList<Object> nuevo = new ArrayList<>();
+                if (estructura instanceof Simbolo) {
+                    Simbolo si = (Simbolo) estructura;
+                    if (iniExpresion instanceof Identificador) {
+                        Identificador idi = (Identificador) iniExpresion;
+                        if (idi.getEDerecha().size() == 0) {
+                            nuevo.add(estructura);
+                        } else {
+                            if (si.getValor() instanceof Simbolo) {
+                                nuevo.add(estructura);
+                            } else {
+                                nuevo = (ArrayList<Object>) si.getValor();
+                            }
+                        }
+                    }
+                } else if (estructura instanceof ArrayList) {
+                    //no pasa nada
+                    nuevo = (ArrayList<Object>) estructura;
+                }
+
+                for (Object object : nuevo) {
+                    Simbolo encontrado = actual.getParaFuncion(idFor, actual, Simbolo.Rol.VARIABLE);
+                    if (encontrado != null) {
+                        if (object instanceof Simbolo) {
+                            Simbolo si = (Simbolo) object;
+                            actual.setValorSimbolo(idFor, si.getValor(), actual, Simbolo.Rol.VARIABLE, si.getTipo(), Simbolo.Rol.VARIABLE);
+                        } else if (object instanceof ArrayList) {
+                            actual.setValorSimbolo(idFor, object, actual, Simbolo.Rol.VARIABLE, Operacion.tipoDato.VECTOR, Simbolo.Rol.VARIABLE);
+                        }
+                    } else {
+                        if (object instanceof Simbolo) {
+                            Simbolo si = (Simbolo) object;
+                            actual.setSimbolo(idFor, new Simbolo(idFor, si.getValor(), getLinea(), getColumnas(), si.getTipo(), Simbolo.Rol.VARIABLE), actual);
+                        } else if (object instanceof ArrayList) {
+                            actual.setSimbolo(idFor, new Simbolo(idFor, object, getLinea(), getColumnas(), Operacion.tipoDato.VECTOR, Simbolo.Rol.VARIABLE), actual);
+                        }
+
+                    }
+                    for (AST object1 : bloque.getListaSentencias()) {
+
+                        if (object1 instanceof Instruccion) {
+                            Instruccion ins = (Instruccion) object1;
+                            if (ins instanceof Breakk) {
+                                return ins;
+                            } else if (ins instanceof Continuee) {
+                                return ins;
+                            } else if (ins instanceof Retorno2) {
+                                return ins;
+                            } else {
+                                Object ss = ins.ejecutar(actual, listas);
+                                if (ss instanceof Retorno2) {
+                                    return ins;
+                                }
+                            }
+                        } else {//funciones 
+                            Expresion exp = (Expresion) object1;
+                            if (exp instanceof Retorno) {
+                                return exp.getValue(actual, listas);
+                            } else {
+                                Object ins = exp.getValue(actual, listas);
+                                if (ins instanceof Retorno2) {
+                                    return ins;
+                                }
+                            }
+                        }
+                    }
+                }
             }
 
         } catch (Exception e) {
