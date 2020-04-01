@@ -51,10 +51,11 @@ public class Ejecutar extends Entorno {
             if (ast instanceof Factorizando_id_igual) {
                 Factorizando_id_igual fact = (Factorizando_id_igual) ast;
                 if (fact.getFuncionesDeclaraciones() instanceof ExpresionValor) {
-                    
+                    Instruccion ins = (Instruccion) ast;
+                    ins.ejecutar(tablaDeSimbolos, errorImprmir);
                 } else if (fact.getFuncionesDeclaraciones() instanceof FuncionFlecha
                         || fact.getFuncionesDeclaraciones() instanceof FuncionNormal) {
-                                        
+
                 }
             } else {
                 if (ast instanceof Expresion) {
