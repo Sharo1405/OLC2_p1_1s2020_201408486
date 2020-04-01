@@ -218,10 +218,48 @@ public class Identificador extends Operacion implements Expresion {
                         //break;
 
                         case "ncol"://matriz
-                            break;
+                            if (EDerecha.size() == 1) {
+                                Expresion expre = EDerecha.get(0);
+                                if (expre instanceof EDerechaParentesis) {
+                                    nCol fc = new nCol(expre, getLinea(), getColumna());
+                                    Object o = fc.getValue(tablaDeSimbolos, listas);
+                                    if (o instanceof Retorno2) {
+                                        o = ((Retorno2) o).getValue(tablaDeSimbolos, listas);
+                                    }
+                                    return o;
+                                } else {
+                                    listas.errores.add(new NodoError(getLinea(), getColumna(), NodoError.tipoError.Semantico,
+                                            "La funcion nCol() no es valida, no es seguiDa de Parentesis"));
+                                    return Operacion.tipoDato.ERRORSEMANTICO;
+                                }
+                            } else {
+                                listas.errores.add(new NodoError(getLinea(), getColumna(), NodoError.tipoError.Semantico,
+                                        "La funcion nCol() no es valida"));
+                                return Operacion.tipoDato.ERRORSEMANTICO;
+                            }
+                            //break;
 
                         case "nrow"://matriz
-                            break;
+                            if (EDerecha.size() == 1) {
+                                Expresion expre = EDerecha.get(0);
+                                if (expre instanceof EDerechaParentesis) {
+                                    nRow fc = new nRow(expre, getLinea(), getColumna());
+                                    Object o = fc.getValue(tablaDeSimbolos, listas);
+                                    if (o instanceof Retorno2) {
+                                        o = ((Retorno2) o).getValue(tablaDeSimbolos, listas);
+                                    }
+                                    return o;
+                                } else {
+                                    listas.errores.add(new NodoError(getLinea(), getColumna(), NodoError.tipoError.Semantico,
+                                            "La funcion nCol() no es valida, no es seguiDa de Parentesis"));
+                                    return Operacion.tipoDato.ERRORSEMANTICO;
+                                }
+                            } else {
+                                listas.errores.add(new NodoError(getLinea(), getColumna(), NodoError.tipoError.Semantico,
+                                        "La funcion nCol() no es valida"));
+                                return Operacion.tipoDato.ERRORSEMANTICO;
+                            }
+                            //break;
 
                         case "stringlength":
                             if (EDerecha.size() == 1) {

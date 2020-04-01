@@ -72,6 +72,7 @@ public class ModaTrim extends Operacion implements Expresion {
 
             Double maxValue = 0.0;
             int maxCount = 0;
+            boolean entroalmenosunavez = false;
 
             for (int i = 0; i < vectorValores.size(); ++i) {
                 int count = 0;
@@ -81,6 +82,7 @@ public class ModaTrim extends Operacion implements Expresion {
                 Double d11 = Double.parseDouble(String.valueOf(oo11));
 
                 if (d11 >= trimersito) {
+                    entroalmenosunavez = true;
                     for (int j = 0; j < vectorValores.size(); ++j) {
 
                         Object o1 = vectorValores.get(i);
@@ -107,7 +109,13 @@ public class ModaTrim extends Operacion implements Expresion {
                 }
             }
 
-            return maxValue;
+            if (entroalmenosunavez == false) {
+                listas.errores.add(new NodoError(getLinea(), getColumna(),
+                        NodoError.tipoError.Semantico, "Ningun valor aplica para el trim, Mode()"));
+                return Operacion.tipoDato.ERRORSEMANTICO;
+            } else {
+                return maxValue;
+            }
 
         } catch (Exception e) {
             System.out.println("Error en la clase Mode sacarModa()");
@@ -139,20 +147,20 @@ public class ModaTrim extends Operacion implements Expresion {
                 Operacion.tipoDato tipoE1 = Operacion.tipoDato.VACIO;
                 Operacion.tipoDato tipoE2 = Operacion.tipoDato.VACIO;
                 Object izquierdo = coma.getExpresion1().getValue(tablaDeSimbolos, listas);
-                if(izquierdo instanceof Retorno2){
+                if (izquierdo instanceof Retorno2) {
                     Retorno2 r = (Retorno2) izquierdo;
                     izquierdo = r.getValue(tablaDeSimbolos, listas);
                     tipoE1 = r.getType(tablaDeSimbolos, listas);
-                }else{
+                } else {
                     tipoE1 = coma.getExpresion1().getType(tablaDeSimbolos, listas);
                 }
-                
+
                 Object derecho = coma.getExpresion2().getValue(tablaDeSimbolos, listas);
-                if(derecho instanceof Retorno2){
+                if (derecho instanceof Retorno2) {
                     Retorno2 r = (Retorno2) derecho;
                     derecho = r.getValue(tablaDeSimbolos, listas);
                     tipoE2 = r.getType(tablaDeSimbolos, listas);
-                }else{
+                } else {
                     tipoE2 = coma.getExpresion2().getType(tablaDeSimbolos, listas);
                 }
 
@@ -262,7 +270,7 @@ public class ModaTrim extends Operacion implements Expresion {
                                     } else {
                                         return Operacion.tipoDato.ERRORSEMANTICO;
                                     }
-                                }else{
+                                } else {
                                     derecho = ob;
                                 }
                             }
@@ -308,7 +316,7 @@ public class ModaTrim extends Operacion implements Expresion {
                                     } else {
                                         return Operacion.tipoDato.ERRORSEMANTICO;
                                     }
-                                }else{
+                                } else {
                                     derecho = ob;
                                 }
                             }

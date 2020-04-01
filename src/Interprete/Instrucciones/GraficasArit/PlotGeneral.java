@@ -74,7 +74,7 @@ public class PlotGeneral extends Operacion implements Instruccion {
                 obtenerLista(co.getExpresion1(), co.getExpresion2(), tablaDeSimbolos, listas, listaParametros);
                 if (listaParametros.size() != 5) {
                     listas.errores.add(new NodoError(getLinea(), getColumna(), NodoError.tipoError.Semantico,
-                            "Parametro/os no validos para el HISTOGRAMA"));
+                            "Parametro/os no validos para el PLOT"));
                     return Operacion.tipoDato.ERRORSEMANTICO;
                 }
 
@@ -110,7 +110,7 @@ public class PlotGeneral extends Operacion implements Instruccion {
                 tipoV = listaParametros.get(0).getType(tablaDeSimbolos, listas);
                 V = obtenerValorSimbolo(V, tablaDeSimbolos, listas);
                 if (!tipoV.equals(Operacion.tipoDato.VECTOR) && !tipoV.equals(Operacion.tipoDato.ENTERO)
-                        && !tipoV.equals(Operacion.tipoDato.DECIMAL)) {
+                        && !tipoV.equals(Operacion.tipoDato.DECIMAL) && !tipoV.equals(Operacion.tipoDato.MATRIZ)) {
                     listas.errores.add(new NodoError(getLinea(), getColumna(), NodoError.tipoError.Semantico,
                             "Parametro v no valido para la grafica HISTOGRAMA, debe ser Numerico, y es: " + String.valueOf(tipoV)));
                     return Operacion.tipoDato.ERRORSEMANTICO;
@@ -146,6 +146,23 @@ public class PlotGeneral extends Operacion implements Instruccion {
                             listas.errores.add(new NodoError(getLinea(), getColumna(), NodoError.tipoError.Semantico,
                                     "El tipo del parametro V no es valida para realizar la Grafica HISTOGRAMA es de tipo: " + tipoV));
                             return Operacion.tipoDato.ERRORSEMANTICO;
+                        }
+                    } else if (tipoV.equals(Operacion.tipoDato.MATRIZ)) {
+                        ArrayList<Object> array1 = (ArrayList<Object>) V;
+
+                        ArrayList<Object> columna = (ArrayList<Object>) array1.get(0);
+                        Operacion.tipoDato tipoMatrix = this.todoLosTipos(columna);
+                        tipoV = tipoMatrix;
+                        if (tipoMatrix.equals(Operacion.tipoDato.ENTERO)
+                                || tipoMatrix.equals(Operacion.tipoDato.DECIMAL)) {
+
+                            for (Object object : array1) {
+                                ArrayList<Object> colu = (ArrayList<Object>) object;
+                                for (Object object1 : colu) {
+                                    VV.add(object1);
+                                }
+                            }
+                            
                         }
                     } else {
                         VV = (ArrayList<Object>) V;
@@ -487,9 +504,9 @@ public class PlotGeneral extends Operacion implements Instruccion {
         int alto = 550;
         Random rand = new Random();
         int randomNum = rand.nextInt((100000 - 10) + 1) + 10;
-        File archivo = new File("C:\\Users\\sharolin\\Desktop\\ReporteArbol\\" + mainMain + String.valueOf(randomNum) + ".jpeg");
+        File archivo = new File("C:\\Users\\sharolin\\Desktop\\ReporteArbol\\" + mainMain + String.valueOf(randomNum) + "JCC" + ".jpeg");
         ChartUtilities.saveChartAsJPEG(archivo, lineas, ancho, alto);
-        return "C:\\Users\\sharolin\\Desktop\\ReporteArbol\\" + mainMain + String.valueOf(randomNum) + ".jpeg";
+        return "C:\\Users\\sharolin\\Desktop\\ReporteArbol\\" + mainMain + String.valueOf(randomNum) + "JCC" + ".jpeg";
     }
 
     private void cuadricula(XYPlot c) {

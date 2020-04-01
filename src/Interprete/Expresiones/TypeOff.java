@@ -8,6 +8,7 @@ package Interprete.Expresiones;
 import Interprete.Entorno.Entorno;
 import Interprete.ErrorImpresion;
 import Interprete.Expresiones.Retorno2;
+import java.util.ArrayList;
 
 /**
  *
@@ -29,17 +30,24 @@ public class TypeOff implements Expresion{
             Retorno2 r = (Retorno2) ob;
             return r.getValue(tablaDeSimbolos, listas);
         }
-        return String.valueOf(Exp.getType(tablaDeSimbolos, listas));
+        Object guardatipo = Exp.getType(tablaDeSimbolos, listas);
+        
+        ArrayList<Object> vectorTipo = new ArrayList<>();
+        vectorTipo.add(guardatipo);
+        return vectorTipo;
     }
 
     @Override
     public Operacion.tipoDato getType(Entorno tablaDeSimbolos, ErrorImpresion listas) {     
-        Object ob = Exp.getValue(tablaDeSimbolos, listas);
+        /*Object ob = Exp.getValue(tablaDeSimbolos, listas);
         if(ob instanceof Retorno2){
             Retorno2 r = (Retorno2) ob;
             return r.getType(tablaDeSimbolos, listas);
         }
-        return getExp().getType(tablaDeSimbolos, listas);
+
+        Operacion.tipoDato guardatipo = Exp.getType(tablaDeSimbolos, listas);
+        return guardatipo;*/
+        return Operacion.tipoDato.STRING;
     }    
 
     /**
